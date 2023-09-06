@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GTP Autocom</string>
+    <!-- other strings -->
+    <string name="flutter_downloader_notification_started">Bắt đầu tải về</string>
+    <string name="flutter_downloader_notification_in_progress">Đang tải về</string>
+    <string name="flutter_downloader_notification_canceled">Đang huỷ tải về</string>
+    <string name="flutter_downloader_notification_failed">Tải về thất bại</string>
+    <string name="flutter_downloader_notification_complete">Tải về thành công</string>
+    <string name="flutter_downloader_notification_paused">Tạm dừng tải về</string>
+</resources>
