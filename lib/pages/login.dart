@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:linhkiennhua_thaco/config/config.dart';
 import 'package:linhkiennhua_thaco/models/icon.dart';
-import 'package:linhkiennhua_thaco/ultis/common.dart';
-import 'package:linhkiennhua_thaco/ultis/snackbar.dart';
+import 'package:linhkiennhua_thaco/pages/home.dart';
 import 'package:linhkiennhua_thaco/widgets/loading_button.dart';
-import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
@@ -282,7 +279,14 @@ class _LoginPageState extends State<LoginPage> {
                     loadingButton(
                       context,
                       _btnController,
-                      (),
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
+                      },
                       'login',
                       Theme.of(context).primaryColor,
                       Colors.black,
