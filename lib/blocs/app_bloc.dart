@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppBloc extends ChangeNotifier {
   SharedPreferences? _pref;
 
-  String _apiUrl = "http://10.14.7.53:81";
+  String _apiUrl = "http://ghethanhphamapi.thacoindustries.com";
   String get apiUrl => _apiUrl;
 
   String? _chuyenId;

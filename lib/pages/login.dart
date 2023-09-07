@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:linhkiennhua_thaco/blocs/app_bloc.dart';
 import 'package:linhkiennhua_thaco/config/config.dart';
 import 'package:linhkiennhua_thaco/models/icon.dart';
 import 'package:linhkiennhua_thaco/ultis/common.dart';
@@ -18,7 +19,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // late AppBloc _ab;
+  late AppBloc _ab;
   // late UserBloc _ub;
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -35,11 +36,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // _ab = Provider.of<AppBloc>(context, listen: false);
+    _ab = Provider.of<AppBloc>(context, listen: false);
     // _ub = Provider.of<UserBloc>(context, listen: false);
 
     setState(() {
-      //   _diaChiApi.text = _ab.apiUrl;
+      _diaChiApi.text = _ab.apiUrl;
     });
   }
 
@@ -92,16 +93,16 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundColor: Theme.of(ctx).primaryColor,
               ),
               onPressed: () {
-                // if (validUrl(_diaChiApi.text)) {
-                //   _ab.saveApiUrl(_diaChiApi.text);
-                //   Navigator.pop(ctx);
-                // } else {
-                //   // message
-                //   openSnackBar(
-                //     ctx,
-                //     "Địa chỉ url không đúng. Vui lòng nhập lại",
-                //   );
-                // }
+                if (validUrl(_diaChiApi.text)) {
+                  _ab.saveApiUrl(_diaChiApi.text);
+                  Navigator.pop(ctx);
+                } else {
+                  // message
+                  openSnackBar(
+                    ctx,
+                    "Địa chỉ url không đúng. Vui lòng nhập lại",
+                  );
+                }
               },
               icon: const Icon(Icons.save),
               label: const Text("Lưu"),
