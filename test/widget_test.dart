@@ -7,9 +7,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:linhkiennhua_thaco/app.dart';
 
-import 'package:linhkiennhua_thaco/main.dart';
+import 'package:ghethanhpham_thaco/app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
