@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:linhkiennhua_thaco/config/config.dart';
-import 'package:linhkiennhua_thaco/pages/home.dart';
-import 'package:linhkiennhua_thaco/pages/login.dart';
-import 'package:linhkiennhua_thaco/ultis/next_screen.dart';
+
+import 'package:ghethanhpham_thaco/config/config.dart';
+import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/pages/login.dart';
+import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
 // import 'package:provider/provider.dart';
 // import 'package:th_ghe_thanh_pham/blocs/user_bloc.dart';
 

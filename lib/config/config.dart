@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Config {
-  static const appName = "Linh kiện nhựa";
+  static const appName = "Ghế thành phẩm";
   static const supportEmail = "phamvanhung3@thaco.com.vn";
   static const apiUrl = "http://10.14.7.53:81";
 
