@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Config {
   static const appName = "Ghế thành phẩm";
   static const supportEmail = "phamvanhung3@thaco.com.vn";
-  static const apiUrl = "http://10.14.7.53:81";
+  static const apiUrl = "http://10.14.7.70:84";
 
   //app theme color
   final Color appThemeColor = const Color(0xFF00529C);

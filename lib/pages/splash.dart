@@ -4,6 +4,13 @@ import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/pages/home.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
 import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
+import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
+import 'package:ghethanhpham_thaco/config/config.dart';
+import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/pages/login.dart';
+import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
+import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
 // import 'package:th_ghe_thanh_pham/blocs/user_bloc.dart';
 
@@ -21,18 +28,18 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   Future _afterSplash() async {
-    //final UserBloc ub = context.read<UserBloc>();
-    // final AppBloc _ab = context.read<AppBloc>();
+    final UserBloc ub = context.read<UserBloc>();
+    final AppBloc _ab = context.read<AppBloc>();
     Future.delayed(const Duration(seconds: 2)).then((value) async {
       _goToLoginPage();
-      //_ab.getApiUrl();
-      // if (ub.isSignedIn) {
-      //   ub.getUserData();
-      //   _ab.getData();
-      //   _goToHomePage();
-      // } else {
-      //   _goToLoginPage();
-      // }
+      _ab.getApiUrl();
+      if (ub.isSignedIn) {
+        ub.getUserData();
+        _ab.getData();
+        _goToHomePage();
+      } else {
+        _goToLoginPage();
+      }
     });
   }
 
