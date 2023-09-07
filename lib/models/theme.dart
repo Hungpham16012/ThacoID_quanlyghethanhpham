@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:linhkiennhua_thaco/config/config.dart';
+
+import 'package:ghethanhpham_thaco/config/config.dart';
 
 class ThemeModel {
   final lightTheme = ThemeData(

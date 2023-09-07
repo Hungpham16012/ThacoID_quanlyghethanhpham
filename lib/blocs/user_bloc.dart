@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:linhkiennhua_thaco/services/request_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import '../models/user.dart';
 
 class UserBloc extends ChangeNotifier {
@@ -34,7 +34,8 @@ class UserBloc extends ChangeNotifier {
 
   String? _refreshToken;
   String? get refreshToken => _refreshToken;
-
+// Hàm lưu dữ liệu người dùng, dùng spf để lấy ra instance của UserModel sau đó
+// gán vào getter của thông tin người dùng, sau đó gán vào lại _user model
   Future saveUserData(UserModel userModel) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     await sp.setString('id', userModel.id!);
@@ -53,6 +54,7 @@ class UserBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+// Hàm lấy dữ liệu của người dùng thông qua phương thức get của lớp SPF
   Future getUserData() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     _id = sp.getString('id');
@@ -71,6 +73,7 @@ class UserBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+// đặt trạng thái đăng nhập là đã đăng nhập
   Future setSignIn() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setBool('signed_in', true);
@@ -78,12 +81,14 @@ class UserBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+// kiểm tra trạng thái đăng nhập
   Future checkSignIn() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     _isSignedIn = sp.getBool('signed_in') ?? false;
     notifyListeners();
   }
 
+// Ham Dang xuat
   Future userSignout() async {
     await clearAllUserData().then((_) {
       _isSignedIn = false;
@@ -97,6 +102,7 @@ class UserBloc extends ChangeNotifier {
     });
   }
 
+// Xoa toan bo du lieu nguoi dung
   Future clearAllUserData() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.clear();

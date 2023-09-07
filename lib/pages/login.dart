@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:linhkiennhua_thaco/config/config.dart';
-import 'package:linhkiennhua_thaco/models/icon.dart';
-import 'package:linhkiennhua_thaco/ultis/common.dart';
-import 'package:linhkiennhua_thaco/ultis/snackbar.dart';
-import 'package:linhkiennhua_thaco/widgets/loading_button.dart';
+import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
+import 'package:ghethanhpham_thaco/config/config.dart';
+import 'package:ghethanhpham_thaco/models/icon.dart';
+import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/services/app_service.dart';
+import 'package:ghethanhpham_thaco/services/auth_service.dart';
+import 'package:ghethanhpham_thaco/ultis/common.dart';
+import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
+import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
+import 'package:ghethanhpham_thaco/widgets/loading_button.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:ghethanhpham_thaco/config/config.dart';
+import 'package:ghethanhpham_thaco/models/icon.dart';
+import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/widgets/loading_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,8 +29,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // late AppBloc _ab;
-  // late UserBloc _ub;
+  late AppBloc _ab;
+  late UserBloc _ub;
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
@@ -35,11 +46,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // _ab = Provider.of<AppBloc>(context, listen: false);
-    // _ub = Provider.of<UserBloc>(context, listen: false);
+    _ab = Provider.of<AppBloc>(context, listen: false);
+    _ub = Provider.of<UserBloc>(context, listen: false);
 
     setState(() {
-      //   _diaChiApi.text = _ab.apiUrl;
+      _diaChiApi.text = _ab.apiUrl;
     });
   }
 
@@ -92,16 +103,16 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundColor: Theme.of(ctx).primaryColor,
               ),
               onPressed: () {
-                // if (validUrl(_diaChiApi.text)) {
-                //   _ab.saveApiUrl(_diaChiApi.text);
-                //   Navigator.pop(ctx);
-                // } else {
-                //   // message
-                //   openSnackBar(
-                //     ctx,
-                //     "Địa chỉ url không đúng. Vui lòng nhập lại",
-                //   );
-                // }
+                if (validUrl(_diaChiApi.text)) {
+                  _ab.saveApiUrl(_diaChiApi.text);
+                  Navigator.pop(ctx);
+                } else {
+                  // message
+                  openSnackBar(
+                    ctx,
+                    "Địa chỉ url không đúng. Vui lòng nhập lại",
+                  );
+                }
               },
               icon: const Icon(Icons.save),
               label: const Text("Lưu"),
@@ -112,48 +123,48 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Future _handleLoginWithUsernamePassword() async {
-  //   SharedPreferences sp = await SharedPreferences.getInstance();
-  //   sp.setString('apiUrl', _ab.apiUrl);
-  //   if (userNameCtrl.text.isEmpty) {
-  //     _btnController.reset();
-  //     // ignore: use_build_context_synchronously
-  //     openSnackBar(context, 'username is required'.tr());
-  //   } else if (passwordCtrl.text.isEmpty) {
-  //     _btnController.reset();
-  //     // ignore: use_build_context_synchronously
-  //     openSnackBar(context, 'password is required'.tr());
-  //   } else {
-  //     AppService().checkInternet().then((hasInternet) async {
-  //       if (!hasInternet!) {
-  //         _btnController.reset();
-  //         openSnackBar(context, 'no internet'.tr());
-  //       } else {
-  //         final AuthService asb = context.read<AuthService>();
-  //         await asb
-  //             .loginWithUsernamePassword(userNameCtrl.text, passwordCtrl.text)
-  //             .then((_) {
-  //           if (asb.user != null) {
-  //             _ub
-  //                 .saveUserData(asb.user!)
-  //                 .then((_) => _ub.setSignIn())
-  //                 .then((_) {
-  //               _btnController.success();
-  //               nextScreenReplace(context, const HomePage());
-  //             });
-  //           } else {
-  //             if (asb.hasError) {
-  //               openSnackBar(context, asb.errorCode);
-  //             } else {
-  //               openSnackBar(context, 'username or password is incorrect'.tr());
-  //             }
-  //             _btnController.reset();
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  // }
+  Future _handleLoginWithUsernamePassword() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.setString('apiUrl', _ab.apiUrl);
+    if (userNameCtrl.text.isEmpty) {
+      _btnController.reset();
+      // ignore: use_build_context_synchronously
+      openSnackBar(context, 'username is required'.tr());
+    } else if (passwordCtrl.text.isEmpty) {
+      _btnController.reset();
+      // ignore: use_build_context_synchronously
+      openSnackBar(context, 'password is required'.tr());
+    } else {
+      AppService().checkInternet().then((hasInternet) async {
+        if (!hasInternet!) {
+          _btnController.reset();
+          openSnackBar(context, 'no internet'.tr());
+        } else {
+          final AuthService asb = context.read<AuthService>();
+          await asb
+              .loginWithUsernamePassword(userNameCtrl.text, passwordCtrl.text)
+              .then((_) {
+            if (asb.user != null) {
+              _ub
+                  .saveUserData(asb.user!)
+                  .then((_) => _ub.setSignIn())
+                  .then((_) {
+                _btnController.success();
+                nextScreenReplace(context, const HomePage());
+              });
+            } else {
+              if (asb.hasError) {
+                openSnackBar(context, asb.errorCode);
+              } else {
+                openSnackBar(context, 'username or password is incorrect'.tr());
+              }
+              _btnController.reset();
+            }
+          });
+        }
+      });
+    }
+  }
 
   _displayLoginForm() {
     return SingleChildScrollView(
@@ -282,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
                     loadingButton(
                       context,
                       _btnController,
-                      (),
+                      _handleLoginWithUsernamePassword,
                       'login',
                       Theme.of(context).primaryColor,
                       Colors.black,
