@@ -1,5 +1,6 @@
 import 'dart:io';
 
+// check Internet connection
 class AppService {
   Future<bool?> checkInternet() async {
     bool? internet;

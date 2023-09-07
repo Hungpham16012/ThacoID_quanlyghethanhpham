@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:linhkiennhua_thaco/blocs/app_bloc.dart';
+import 'package:linhkiennhua_thaco/blocs/user_bloc.dart';
 import 'package:linhkiennhua_thaco/config/config.dart';
 import 'package:linhkiennhua_thaco/models/icon.dart';
+import 'package:linhkiennhua_thaco/pages/home.dart';
+import 'package:linhkiennhua_thaco/services/app_service.dart';
+import 'package:linhkiennhua_thaco/services/auth_service.dart';
 import 'package:linhkiennhua_thaco/ultis/common.dart';
+import 'package:linhkiennhua_thaco/ultis/next_screen.dart';
 import 'package:linhkiennhua_thaco/ultis/snackbar.dart';
 import 'package:linhkiennhua_thaco/widgets/loading_button.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +25,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late AppBloc _ab;
-  // late UserBloc _ub;
+  late UserBloc _ub;
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
@@ -37,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _ab = Provider.of<AppBloc>(context, listen: false);
-    // _ub = Provider.of<UserBloc>(context, listen: false);
+    _ub = Provider.of<UserBloc>(context, listen: false);
 
     setState(() {
       _diaChiApi.text = _ab.apiUrl;
@@ -113,48 +118,48 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Future _handleLoginWithUsernamePassword() async {
-  //   SharedPreferences sp = await SharedPreferences.getInstance();
-  //   sp.setString('apiUrl', _ab.apiUrl);
-  //   if (userNameCtrl.text.isEmpty) {
-  //     _btnController.reset();
-  //     // ignore: use_build_context_synchronously
-  //     openSnackBar(context, 'username is required'.tr());
-  //   } else if (passwordCtrl.text.isEmpty) {
-  //     _btnController.reset();
-  //     // ignore: use_build_context_synchronously
-  //     openSnackBar(context, 'password is required'.tr());
-  //   } else {
-  //     AppService().checkInternet().then((hasInternet) async {
-  //       if (!hasInternet!) {
-  //         _btnController.reset();
-  //         openSnackBar(context, 'no internet'.tr());
-  //       } else {
-  //         final AuthService asb = context.read<AuthService>();
-  //         await asb
-  //             .loginWithUsernamePassword(userNameCtrl.text, passwordCtrl.text)
-  //             .then((_) {
-  //           if (asb.user != null) {
-  //             _ub
-  //                 .saveUserData(asb.user!)
-  //                 .then((_) => _ub.setSignIn())
-  //                 .then((_) {
-  //               _btnController.success();
-  //               nextScreenReplace(context, const HomePage());
-  //             });
-  //           } else {
-  //             if (asb.hasError) {
-  //               openSnackBar(context, asb.errorCode);
-  //             } else {
-  //               openSnackBar(context, 'username or password is incorrect'.tr());
-  //             }
-  //             _btnController.reset();
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  // }
+  Future _handleLoginWithUsernamePassword() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.setString('apiUrl', _ab.apiUrl);
+    if (userNameCtrl.text.isEmpty) {
+      _btnController.reset();
+      // ignore: use_build_context_synchronously
+      openSnackBar(context, 'username is required'.tr());
+    } else if (passwordCtrl.text.isEmpty) {
+      _btnController.reset();
+      // ignore: use_build_context_synchronously
+      openSnackBar(context, 'password is required'.tr());
+    } else {
+      AppService().checkInternet().then((hasInternet) async {
+        if (!hasInternet!) {
+          _btnController.reset();
+          openSnackBar(context, 'no internet'.tr());
+        } else {
+          final AuthService asb = context.read<AuthService>();
+          await asb
+              .loginWithUsernamePassword(userNameCtrl.text, passwordCtrl.text)
+              .then((_) {
+            if (asb.user != null) {
+              _ub
+                  .saveUserData(asb.user!)
+                  .then((_) => _ub.setSignIn())
+                  .then((_) {
+                _btnController.success();
+                nextScreenReplace(context, const HomePage());
+              });
+            } else {
+              if (asb.hasError) {
+                openSnackBar(context, asb.errorCode);
+              } else {
+                openSnackBar(context, 'username or password is incorrect'.tr());
+              }
+              _btnController.reset();
+            }
+          });
+        }
+      });
+    }
+  }
 
   _displayLoginForm() {
     return SingleChildScrollView(
@@ -283,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                     loadingButton(
                       context,
                       _btnController,
-                      (),
+                      _handleLoginWithUsernamePassword,
                       'login',
                       Theme.of(context).primaryColor,
                       Colors.black,
