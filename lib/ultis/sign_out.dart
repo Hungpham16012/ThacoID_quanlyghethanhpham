@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../blocs/user_bloc.dart';
@@ -7,16 +8,16 @@ import '../pages/login.dart';
 import 'next_screen.dart';
 
 void signOut(context) async {
-  // final UserBloc ub = Provider.of<UserBloc>(context, listen: false);
-  // final AppBloc ab = Provider.of<AppBloc>(context, listen: false);
-  // await ub.userSignout().then((_) {
-  //   ab.clearData().then((_) {
-  //     nextScreenCloseOthers(
-  //       context,
-  //       const LoginPage(),
-  //     );
-  //   });
-  // });
+  final UserBloc ub = Provider.of<UserBloc>(context, listen: false);
+  final AppBloc ab = Provider.of<AppBloc>(context, listen: false);
+  await ub.userSignout().then((_) {
+    ab.clearData().then((_) {
+      nextScreenCloseOthers(
+        context,
+        const LoginPage(),
+      );
+    });
+  });
 }
 
 void openLogoutDialog(context) {
