@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:linhkiennhua_thaco/config/config.dart';
-import 'package:linhkiennhua_thaco/pages/history/history.dart';
-import 'package:linhkiennhua_thaco/pages/home/main.dart';
-import 'package:linhkiennhua_thaco/pages/setting/setting.dart';
-import 'package:linhkiennhua_thaco/ultis/sign_out.dart';
+import 'package:ghethanhpham_thaco/config/config.dart';
+import 'package:ghethanhpham_thaco/pages/history/history.dart';
+import 'package:ghethanhpham_thaco/pages/home/main.dart';
+import 'package:ghethanhpham_thaco/pages/setting/setting.dart';
+import 'package:ghethanhpham_thaco/ultis/sign_out.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
