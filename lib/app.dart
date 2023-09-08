@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
-import 'package:ghethanhpham_thaco/blocs/chucnang_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/history_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/theme_bloc.dart';
@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider<AuthService>(
                 create: (context) => AuthService(),
               ),
-              ChangeNotifierProvider<ChucNangBloc>(
-                create: (context) => ChucNangBloc(),
+              ChangeNotifierProvider<FeatureBloc>(
+                create: (context) => FeatureBloc(),
               ),
               ChangeNotifierProvider<ScanBloc>(
                 create: (context) => ScanBloc(),
