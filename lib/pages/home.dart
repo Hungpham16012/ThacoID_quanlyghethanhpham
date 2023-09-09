@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 
 import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/pages/history/history.dart';
 import 'package:ghethanhpham_thaco/pages/home/main.dart';
 import 'package:ghethanhpham_thaco/pages/setting/setting.dart';
 import 'package:ghethanhpham_thaco/ultis/sign_out.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,11 +18,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
+  late UserBloc _userBloc;
+  String _fullName = "No name";
+
   final tabs = [
     const MainPage(),
     const HistoryPage(),
     const SettingPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _userBloc = Provider.of<UserBloc>(context, listen: false);
+    setState(() {
+      _fullName = _userBloc.name!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +46,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             margin: const EdgeInsets.only(top: 21),
             child: Text(
-              "Full Name",
+              _fullName,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
