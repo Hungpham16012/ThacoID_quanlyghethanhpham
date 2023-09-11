@@ -136,7 +136,7 @@ class _SettingPageState extends State<SettingPage> {
       setState(() {
         _version = tmpVal["maPhienBan"];
         values = tmpVal;
-        callUpdateAction(tmpVal);
+        // callUpdateAction(tmpVal);
       });
     }
   }
@@ -150,78 +150,77 @@ class _SettingPageState extends State<SettingPage> {
         ?.send([id, status, progress]);
   }
 
-  callUpdateAction(values) async {
-    if ((values["maPhienBan"] != _appBloc.appVersion) &&
-        values["isCapNhat"] == true) {
-      // show a dialog to ask the user to download the update
-      // ignore: use_build_context_synchronously
-      bool shouldUpdate = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Cập nhật"),
-            content: const Text(
-              "Ứng dụng đã có phiên bản mới. Bạn có muốn tải về không?",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text("Huỷ"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text("Tải về và cài đặt"),
-              ),
-            ],
-          );
-        },
-      );
-      if (shouldUpdate) {
-        await createDownloadDirectory();
-        Directory? downloadsDirectory = await getExternalStorageDirectory();
-        List<String> tmpArr = values["fileUrl"].split('/');
-        // Get the file path
-        final String filePath =
-            '${downloadsDirectory!.path}/Download/${tmpArr.last}';
+  // callUpdateAction(values) async {
+  //   if ((values["maPhienBan"] != _appBloc.appVersion) && values["isCapNhat"]) {
+  //     // show a dialog to ask the user to download the update
+  //     // ignore: use_build_context_synchronously
+  //     bool shouldUpdate = await showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text("Cập nhật"),
+  //           content: const Text(
+  //             "Ứng dụng đã có phiên bản mới. Bạn có muốn tải về không?",
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, false),
+  //               child: const Text("Huỷ"),
+  //             ),
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, true),
+  //               child: const Text("Tải về và cài đặt"),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //     if (shouldUpdate) {
+  //       await createDownloadDirectory();
+  //       Directory? downloadsDirectory = await getExternalStorageDirectory();
+  //       List<String> tmpArr = values["fileUrl"].split('/');
+  //       // Get the file path
+  //       final String filePath =
+  //           '${downloadsDirectory!.path}/Download/${tmpArr.last}';
 
-        // Check if the file exists
-        final bool fileExists = File(filePath).existsSync();
+  //       // Check if the file exists
+  //       final bool fileExists = File(filePath).existsSync();
 
-        // Delete the file if it exists
-        if (fileExists) {
-          File(filePath).deleteSync();
-        }
+  //       // Delete the file if it exists
+  //       if (fileExists) {
+  //         File(filePath).deleteSync();
+  //       }
 
-        String? downloadId = await FlutterDownloader.enqueue(
-          url: '${_appBloc.apiUrl}/${values["fileUrl"]}',
-          savedDir: '${downloadsDirectory.path}/Download',
-          showNotification: true,
-          openFileFromNotification: true,
-          // fileName: values["fileName"],
-        );
+  //       String? downloadId = await FlutterDownloader.enqueue(
+  //         url: '${_appBloc.apiUrl}/${values["fileUrl"]}',
+  //         savedDir: '${downloadsDirectory.path}/Download',
+  //         showNotification: true,
+  //         openFileFromNotification: true,
+  //         // fileName: values["fileName"],
+  //       );
 
-        // wait for the download to complete
-        bool isComplete = false;
-        while (!isComplete) {
-          List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
-          DownloadTask? task =
-              tasks?.firstWhere((task) => task.taskId == downloadId);
-          if (task?.status == DownloadTaskStatus.complete) {
-            isComplete = true;
-          }
-        }
-        // Install the update using install_plugin
-        await InstallPlugin.installApk(
-          '${downloadsDirectory.path}/Download/${tmpArr.last}',
-          appId: 'com.thaco.id.autocom.ghe',
-        ).then((value) {
-          if (value == 'Success') {
-            openSnackBar(context, "Tải xuống thành công");
-          }
-        });
-      }
-    }
-  }
+  //       // wait for the download to complete
+  //       bool isComplete = false;
+  //       while (!isComplete) {
+  //         List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
+  //         DownloadTask? task =
+  //             tasks?.firstWhere((task) => task.taskId == downloadId);
+  //         if (task?.status == DownloadTaskStatus.complete) {
+  //           isComplete = true;
+  //         }
+  //       }
+  //       // Install the update using install_plugin
+  //       await InstallPlugin.installApk(
+  //         '${downloadsDirectory.path}/Download/${tmpArr.last}',
+  //         appId: 'com.thaco.id.autocom.ghe',
+  //       ).then((value) {
+  //         if (value == 'Success') {
+  //           openSnackBar(context, "Tải xuống thành công");
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 
   createDownloadDirectory() async {
     // Get the directory where the downloaded files should be saved
@@ -255,79 +254,68 @@ class _SettingPageState extends State<SettingPage> {
 
   _renderListFeature() {
     var values = _listFeatures.isEmpty ? _featureBloc.data : _listFeatures;
-    return values.isEmpty
-        ? const Text("Nothing")
-        : Column(
-            children: _listFeatures.map((feature) {
-              var parentItem = _options.firstWhere(
-                  (name) => name.parentName == feature.tenNhomChucNang);
-              var index = _options.indexOf(parentItem);
-              return Column(
-                children: [
-                  const SizedBox(height: 15),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          feature.tenNhomChucNang,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.7,
-                            wordSpacing: 1,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const DividerWidget(),
-                        const SizedBox(height: 10),
-                        feature.lstChucNangs.isEmpty
-                            ? const Text("Không có tuỳ chọn")
-                            : SettingNhaMay(
-                                listFeatures: feature.lstChucNangs,
-                                optionItem: parentItem.childId,
-                                onChangeSelect: (value, tenChucNang) {
-                                  setState(
-                                    () {
-                                      if (index == 0) {
-                                        _options[1] = SettingOptions(
-                                          parentName: _options[1].parentName,
-                                          childId: null,
-                                        );
-                                        // save to local value
-                                        _appBloc.saveData(
-                                          value,
-                                          tenChucNang,
-                                          feature.tenNhomChucNang,
-                                          true,
-                                        );
-                                      } else {
-                                        _options[0] = SettingOptions(
-                                          parentName: _options[0].parentName,
-                                          childId: null,
-                                        );
-                                        _appBloc.saveData(
-                                          value,
-                                          tenChucNang,
-                                          feature.tenNhomChucNang,
-                                          false,
-                                        );
-                                      }
-                                      parentItem.childId = value;
-                                    },
-                                  );
-                                },
-                              ),
-                      ],
-                    ),
+    List<ChucNangItemModel> chucNangs = [];
+    var featureGroupName;
+    if (values.isNotEmpty) {
+      chucNangs = values[1].lstChucNangs;
+      featureGroupName = values[1].tenNhomChucNang;
+    }
+    return chucNangs.isEmpty
+        ? const Text("Không có tuỳ chọn")
+        : Container(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 10,
+              bottom: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  featureGroupName,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.7,
+                    wordSpacing: 1,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                ],
-              );
-            }).toList(),
+                ),
+                const SizedBox(height: 10),
+                const DividerWidget(),
+                const SizedBox(height: 10),
+                SettingNhaMay(
+                  listFeatures: chucNangs,
+                  optionItem: null,
+                  onChangeSelect: (value, tenChucNang) {
+                    setState(
+                      () {
+                        if (values[1].thuTu == 0) {
+                          // save to local value
+                          _appBloc.saveData(
+                            value,
+                            tenChucNang,
+                            featureGroupName,
+                            false,
+                          );
+                        } else {
+                          _appBloc.saveData(
+                            value,
+                            tenChucNang,
+                            featureGroupName,
+                            false,
+                          );
+                        }
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           );
   }
 
@@ -354,11 +342,11 @@ class _SettingPageState extends State<SettingPage> {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
-            child: UserUI(
-              onlineVersion: _version,
-              callUpdateAction: callUpdateAction,
-              values: values,
-            ),
+            // child: UserUI(
+            //   onlineVersion: _version,
+            //   callUpdateAction: callUpdateAction,
+            //   values: values,
+            // ),
           )
         ],
       ),

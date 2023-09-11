@@ -1,3 +1,6 @@
+// ignore: implementation_imports
+import 'package:flutter/src/widgets/basic.dart';
+
 class ChucNangModel {
   String tenNhomChucNang;
   bool isNhapKho;
@@ -21,6 +24,8 @@ class ChucNangModel {
           .toList(),
     );
   }
+
+  map(Column Function(dynamic feature) param0) {}
 }
 
 class ChucNangItemModel {
