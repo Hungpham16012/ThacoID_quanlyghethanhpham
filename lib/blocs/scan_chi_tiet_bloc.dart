@@ -1,14 +1,15 @@
 import 'dart:convert';
+import 'package:ghethanhpham_thaco/models/chi_tiet_ke.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:ghethanhpham_thaco/models/scan.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
+import 'package:ghethanhpham_thaco/models/chi_tiet_ke.dart';
 
 class ScanBloc extends ChangeNotifier {
   static RequestHelper requestHelper = RequestHelper();
 
-  ScanModel? _data;
-  ScanModel? get data => _data;
+  KeScanModel? _data;
+  KeScanModel? get data => _data;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -27,7 +28,7 @@ class ScanBloc extends ChangeNotifier {
           .getData('Mobile/ThongTin?Qrcode=$qrCode&IsNhapKho=$isNhapKho');
       var decodedData = jsonDecode(response.body);
       if (decodedData["data"] != null) {
-        _data = ScanModel.fromJson(decodedData["data"]);
+        _data = KeScanModel.fromJson(decodedData["data"]);
       } else {
         _data = null;
       }
@@ -43,12 +44,12 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
-  Future postData(ScanModel scanData) async {
+  Future postData(KeScanModel scanData) async {
     _isLoading = true;
     try {
       var newScanData = scanData;
-      newScanData.chuyenId =
-          (newScanData.chuyenId == 'null' ? null : newScanData.chuyenId)!;
+      newScanData.keId =
+          (newScanData.keId == 'null' ? null : newScanData.keId)!;
       final http.Response response =
           await requestHelper.postData('Mobile/ThongTin', newScanData.toJson());
       var decodedData = jsonDecode(response.body);
