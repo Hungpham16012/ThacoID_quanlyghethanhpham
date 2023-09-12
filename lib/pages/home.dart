@@ -17,31 +17,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  late UserBloc _ub;
+  late UserBloc _userBloc;
   String _fullName = "No name";
+
+  final tabs = [
+    const MainPage(),
+    const HistoryPage(),
+    const SettingPage(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
-    _tabController!.addListener(_handleTabChange);
-    _ub = Provider.of<UserBloc>(context, listen: false);
+    _userBloc = Provider.of<UserBloc>(context, listen: false);
     setState(() {
-      _fullName = _ub.name!;
+      _fullName = _userBloc.name!;
     });
-  }
-
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
-  }
-
-  void _handleTabChange() {
-    if (_tabController!.indexIsChanging) {
-      // Call the action when the tab changes
-      // print('Tab changed to: ${_tabController!.index}');
-    }
   }
 
   @override
@@ -54,7 +45,7 @@ class _HomePageState extends State<HomePage>
           Container(
             margin: const EdgeInsets.only(top: 21),
             child: Text(
-              _fullName ?? "No name",
+              _fullName,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
