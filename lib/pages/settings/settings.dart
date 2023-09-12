@@ -3,23 +3,24 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
-import 'package:ghethanhpham_thaco/blocs/chucnang_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
-import 'package:ghethanhpham_thaco/models/chuc_nang.dart';
+import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
-import 'package:ghethanhpham_thaco/pages/settings/setting_general.dart';
-import 'package:ghethanhpham_thaco/pages/settings/setting_nha_may.dart';
-import 'package:ghethanhpham_thaco/pages/settings/user_ui.dart';
+import 'package:ghethanhpham_thaco/pages/setting/setting_nha_may.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
-import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
-import 'package:ghethanhpham_thaco/ultis/update_checker%20copy.dart';
 import 'package:ghethanhpham_thaco/widgets/dialog.dart';
 import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
 import 'package:install_plugin/install_plugin.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
+import 'package:ghethanhpham_thaco/pages/setting/setting_general.dart';
+import 'package:ghethanhpham_thaco/pages/setting/user_ui.dart';
+import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
+import 'package:ghethanhpham_thaco/ultis/update_checker.dart';
 import 'package:provider/provider.dart';
 
 class SettingOptions {
@@ -41,83 +42,45 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   static RequestHelper requestHelper = RequestHelper();
-  late ChucNangBloc _cnb;
-  late AppBloc _ab;
-  late UserBloc _ub;
+  late FeatureBloc _featureBloc;
+  late AppBloc _appBloc;
+  late UserBloc _userBloc;
 
   String? _version;
-  Map<String, dynamic>? values;
-
-  List<ChucNangModel> _chucNangs = [];
-  bool _loading = false;
+  List<ChucNangModel> _listFeatures = [];
   List<SettingOptions> _options = [];
+  Map<String, dynamic>? values;
   int? statusCode;
   bool allowRefresh = true;
+  late bool _loading = false;
 
   @override
   void initState() {
-    _ab = Provider.of<AppBloc>(context, listen: false);
-    _cnb = Provider.of<ChucNangBloc>(context, listen: false);
-    _ub = Provider.of<UserBloc>(context, listen: false);
-    if (_cnb.data.isEmpty) {}
+    _appBloc = Provider.of<AppBloc>(context, listen: false);
+    _featureBloc = Provider.of<FeatureBloc>(context, listen: false);
+    _userBloc = Provider.of<UserBloc>(context, listen: false);
+    if (_featureBloc.data.isEmpty) {}
     setState(() {
       _loading = true;
     });
     callGetSettingData();
-    FlutterDownloader.registerCallback(downloadCallback as DownloadCallback,
-        step: 1);
+    FlutterDownloader.registerCallback(downloadCallback, step: 1);
     super.initState();
   }
 
   callGetSettingData() {
-    var tryTime = 0;
     // call API
-    _cnb.getData().then((_) {
-      _ab.getData().then((_) {
-        if (_cnb.statusCode == 200) {
-          setState(() {
-            _loading = false;
-            _chucNangs = _cnb.data;
-            _options = _cnb.data.map((cn) {
-              if (_ab.tenNhomChucNang != null &&
-                  _ab.tenNhomChucNang == cn.tenNhomChucNang) {}
-              return SettingOptions(
-                parentName: cn.tenNhomChucNang,
-                childId: _ab.chuyenId,
-              );
-            }).toList();
-          });
+    _featureBloc.getData().then((_) {
+      _appBloc.getData().then((_) {
+        if (_featureBloc.statusCode == 200) {
+          setState(() {});
         }
-        setState(() {
-          _loading = false;
-        });
-        checkUpdate(_ab.appVersion);
-        statusCode = _cnb.statusCode;
+        setState(() {});
+        checkUpdate(_appBloc.appVersion);
+        statusCode = _featureBloc.statusCode;
         Future.delayed(const Duration(seconds: 2), () async {
-          if (_cnb.statusCode == 401) {
+          if (_featureBloc.statusCode == 401) {
             signOutAction();
-            // if (allowRefresh) {
-            //   if (tryTime < 2) {
-            //     callRefreshToken();
-            //     Future.delayed(const Duration(seconds: 3), () {
-            //       tryTime++;
-            //       callGetSettingData();
-            //     });
-            //   } else {
-            //     AlertDialog(
-            //       title: const Text("Thông báo"),
-            //       content: const Text("Không thể load được phiên làm việc mới"),
-            //       actions: [
-            //         TextButton(
-            //           onPressed: () async {
-            //             signOutAction();
-            //           },
-            //           child: const Text("Đăng xuất"),
-            //         ),
-            //       ],
-            //     );
-            //   }
-            // }
           }
         });
       });
@@ -125,8 +88,8 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void signOutAction() async {
-    await _ub.userSignout().then((_) {
-      _ab.clearData().then((_) {
+    await _userBloc.userSignout().then((_) {
+      _appBloc.clearData().then((_) {
         nextScreenCloseOthers(
           context,
           const LoginPage(),
@@ -146,11 +109,11 @@ class _SettingPageState extends State<SettingPage> {
       context: context,
       actions: () async {
         var newToken = await requestHelper.refreshTokenAction({
-          "token": _ub.token,
-          "refreshToken": _ub.refreshToken,
+          "token": _userBloc.token,
+          "refreshToken": _userBloc.refreshToken,
         });
         // set token Value
-        _ub.refreshTokenValue(newToken);
+        _userBloc.refreshTokenValue(newToken);
         allowRefresh = false;
       },
       cancelActions: () {
@@ -165,7 +128,7 @@ class _SettingPageState extends State<SettingPage> {
   checkUpdate(version) async {
     var checkVersion = UpdateChecker(
       context: context,
-      baseApiUrl: _ab.apiUrl,
+      baseApiUrl: _appBloc.apiUrl,
       currentVersion: version,
     );
     var tmpVal = await checkVersion.checkForUpdate();
@@ -173,92 +136,91 @@ class _SettingPageState extends State<SettingPage> {
       setState(() {
         _version = tmpVal["maPhienBan"];
         values = tmpVal;
-        callUpdateAction(tmpVal);
+        // callUpdateAction(tmpVal);
       });
     }
   }
 
   static void downloadCallback(
     String id,
-    DownloadTaskStatus status,
+    int status,
     int progress,
   ) {
     IsolateNameServer.lookupPortByName('downloader_send_port')
-        ?.send([id, status.name, progress]);
+        ?.send([id, status, progress]);
   }
 
-  callUpdateAction(values) async {
-    if ((values["maPhienBan"] != _ab.appVersion) &&
-        values["isCapNhat"] == true) {
-      // show a dialog to ask the user to download the update
-      // ignore: use_build_context_synchronously
-      bool shouldUpdate = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Cập nhật"),
-            content: const Text(
-              "Ứng dụng đã có phiên bản mới. Bạn có muốn tải về không?",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text("Huỷ"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text("Tải về và cài đặt"),
-              ),
-            ],
-          );
-        },
-      );
-      if (shouldUpdate) {
-        await createDownloadDirectory();
-        Directory? downloadsDirectory = await getExternalStorageDirectory();
-        List<String> tmpArr = values["fileUrl"].split('/');
-        // Get the file path
-        final String filePath =
-            '${downloadsDirectory!.path}/Download/${tmpArr.last}';
+  // callUpdateAction(values) async {
+  //   if ((values["maPhienBan"] != _appBloc.appVersion) && values["isCapNhat"]) {
+  //     // show a dialog to ask the user to download the update
+  //     // ignore: use_build_context_synchronously
+  //     bool shouldUpdate = await showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text("Cập nhật"),
+  //           content: const Text(
+  //             "Ứng dụng đã có phiên bản mới. Bạn có muốn tải về không?",
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, false),
+  //               child: const Text("Huỷ"),
+  //             ),
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, true),
+  //               child: const Text("Tải về và cài đặt"),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //     if (shouldUpdate) {
+  //       await createDownloadDirectory();
+  //       Directory? downloadsDirectory = await getExternalStorageDirectory();
+  //       List<String> tmpArr = values["fileUrl"].split('/');
+  //       // Get the file path
+  //       final String filePath =
+  //           '${downloadsDirectory!.path}/Download/${tmpArr.last}';
 
-        // Check if the file exists
-        final bool fileExists = File(filePath).existsSync();
+  //       // Check if the file exists
+  //       final bool fileExists = File(filePath).existsSync();
 
-        // Delete the file if it exists
-        if (fileExists) {
-          File(filePath).deleteSync();
-        }
+  //       // Delete the file if it exists
+  //       if (fileExists) {
+  //         File(filePath).deleteSync();
+  //       }
 
-        String? downloadId = await FlutterDownloader.enqueue(
-          url: '${_ab.apiUrl}/${values["fileUrl"]}',
-          savedDir: '${downloadsDirectory.path}/Download',
-          showNotification: true,
-          openFileFromNotification: true,
-          // fileName: values["fileName"],
-        );
+  //       String? downloadId = await FlutterDownloader.enqueue(
+  //         url: '${_appBloc.apiUrl}/${values["fileUrl"]}',
+  //         savedDir: '${downloadsDirectory.path}/Download',
+  //         showNotification: true,
+  //         openFileFromNotification: true,
+  //         // fileName: values["fileName"],
+  //       );
 
-        // wait for the download to complete
-        bool isComplete = false;
-        while (!isComplete) {
-          List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
-          DownloadTask? task =
-              tasks?.firstWhere((task) => task.taskId == downloadId);
-          if (task?.status == DownloadTaskStatus.complete) {
-            isComplete = true;
-          }
-        }
-        // Install the update using install_plugin_v2
-        await InstallPlugin.installApk(
-          '${downloadsDirectory.path}/Download/${tmpArr.last}',
-          appId: 'com.thaco.id.autocom.ghe',
-        ).then((value) {
-          if (value == 'Success') {
-            openSnackBar(context, "Tải xuống thành công");
-          }
-        });
-      }
-    }
-  }
+  //       // wait for the download to complete
+  //       bool isComplete = false;
+  //       while (!isComplete) {
+  //         List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
+  //         DownloadTask? task =
+  //             tasks?.firstWhere((task) => task.taskId == downloadId);
+  //         if (task?.status == DownloadTaskStatus.complete) {
+  //           isComplete = true;
+  //         }
+  //       }
+  //       // Install the update using install_plugin
+  //       await InstallPlugin.installApk(
+  //         '${downloadsDirectory.path}/Download/${tmpArr.last}',
+  //         appId: 'com.thaco.id.autocom.ghe',
+  //       ).then((value) {
+  //         if (value == 'Success') {
+  //           openSnackBar(context, "Tải xuống thành công");
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 
   createDownloadDirectory() async {
     // Get the directory where the downloaded files should be saved
@@ -275,94 +237,85 @@ class _SettingPageState extends State<SettingPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Call the action when the screen becomes active after clicking on a tab menu
-    if (_cnb.data.isNotEmpty) {
+    if (_featureBloc.data.isNotEmpty) {
       setState(() {
-        _chucNangs = _cnb.data;
-        _options = _cnb.data.map((cn) {
-          if (_ab.tenNhomChucNang != null &&
-              _ab.tenNhomChucNang == cn.tenNhomChucNang) {}
+        _listFeatures = _featureBloc.data;
+        _options = _featureBloc.data.map((feature) {
+          if (_appBloc.tenNhomChucNang != null &&
+              _appBloc.tenNhomChucNang == feature.tenNhomChucNang) {}
           return SettingOptions(
-            parentName: cn.tenNhomChucNang,
-            childId: _ab.chuyenId,
+            parentName: feature.tenNhomChucNang,
+            childId: _appBloc.chuyenId,
           );
         }).toList();
       });
     }
   }
 
-  _renderListCauHinh() {
-    var values = _chucNangs.isEmpty ? _cnb.data : _chucNangs;
-    return values.isEmpty
-        ? const Text("Nothing")
-        : Column(
-            children: _chucNangs.map((cn) {
-              var parentItem = _options
-                  .firstWhere((name) => name.parentName == cn.tenNhomChucNang);
-              var index = _options.indexOf(parentItem);
-              return Column(
-                children: [
-                  const SizedBox(height: 15),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          cn.tenNhomChucNang,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.7,
-                            wordSpacing: 1,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const DividerWidget(),
-                        const SizedBox(height: 10),
-                        cn.listChucNangs.isEmpty
-                            ? const Text("Không có tuỳ chọn")
-                            : SettingNhaMay(
-                                chucNangs: cn.listChucNangs,
-                                optionItem: parentItem.childId,
-                                onChangeSelect: (value, tenChucNang) {
-                                  setState(() {
-                                    if (index == 0) {
-                                      _options[1] = SettingOptions(
-                                        parentName: _options[1].parentName,
-                                        childId: null,
-                                      );
-                                      // save to local value
-                                      _ab.saveData(
-                                        value,
-                                        tenChucNang,
-                                        cn.tenNhomChucNang,
-                                        true,
-                                      );
-                                    } else {
-                                      _options[0] = SettingOptions(
-                                        parentName: _options[0].parentName,
-                                        childId: null,
-                                      );
-                                      _ab.saveData(
-                                        value,
-                                        tenChucNang,
-                                        cn.tenNhomChucNang,
-                                        false,
-                                      );
-                                    }
-                                    parentItem.childId = value;
-                                  });
-                                },
-                              ),
-                      ],
-                    ),
+  _renderListFeature() {
+    var values = _listFeatures.isEmpty ? _featureBloc.data : _listFeatures;
+    List<ChucNangItemModel> chucNangs = [];
+    var featureGroupName;
+    if (values.isNotEmpty) {
+      chucNangs = values[1].lstChucNangs;
+      featureGroupName = values[1].tenNhomChucNang;
+    }
+    return chucNangs.isEmpty
+        ? const Text("Không có tuỳ chọn")
+        : Container(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 10,
+              bottom: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  featureGroupName,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.7,
+                    wordSpacing: 1,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                ],
-              );
-            }).toList(),
+                ),
+                const SizedBox(height: 10),
+                const DividerWidget(),
+                const SizedBox(height: 10),
+                SettingNhaMay(
+                  listFeatures: chucNangs,
+                  optionItem: null,
+                  onChangeSelect: (value, tenChucNang) {
+                    setState(
+                      () {
+                        if (values[1].thuTu == 0) {
+                          // save to local value
+                          _appBloc.saveData(
+                            value,
+                            tenChucNang,
+                            featureGroupName,
+                            false,
+                          );
+                        } else {
+                          _appBloc.saveData(
+                            value,
+                            tenChucNang,
+                            featureGroupName,
+                            false,
+                          );
+                        }
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           );
   }
 
@@ -372,11 +325,7 @@ class _SettingPageState extends State<SettingPage> {
       padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         children: [
-          _loading
-              ? LoadingWidget(height: 350)
-              :
-              // Setting nha may
-              _renderListCauHinh(),
+          _renderListFeature(),
           const SizedBox(
             height: 15,
           ),
@@ -393,12 +342,12 @@ class _SettingPageState extends State<SettingPage> {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
-            child: UserUI(
-              onlineVersion: _version,
-              callUpdateAction: callUpdateAction,
-              values: values,
-            ),
-          ),
+            // child: UserUI(
+            //   onlineVersion: _version,
+            //   callUpdateAction: callUpdateAction,
+            //   values: values,
+            // ),
+          )
         ],
       ),
     );
