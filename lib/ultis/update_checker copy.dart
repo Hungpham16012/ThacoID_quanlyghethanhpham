@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:install_plugin/install_plugin.dart';
 
 import 'package:http/http.dart' as http;
-
-import 'package:ghethanhpham_thaco/services/request_helper.dart';
-// import '../services/request_helper.dart';
+import '../services/request_helper.dart';
 
 class UpdateChecker {
   static RequestHelper requestHelper = RequestHelper();
@@ -47,5 +47,37 @@ class UpdateChecker {
       print("Error checking for update: $e");
       return statusCode;
     }
+  }
+
+  downloadFileAndInstall(String url, String fileName) async {
+    String? downloadId = await FlutterDownloader.enqueue(
+      url: url,
+      savedDir: 'path/to/downloads',
+      showNotification: true,
+      openFileFromNotification: true,
+    );
+
+    // listen for download progress
+    FlutterDownloader.registerCallback((id, status, progress) {
+      // Update for the download progress UI
+    });
+
+    // wait for the download to complete
+    bool isComplete = false;
+    while (!isComplete) {
+      List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
+      DownloadTask? task =
+          tasks?.firstWhere((task) => task.taskId == downloadId);
+      if (task?.status == DownloadTaskStatus.complete) {
+        isComplete = true;
+      }
+    }
+    // Install the update using install_plugin_v2
+    await InstallPlugin.installApk(
+      'path/to/downloads/$fileName',
+      appId: 'com.thaco.id.autocom.ghe',
+    ).then((value) {
+      print(value);
+    });
   }
 }
