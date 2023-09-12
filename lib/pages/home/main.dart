@@ -161,126 +161,129 @@ class _MainPageState extends State<MainPage> {
         "Bạn chưa cấu hình để sử dụng.",
         style: TextStyle(fontSize: 20),
       ));
-    }
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 5),
-          Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(10),
-            color: Theme.of(context).colorScheme.onPrimary,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  _ab.tenChuyen!,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ).tr(),
-                const SizedBox(height: 10),
-                const DividerWidget(),
-                const SizedBox(height: 10),
-                EasyAutocomplete(
-                    controller: _qrDataController,
-                    onChanged: _onSearchChanged,
-                    suggestions: _results,
-                    onSubmitted: _onScan,
-                    decoration: InputDecoration(
-                      hintText: 'Enter QR/Bar code',
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 0,
-                        horizontal: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            color: Colors.purple,
-                            style: BorderStyle.solid,
-                          )),
-                    ),
-                    suggestionBuilder: (data) {
-                      return Container(
-                        margin: const EdgeInsets.all(1),
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(5),
+    } else {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 5),
+            Container(
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    _ab.tenChuyen!,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ).tr(),
+                  const SizedBox(height: 10),
+                  const DividerWidget(),
+                  const SizedBox(height: 10),
+                  EasyAutocomplete(
+                      controller: _qrDataController,
+                      onChanged: _onSearchChanged,
+                      suggestions: _results,
+                      onSubmitted: _onScan,
+                      decoration: InputDecoration(
+                        hintText: 'Enter QR/Bar code',
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 10,
                         ),
-                        child: Text(
-                          data,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ),
-                      );
-                    }),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          _loading
-              ? LoadingWidget(height: 200)
-              : _data == null
-                  ? const SizedBox.shrink()
-                  : Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.all(10),
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      child: Column(
-                        children: [
-                          showInfoXe("Tên", _data!.tenChiTiet),
-                          const SizedBox(height: 10),
-                          showInfoXe("Model", _data!.tenDongXe),
-                          const SizedBox(height: 10),
-                          showInfoXe("Loại xe", _data!.tenLoaiXe),
-                          const SizedBox(height: 10),
-                          if (_data!.ngay != null)
-                            SizedBox(
-                                child: Column(
-                              children: [
-                                showInfoXe("Ngày", _data!.ngay.toString()),
-                                const SizedBox(height: 10),
-                              ],
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: const BorderSide(
+                              color: Colors.purple,
+                              style: BorderStyle.solid,
                             )),
-                        ],
                       ),
-                    ),
-          const SizedBox(height: 10),
-          _data == null || _loading
-              ? const SizedBox.shrink()
-              : Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: _onSave,
-                    icon: Icon(
-                      FontAwesomeIcons.tablet,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    label: Text(
-                      _ab.isNhapKho
-                          ? (_data!.nhapXuatKhoId == null
-                              ? "Nhập kho"
-                              : "Huỷ xác nhận")
-                          : (_data!.nhapXuatKhoId == null
-                              ? "Xuất kho"
-                              : "Huỷ xác nhận"),
-                      style: TextStyle(
+                      suggestionBuilder: (data) {
+                        return Container(
+                          margin: const EdgeInsets.all(1),
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            data,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        );
+                      }),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            _loading
+                ? LoadingWidget(height: 200)
+                : _data == null
+                    ? const SizedBox.shrink()
+                    : Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.all(10),
                         color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 20,
+                        child: Column(
+                          children: [
+                            showInfoXe("Tên", _data!.tenChiTiet),
+                            const SizedBox(height: 10),
+                            showInfoXe("Model", _data!.tenDongXe),
+                            const SizedBox(height: 10),
+                            showInfoXe("Loại xe", _data!.tenLoaiXe),
+                            const SizedBox(height: 10),
+                            // ignore: unnecessary_null_comparison
+                            if (_data!.ngay != null)
+                              // if (_data!.ngay != null)
+                              SizedBox(
+                                  child: Column(
+                                children: [
+                                  showInfoXe("Ngày", _data!.ngay.toString()),
+                                  const SizedBox(height: 10),
+                                ],
+                              )),
+                          ],
+                        ),
+                      ),
+            const SizedBox(height: 10),
+            _data == null || _loading
+                ? const SizedBox.shrink()
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: _onSave,
+                      icon: Icon(
+                        FontAwesomeIcons.tablet,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      label: Text(
+                        _ab.isNhapKho
+                            ? (_data!.nhapXuatKhoId == null
+                                ? "Nhập kho"
+                                : "Huỷ xác nhận")
+                            : (_data!.nhapXuatKhoId == null
+                                ? "Xuất kho"
+                                : "Huỷ xác nhận"),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
-                  ),
-                )
-        ],
-      ),
-    );
+                  )
+          ],
+        ),
+      );
+    }
   }
 }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ghethanhpham_thaco/blocs/mau_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -43,9 +42,6 @@ class MyApp extends StatelessWidget {
               ),
               ChangeNotifierProvider<HistoryBloc>(
                 create: (context) => HistoryBloc(),
-              ),
-              ChangeNotifierProvider<MauBloc>(
-                create: (context) => MauBloc(),
               ),
             ],
             child: MaterialApp(
