@@ -2,13 +2,13 @@ class ChucNangModel {
   String tenNhomChucNang;
   bool isNhapKho;
   int thuTu;
-  List<ChucNangItemModel> listChucNangs;
+  List<ChucNangItemModel> lstChucNangs;
 
   ChucNangModel({
     required this.tenNhomChucNang,
     required this.isNhapKho,
     required this.thuTu,
-    required this.listChucNangs,
+    required this.lstChucNangs,
   });
 
   factory ChucNangModel.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,7 @@ class ChucNangModel {
       tenNhomChucNang: json["tenNhomChucNang"].toString(),
       isNhapKho: json["isNhapKho"],
       thuTu: json["thuTu"],
-      listChucNangs: (json['lstChucNangs'] as List)
+      lstChucNangs: (json['lstChucNangs'] as List)
           .map((e) => ChucNangItemModel.fromJson(e))
           .toList(),
     );
