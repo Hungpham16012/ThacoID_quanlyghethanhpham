@@ -1,15 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:ghethanhpham_thaco/models/chuc_nang.dart';
+import 'package:ghethanhpham_thaco/models/mamau.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:http/http.dart' as http;
 
-class ChucNangBloc extends ChangeNotifier {
+class MauBloc extends ChangeNotifier {
   static RequestHelper requestHelper = RequestHelper();
 
-  List<ChucNangModel> _data = [];
-  List<ChucNangModel> get data => _data;
+  List<MauModel> _listMau = [];
+  List<MauModel> get listMau => _listMau;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -20,24 +19,20 @@ class ChucNangBloc extends ChangeNotifier {
   String? _message;
   String? get message => _message;
 
-  int? _statusCode;
-  int? get statusCode => _statusCode;
-
   Future getData() async {
     _isLoading = true;
     try {
       final http.Response response =
-          await requestHelper.getData('Mobile/ChucNang');
-      if (response.statusCode == 200) {
-        var decodedData = jsonDecode(response.body);
-        _data = (decodedData['data'] as List).map((item) {
-          return ChucNangModel.fromJson(item);
-        }).toList();
-        _success = decodedData["success"];
-        _message = decodedData["message"];
-      }
-      _statusCode = response.statusCode;
+          await requestHelper.getData('api/BangMaMau');
+      var decodedData = jsonDecode(response.body);
+
+      _listMau = (decodedData['data'] as List).map((item) {
+        return MauModel.fromJson(item);
+      }).toList();
+
       _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
       notifyListeners();
     } catch (e) {
       _message = e.toString();

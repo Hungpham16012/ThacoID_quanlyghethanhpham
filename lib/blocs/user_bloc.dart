@@ -34,8 +34,10 @@ class UserBloc extends ChangeNotifier {
 
   String? _refreshToken;
   String? get refreshToken => _refreshToken;
+
 // Hàm lưu dữ liệu người dùng, dùng spf để lấy ra instance của UserModel sau đó
 // gán vào getter của thông tin người dùng, sau đó gán vào lại _user model
+
   Future saveUserData(UserModel userModel) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     await sp.setString('id', userModel.id!);

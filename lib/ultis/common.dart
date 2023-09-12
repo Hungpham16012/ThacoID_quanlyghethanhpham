@@ -55,7 +55,7 @@ void setLocalValue(key, value, type) async {
     sp.setString(key, value);
   }
   if (type == 'double') {
-    sp.setDouble(key, value);
+    sp.setDouble(key, value);   
   }
 }
 
