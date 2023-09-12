@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+// Tim theo ID
 findById(String id, List list) {
   return list.firstWhere((item) => item.id == id);
 }
@@ -55,7 +55,7 @@ void setLocalValue(key, value, type) async {
     sp.setString(key, value);
   }
   if (type == 'double') {
-    sp.setDouble(key, value);
+    sp.setDouble(key, value);   
   }
 }
 

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/history_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/mau_bloc.dart';
 import 'package:ghethanhpham_thaco/models/history.dart';
+import 'package:ghethanhpham_thaco/models/mamau.dart';
 import 'package:ghethanhpham_thaco/pages/history/nhap_kho.dart';
+import 'package:ghethanhpham_thaco/pages/history/mau.dart';
 import 'package:ghethanhpham_thaco/pages/history/xuat_kho.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
 import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
@@ -19,9 +22,12 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   late AppBloc _ab;
   late HistoryBloc _hb;
+  late MauBloc _mb;
   bool _loading = false;
   List<HistoryModal> _listNhapKho = [];
   List<HistoryModal> _listXuatKho = [];
+  List<MauModel> _listMau = [];
+
   int selectedValue = 1;
   bool _firstLoad = false;
 
@@ -30,6 +36,7 @@ class _HistoryPageState extends State<HistoryPage> {
     super.initState();
     _ab = Provider.of<AppBloc>(context, listen: false);
     _hb = Provider.of<HistoryBloc>(context, listen: false);
+    _mb = Provider.of<MauBloc>(context, listen: false);
     AppService().checkInternet().then((hasInternet) {
       if (!hasInternet!) {
         openSnackBar(context, 'no internet'.tr());
@@ -79,13 +86,13 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (_ab.tenNhomChucNang == null) {
-    //   return const Center(
-    //       child: Text(
-    //     "Bạn chưa cấu hình để sử dụng.",
-    //     style: TextStyle(fontSize: 20),
-    //   ));
-    // }
+    if (_ab.tenNhomChucNang == null) {
+      return const Center(
+          child: Text(
+        "Bạn chưa cấu hình để sử dụng.",
+        style: TextStyle(fontSize: 20),
+      ));
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -118,12 +125,23 @@ class _HistoryPageState extends State<HistoryPage> {
                     const Text('Xuất kho'),
                   ],
                 ),
+                // Row(
+                //   children: [
+                //     Radio(
+                //       activeColor: Theme.of(context).primaryColor,
+                //       value: 3,
+                //       groupValue: selectedValue,
+                //       onChanged: onChangeSelect,
+                //     ),
+                //     const Text('Xuất kho'),
+                //   ],
+                // ),
               ],
             ),
           ),
           selectedValue == 1
-              ? HistoryNhapKhoPage(
-                  list: _listNhapKho,
+              ? MauPage(
+                  list: _listMau,
                   callApi: callApi,
                   loading: _loading,
                   firstLoad: _firstLoad,

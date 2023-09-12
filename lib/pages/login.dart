@@ -15,10 +15,6 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:ghethanhpham_thaco/config/config.dart';
-import 'package:ghethanhpham_thaco/models/icon.dart';
-import 'package:ghethanhpham_thaco/pages/home.dart';
-import 'package:ghethanhpham_thaco/widgets/loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {

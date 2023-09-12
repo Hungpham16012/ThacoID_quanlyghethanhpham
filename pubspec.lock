@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  easy_autocomplete:
+    dependency: "direct main"
+    description:
+      name: easy_autocomplete
+      sha256: e7ded95deb010daec41caf25f553b450fbdaa6769e7a6fdb7b8dce6764318406
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
   easy_localization:
     dependency: "direct main"
     description:
@@ -102,6 +110,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_datawedge:
+    dependency: "direct main"
+    description:
+      name: flutter_datawedge
+      sha256: "5137761a4878debc4e83594de3c0b86d64a71e34ecfccd41e7a02cbd1b8845a1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_downloader:
     dependency: "direct main"
     description:
@@ -150,6 +166,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.5.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: c3fd9336eb55a38cc1bbd79ab17573113a8deccd0ecbbf926cca3c62803b5c2d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  freezed_result:
+    dependency: transitive
+    description:
+      name: freezed_result
+      sha256: "09da2a99c309deead2b7370a4b5a27572d414b17380ef30f58e033a2d1f0e9b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3+1"
   http:
     dependency: "direct main"
     description:
@@ -182,6 +214,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.1"
   lints:
     dependency: transitive
     description:
@@ -427,6 +467,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  stream_transform:
+    dependency: transitive
+    description:
+      name: stream_transform
+      sha256: "14a00e794c7c11aa145a170587321aedce29769c08d7f58b1d141da75e3b1c6f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  strict_json:
+    dependency: transitive
+    description:
+      name: strict_json
+      sha256: "7933f3bd539d70f4b0a2531a253c51a1c0440e14d3e5b6e9a19f0e6e02c384e0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   string_scanner:
     dependency: transitive
     description:

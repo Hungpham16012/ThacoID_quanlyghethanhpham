@@ -47,9 +47,12 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   http: ^1.1.0
   intl: ^0.18.1
-  install_plugin: ^2.1.0
   path_provider: ^2.0.15
   loading_animation_widget: ^1.2.0+4
+  easy_autocomplete: ^1.6.0
+  install_plugin: ^2.1.0
+  flutter_datawedge: ^2.0.0
+  path_provider: ^2.0.15
   
 
 dev_dependencies:
