@@ -51,7 +51,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   easy_autocomplete: ^1.6.0
   install_plugin: ^2.1.0
-  flutter_datawedge: ^2.0.0s
+  flutter_datawedge: ^2.0.0
   
 
 dev_dependencies:
