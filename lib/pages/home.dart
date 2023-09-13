@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
+import 'package:provider/provider.dart';
 
+import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/pages/history/history.dart';
 import 'package:ghethanhpham_thaco/pages/home/main.dart';
 import 'package:ghethanhpham_thaco/pages/setting/setting.dart';
-// import 'package:ghethanhpham_thaco/pages/settings/settings.dart';
 import 'package:ghethanhpham_thaco/ultis/sign_out.dart';
-import 'package:provider/provider.dart';
+import 'package:ghethanhpham_thaco/widgets/menu_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,9 +40,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const MenuWidget(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Image(image: AssetImage(Config.logoId), width: 140),
+        title: const Image(
+          image: AssetImage(Config.logoId),
+          width: 140,
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         actions: [
           Container(
             margin: const EdgeInsets.only(top: 21),

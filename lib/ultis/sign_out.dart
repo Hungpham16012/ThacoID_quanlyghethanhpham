@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 
 import '../blocs/user_bloc.dart';
 import '../pages/login.dart';
 import 'next_screen.dart';
-import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 
 void signOut(context) async {
   final UserBloc userBloc = Provider.of<UserBloc>(context, listen: false);
