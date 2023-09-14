@@ -64,10 +64,10 @@ class _MainPageState extends State<MainPage> {
   Future<void> _scanQRCode() async {
     try {
       final result = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", // Màu của đường scan
-        "Hủy", // Văn bản nút hủy
-        true, // Hiển thị biểu tượng flash
-        ScanMode.QR, // Chế độ quét (QR hoặc BARCODE)
+        '#ff6666', // Color of the scan line
+        'Hủy', // text button
+        true, // show flash icon
+        ScanMode.QR, // scan feature (QR or BARCODE)
       );
 
       if (!mounted) return;
@@ -77,10 +77,10 @@ class _MainPageState extends State<MainPage> {
         scannedProducts.add(_sb.data!);
       });
 
-      // Gọi hàm tùy chỉnh xử lý dữ liệu quét
+      // call resolve scan data function
       _onScan(_qrData);
     } catch (e) {
-      // Xử lý lỗi nếu có
+      // print error
       print("Lỗi khi quét mã QR: $e");
     }
   }
