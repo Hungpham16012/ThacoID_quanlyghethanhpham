@@ -69,18 +69,54 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   callGetSettingData() {
+    var tryTime = 0;
     // call API
     _featureBloc.getData().then((_) {
       _appBloc.getData().then((_) {
         if (_featureBloc.statusCode == 200) {
-          setState(() {});
+          setState(() {
+            _loading = false;
+            _listFeatures = _featureBloc.data;
+            _options = _featureBloc.data.map((cn) {
+              if (_appBloc.tenNhomChucNang != null &&
+                  _appBloc.tenNhomChucNang == cn.tenNhomChucNang) {}
+              return SettingOptions(
+                parentName: cn.tenNhomChucNang,
+                childId: _appBloc.chuyenId,
+              );
+            }).toList();
+          });
         }
-        setState(() {});
+        setState(() {
+          _loading = false;
+        });
         checkUpdate(_appBloc.appVersion);
         statusCode = _featureBloc.statusCode;
         Future.delayed(const Duration(seconds: 2), () async {
           if (_featureBloc.statusCode == 401) {
             signOutAction();
+            // if (allowRefresh) {
+            //   if (tryTime < 2) {
+            //     callRefreshToken();
+            //     Future.delayed(const Duration(seconds: 3), () {
+            //       tryTime++;
+            //       callGetSettingData();
+            //     });
+            //   } else {
+            //     AlertDialog(
+            //       title: const Text("Thông báo"),
+            //       content: const Text("Không thể load được phiên làm việc mới"),
+            //       actions: [
+            //         TextButton(
+            //           onPressed: () async {
+            //             signOutAction();
+            //           },
+            //           child: const Text("Đăng xuất"),
+            //         ),
+            //       ],
+            //     );
+            //   }
+            // }
           }
         });
       });
@@ -334,7 +370,11 @@ class _SettingPageState extends State<SettingPage> {
       padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         children: [
-          _renderListFeatures(),
+          _loading
+              ? LoadingWidget(height: 350)
+              :
+              // Setting nha may
+              _renderListFeatures(),
           const SizedBox(
             height: 15,
           ),
@@ -356,7 +396,7 @@ class _SettingPageState extends State<SettingPage> {
               callUpdateAction: callUpdateAction,
               values: values,
             ),
-          )
+          ),
         ],
       ),
     );

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 // import 'package:flutter_datawedge/flutter_datawedge.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
@@ -17,6 +16,7 @@ import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -61,29 +61,29 @@ class _MainPageState extends State<MainPage> {
     // );
   }
 
-  Future<void> _scanQRCode() async {
-    try {
-      final result = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', // Color of the scan line
-        'Hủy', // text button
-        true, // show flash icon
-        ScanMode.QR, // scan feature (QR or BARCODE)
-      );
+  // Future<void> _scanQRCode() async {
+  //   try {
+  //     final result = await FlutterBarcodeScanner.scanBarcode(
+  //       "#ff6666", // Màu của đường scan
+  //       "Hủy", // Văn bản nút hủy
+  //       true, // Hiển thị biểu tượng flash
+  //       ScanMode.QR, // Chế độ quét (QR hoặc BARCODE)
+  //     );
 
-      if (!mounted) return;
+  //     if (!mounted) return;
 
-      setState(() {
-        _qrData = result;
-        scannedProducts.add(_sb.data!);
-      });
+  //     setState(() {
+  //       _qrData = result;
+  //       scannedProducts.add(_sb.data!);
+  //     });
 
-      // call resolve scan data function
-      _onScan(_qrData);
-    } catch (e) {
-      // print error
-      print("Lỗi khi quét mã QR: $e");
-    }
-  }
+  //     // Gọi hàm tùy chỉnh xử lý dữ liệu quét
+  //     _onScan(_qrData);
+  //   } catch (e) {
+  //     // Xử lý lỗi nếu có
+  //     print("Lỗi khi quét mã QR: $e");
+  //   }
+  // }
 
   // Hàm tùy chỉnh để xử lý dữ liệu quét
   _onScan(value) {
@@ -243,7 +243,7 @@ class _MainPageState extends State<MainPage> {
                     }),
                 const SizedBox(height: 10),
                 ElevatedButton.icon(
-                    onPressed: _scanQRCode,
+                    onPressed: () {},
                     icon: const Icon(Icons.camera),
                     label: const Text('Quét mã'))
               ],
