@@ -3,7 +3,6 @@ import 'package:ghethanhpham_thaco/models/chi_tiet_ke.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
-import 'package:ghethanhpham_thaco/models/chi_tiet_ke.dart';
 
 class ScanBloc extends ChangeNotifier {
   static RequestHelper requestHelper = RequestHelper();

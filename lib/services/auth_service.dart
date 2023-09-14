@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:ghethanhpham_thaco/models/user.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends ChangeNotifier {
   static RequestHelper requestHelper = RequestHelper();

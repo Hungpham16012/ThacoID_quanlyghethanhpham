@@ -16,14 +16,14 @@ showDiaLogItem({
         content: Text(content),
         actions: <Widget>[
           TextButton(
-            child: Text('Không'),
+            child: const Text('Không'),
             onPressed: () {
               Navigator.of(context).pop(true);
               cancelActions();
             },
           ),
           TextButton(
-            child: Text('Có'),
+            child: const Text('Có'),
             onPressed: () {
               Navigator.of(context).pop(true);
               actions();

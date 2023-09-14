@@ -34,6 +34,7 @@ class _MainPageState extends State<MainPage> {
   Timer? _debounce;
   List<String>? _results = [];
   ScanModel? _data;
+  List<ScanModel> listScannedProduct = [];
 
   bool _loading = false;
 
@@ -47,10 +48,10 @@ class _MainPageState extends State<MainPage> {
   Future<void> _scanQRCode() async {
     try {
       final result = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", // Màu của đường scan
-        "Hủy", // Văn bản nút hủy
-        true, // Hiển thị biểu tượng flash
-        ScanMode.QR, // Chế độ quét (QR hoặc BARCODE)
+        '#ff6666', // Color of the scan line
+        'Hủy', // text button
+        true, // show flash icon
+        ScanMode.QR, // scan feature (QR or BARCODE)
       );
 
       if (!mounted) return;
@@ -59,10 +60,10 @@ class _MainPageState extends State<MainPage> {
         _qrData = result;
       });
 
-      // Gọi hàm tùy chỉnh xử lý dữ liệu quét
+      // call resolve scan data function
       _onScan(_qrData);
     } catch (e) {
-      // Xử lý lỗi nếu có
+      // print error
       print("Lỗi khi quét mã QR: $e");
     }
   }
@@ -103,16 +104,16 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  // Hàm tùy chỉnh để xử lý dữ liệu quét
-  _onScan(value) {
+  _onScan(qrCode) {
     setState(() {
       _loading = true;
     });
-    _scanBloc.getData(value, _appBloc.isNhapKho).then(
+
+    _scanBloc.getData(qrCode, _appBloc.isNhapKho).then(
       (_) {
         setState(
           () {
-            _qrData = value;
+            _qrData = _qrData;
             if (_scanBloc.data == null) {
               _qrData = '';
               _qrDataController.text = '';

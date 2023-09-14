@@ -17,8 +17,8 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  late AppBloc _ab;
-  late HistoryBloc _hb;
+  late AppBloc _appBloc;
+  late HistoryBloc _historyBloc;
   bool _loading = false;
   List<HistoryModal> _listNhapKho = [];
   List<HistoryModal> _listXuatKho = [];
@@ -29,8 +29,8 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    _ab = Provider.of<AppBloc>(context, listen: false);
-    _hb = Provider.of<HistoryBloc>(context, listen: false);
+    _appBloc = Provider.of<AppBloc>(context, listen: false);
+    _historyBloc = Provider.of<HistoryBloc>(context, listen: false);
     AppService().checkInternet().then((hasInternet) {
       if (!hasInternet!) {
         openSnackBar(context, 'no internet'.tr());
@@ -45,13 +45,13 @@ class _HistoryPageState extends State<HistoryPage> {
     setState(() {
       _loading = true;
     });
-    _hb.getData(ngay, isNhapKho).then((_) {
+    _historyBloc.getData(ngay, isNhapKho).then((_) {
       setState(() {
         _loading = false;
         if (isNhapKho) {
-          _listNhapKho = _hb.listNhapKho;
+          _listNhapKho = _historyBloc.listNhapKho;
         } else {
-          _listXuatKho = _hb.listXuatKho;
+          _listXuatKho = _historyBloc.listXuatKho;
         }
         if (_firstLoad == false) {
           _firstLoad = true;
@@ -80,13 +80,13 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (_ab.tenNhomChucNang == null) {
-    //   return const Center(
-    //       child: Text(
-    //     "Bạn chưa cấu hình để sử dụng.",
-    //     style: TextStyle(fontSize: 20),
-    //   ));
-    // }
+    if (_appBloc.tenNhomChucNang == null) {
+      return const Center(
+          child: Text(
+        "Bạn chưa cấu hình để sử dụng.",
+        style: TextStyle(fontSize: 20),
+      ));
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
