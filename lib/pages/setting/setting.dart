@@ -95,28 +95,6 @@ class _SettingPageState extends State<SettingPage> {
         Future.delayed(const Duration(seconds: 2), () async {
           if (_featureBloc.statusCode == 401) {
             signOutAction();
-            // if (allowRefresh) {
-            //   if (tryTime < 2) {
-            //     callRefreshToken();
-            //     Future.delayed(const Duration(seconds: 3), () {
-            //       tryTime++;
-            //       callGetSettingData();
-            //     });
-            //   } else {
-            //     AlertDialog(
-            //       title: const Text("Thông báo"),
-            //       content: const Text("Không thể load được phiên làm việc mới"),
-            //       actions: [
-            //         TextButton(
-            //           onPressed: () async {
-            //             signOutAction();
-            //           },
-            //           child: const Text("Đăng xuất"),
-            //         ),
-            //       ],
-            //     );
-            //   }
-            // }
           }
         });
       });
@@ -366,38 +344,36 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Column(
-        children: [
-          _loading
-              ? LoadingWidget(height: 350)
-              :
-              // Setting nha may
-              _renderListFeatures(),
-          const SizedBox(
-            height: 15,
-          ),
-          // Setting for the application
-          const SettingGeneral(),
-          const SizedBox(height: 15),
-          Container(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 10,
-              bottom: 10,
+    return Material(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          children: [
+            _loading ? LoadingWidget(height: 350) : _renderListFeatures(),
+            const SizedBox(
+              height: 15,
             ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onPrimary,
+            // Setting for the application
+            const SettingGeneral(),
+            const SizedBox(height: 15),
+            Container(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 10,
+                bottom: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+              child: UserUI(
+                onlineVersion: _version,
+                callUpdateAction: callUpdateAction,
+                values: values,
+              ),
             ),
-            child: UserUI(
-              onlineVersion: _version,
-              callUpdateAction: callUpdateAction,
-              values: values,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

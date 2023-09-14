@@ -64,7 +64,7 @@ class _MainPageState extends State<MainPage> {
       _onScan(_qrData);
     } catch (e) {
       // print error
-      print("Lỗi khi quét mã QR: $e");
+      print('Lỗi khi quét mã QR: $e');
     }
   }
 
@@ -90,9 +90,9 @@ class _MainPageState extends State<MainPage> {
           await requestHelper.getData('Mobile/BarCode?keyword=$query');
       var decodedData = jsonDecode(response.body);
       setState(() {
-        _results = decodedData["data"] == null
+        _results = decodedData['data'] == null
             ? []
-            : List<String>.from(decodedData["data"]);
+            : List<String>.from(decodedData['data']);
       });
       setState(() {
         _loading = false;
@@ -120,7 +120,7 @@ class _MainPageState extends State<MainPage> {
               if (_scanBloc.success == false && _scanBloc.message!.isNotEmpty) {
                 openSnackBar(context, _scanBloc.message!);
               } else {
-                openSnackBar(context, "Không có dữ liệu");
+                openSnackBar(context, 'Không có dữ liệu');
               }
             }
             _loading = false;
@@ -147,7 +147,7 @@ class _MainPageState extends State<MainPage> {
           if (_scanBloc.success) {
             openSnackBar(context, 'Lưu thành công');
           } else {
-            openSnackBar(context, "Lưu thất bại");
+            openSnackBar(context, 'Lưu thất bại');
           }
           setState(() {
             _data = null;
@@ -165,7 +165,7 @@ class _MainPageState extends State<MainPage> {
     if (_appBloc.tenNhomChucNang == null) {
       return const Center(
           child: Text(
-        "Bạn chưa cấu hình để sử dụng.",
+        'Bạn chưa cấu hình để sử dụng.',
         style: TextStyle(fontSize: 20),
       ));
     } else {
@@ -243,11 +243,11 @@ class _MainPageState extends State<MainPage> {
                         color: Theme.of(context).colorScheme.onPrimary,
                         child: Column(
                           children: [
-                            showInfoXe("Tên", _data!.tenChiTiet),
+                            showInfoXe('Tên', _data!.tenChiTiet),
                             const SizedBox(height: 10),
-                            showInfoXe("Model", _data!.tenDongXe),
+                            showInfoXe('Model', _data!.tenDongXe),
                             const SizedBox(height: 10),
-                            showInfoXe("Loại xe", _data!.tenLoaiXe),
+                            showInfoXe('Loại xe', _data!.tenLoaiXe),
                             const SizedBox(height: 10),
                             // ignore: unnecessary_null_comparison
                             if (_data!.ngay != null)
@@ -255,7 +255,7 @@ class _MainPageState extends State<MainPage> {
                               SizedBox(
                                 child: Column(
                                   children: [
-                                    showInfoXe("Ngày", _data!.ngay.toString()),
+                                    showInfoXe('Ngày', _data!.ngay.toString()),
                                     const SizedBox(height: 10),
                                   ],
                                 ),
@@ -283,11 +283,11 @@ class _MainPageState extends State<MainPage> {
                       label: Text(
                         _appBloc.isNhapKho
                             ? (_data!.nhapXuatKhoId == null
-                                ? "Nhập kho"
-                                : "Huỷ xác nhận")
+                                ? 'Nhập kho'
+                                : 'Huỷ xác nhận')
                             : (_data!.nhapXuatKhoId == null
-                                ? "Xuất kho"
-                                : "Huỷ xác nhận"),
+                                ? 'Xuất kho'
+                                : 'Huỷ xác nhận'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 20,
