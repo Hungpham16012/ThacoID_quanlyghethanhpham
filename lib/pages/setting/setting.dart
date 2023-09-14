@@ -351,11 +351,11 @@ class _SettingPageState extends State<SettingPage> {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
-            // child: UserUI(
-            //   onlineVersion: _version,
-            //   callUpdateAction: callUpdateAction,
-            //   values: values,
-            // ),
+            child: UserUI(
+              onlineVersion: _version,
+              callUpdateAction: callUpdateAction,
+              values: values,
+            ),
           )
         ],
       ),
