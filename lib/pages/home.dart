@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/pages/history/history.dart';
 import 'package:ghethanhpham_thaco/pages/home/main.dart';
@@ -18,7 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-
   late UserBloc _userBloc;
   String _fullName = "No name";
 
@@ -28,7 +26,6 @@ class _HomePageState extends State<HomePage> {
     const SettingPage(),
   ];
 
-  // GlobalKey for managing Navigator
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -75,11 +72,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: MenuWidget(
-        // Pass the onMenuItemTap callback
         onMenuItemTap: (index) {
           _navigatorKey.currentState!.pushReplacement(
             MaterialPageRoute(builder: (context) => pages[index]),
           );
+
+          setState(() {
+            _currentIndex = index;
+          });
         },
       ),
       body: Navigator(
@@ -90,7 +90,6 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-      // BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -108,6 +107,10 @@ class _HomePageState extends State<HomePage> {
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
+          _navigatorKey.currentState!.pushReplacement(
+            MaterialPageRoute(builder: (context) => pages[index]),
+          );
+
           setState(() {
             _currentIndex = index;
           });

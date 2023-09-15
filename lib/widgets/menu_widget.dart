@@ -11,7 +11,6 @@ class MenuWidget extends StatelessWidget {
     IconData? icon,
     double? fontSize,
     int? index,
-    BuildContext? context,
   }) {
     const color = Color.fromARGB(255, 0, 0, 0);
     const hoverColor = Color.fromARGB(221, 75, 75, 221);
@@ -27,8 +26,7 @@ class MenuWidget extends StatelessWidget {
       ),
       hoverColor: hoverColor,
       onTap: () {
-        Navigator.pop(context!); // Close the drawer
-        onMenuItemTap(index!); // Execute the callback function
+        onMenuItemTap(index!); // Gọi callback function để chuyển chỉ mục
       },
     );
   }
@@ -62,20 +60,17 @@ class MenuWidget extends StatelessWidget {
               MenuItem(
                 text: 'Nhập áo ghế',
                 fontSize: 17,
-                index: 2,
-                context: context,
+                index: 2, // Đặt chỉ mục tương ứng
               ),
               MenuItem(
                 text: 'Nhập nệm ghế',
                 fontSize: 17,
-                index: 2,
-                context: context,
+                index: 2, // Đặt chỉ mục tương ứng
               ),
               MenuItem(
                 text: 'Nhập thành phẩm ghế',
                 fontSize: 17,
-                index: 2,
-                context: context,
+                index: 2, // Đặt chỉ mục tương ứng
               ),
             ],
           ),
@@ -92,20 +87,17 @@ class MenuWidget extends StatelessWidget {
               MenuItem(
                 text: 'Xuất kho theo kệ',
                 fontSize: 17,
-                index: 2,
-                context: context,
+                index: 2, // Đặt chỉ mục tương ứng
               ),
               MenuItem(
                 text: 'Xuất kho theo chi tiết (BMW)',
                 fontSize: 17,
-                index: 2,
-                context: context,
+                index: 2, // Đặt chỉ mục tương ứng
               ),
               MenuItem(
                 text: 'Xuất bán lẻ',
                 fontSize: 17,
-                index: 2,
-                context: context,
+                index: 2, // Đặt chỉ mục tương ứng
               ),
             ],
           ),
