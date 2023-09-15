@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/pages/setting/setting.dart';
 
 class MenuWidget extends StatelessWidget {
   const MenuWidget({super.key});
@@ -40,7 +41,7 @@ class MenuWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const SettingPage(),
                       ),
                     );
                   },
@@ -52,7 +53,7 @@ class MenuWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const SettingPage(),
                       ),
                     );
                   },
@@ -64,7 +65,7 @@ class MenuWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const SettingPage(),
                       ),
                     );
                   },
@@ -88,7 +89,7 @@ class MenuWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const SettingPage(),
                       ),
                     );
                   },
@@ -100,7 +101,7 @@ class MenuWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const SettingPage(),
                       ),
                     );
                   },
@@ -112,7 +113,7 @@ class MenuWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const SettingPage(),
                       ),
                     );
                   },
