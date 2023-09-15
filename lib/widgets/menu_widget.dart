@@ -4,13 +4,15 @@ import 'package:ghethanhpham_thaco/config/config.dart';
 class MenuWidget extends StatelessWidget {
   final Function(int) onMenuItemTap;
 
-  const MenuWidget({Key? key, required this.onMenuItemTap});
+  const MenuWidget({super.key, required this.onMenuItemTap});
 
+  // ignore: non_constant_identifier_names
   Widget MenuItem({
     required String text,
     IconData? icon,
     double? fontSize,
     int? index,
+    BuildContext? context,
   }) {
     const color = Color.fromARGB(255, 0, 0, 0);
     const hoverColor = Color.fromARGB(221, 75, 75, 221);
@@ -26,7 +28,8 @@ class MenuWidget extends StatelessWidget {
       ),
       hoverColor: hoverColor,
       onTap: () {
-        onMenuItemTap(index!); // Gọi callback function để chuyển chỉ mục
+        Navigator.pop(context!);
+        onMenuItemTap(index!);
       },
     );
   }
@@ -60,17 +63,20 @@ class MenuWidget extends StatelessWidget {
               MenuItem(
                 text: 'Nhập áo ghế',
                 fontSize: 17,
-                index: 2, // Đặt chỉ mục tương ứng
+                index: 2,
+                context: context,
               ),
               MenuItem(
                 text: 'Nhập nệm ghế',
                 fontSize: 17,
-                index: 2, // Đặt chỉ mục tương ứng
+                index: 2,
+                context: context,
               ),
               MenuItem(
                 text: 'Nhập thành phẩm ghế',
                 fontSize: 17,
-                index: 2, // Đặt chỉ mục tương ứng
+                index: 2,
+                context: context,
               ),
             ],
           ),
@@ -87,17 +93,20 @@ class MenuWidget extends StatelessWidget {
               MenuItem(
                 text: 'Xuất kho theo kệ',
                 fontSize: 17,
-                index: 2, // Đặt chỉ mục tương ứng
+                index: 2,
+                context: context,
               ),
               MenuItem(
                 text: 'Xuất kho theo chi tiết (BMW)',
                 fontSize: 17,
-                index: 2, // Đặt chỉ mục tương ứng
+                index: 2,
+                context: context,
               ),
               MenuItem(
                 text: 'Xuất bán lẻ',
                 fontSize: 17,
-                index: 2, // Đặt chỉ mục tương ứng
+                index: 2,
+                context: context,
               ),
             ],
           ),
