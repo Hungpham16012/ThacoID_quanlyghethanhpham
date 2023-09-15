@@ -19,7 +19,9 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final String? featureName; // Define the featureName parameter here
+
+  const MainPage({Key? key, this.featureName}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -45,28 +47,28 @@ class _MainPageState extends State<MainPage> {
     _scanBloc = Provider.of<ScanBloc>(context, listen: false);
   }
 
-  Future<void> _scanQRCode() async {
-    try {
-      final result = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', // Color of the scan line
-        'Hủy', // text button
-        true, // show flash icon
-        ScanMode.QR, // scan feature (QR or BARCODE)
-      );
+  // Future<void> _scanQRCode() async {
+  //   try {
+  //     final result = await FlutterBarcodeScanner.scanBarcode(
+  //       '#ff6666', // Color of the scan line
+  //       'Hủy', // text button
+  //       true, // show flash icon
+  //       ScanMode.QR, // scan feature (QR or BARCODE)
+  //     );
 
-      if (!mounted) return;
+  //     if (!mounted) return;
 
-      setState(() {
-        _qrData = result;
-      });
+  //     setState(() {
+  //       _qrData = result;
+  //     });
 
-      // call resolve scan data function
-      _onScan(_qrData);
-    } catch (e) {
-      // print error
-      print('Lỗi khi quét mã QR: $e');
-    }
-  }
+  //     // call resolve scan data function
+  //     _onScan(_qrData);
+  //   } catch (e) {
+  //     // print error
+  //     print('Lỗi khi quét mã QR: $e');
+  //   }
+  // }
 
   void _onSearchChanged(String query) {
     if (query.isNotEmpty) {
@@ -225,7 +227,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton.icon(
-                    onPressed: _scanQRCode,
+                    onPressed: () {},
                     icon: const Icon(Icons.camera),
                     label: const Text('Quét mã'),
                   ),

@@ -6,6 +6,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
+import 'package:ghethanhpham_thaco/pages/home.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
 import 'package:ghethanhpham_thaco/pages/setting/setting_nha_may.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
@@ -34,6 +35,7 @@ class SettingOptions {
 }
 
 class SettingPage extends StatefulWidget {
+  
   const SettingPage({super.key});
 
   @override

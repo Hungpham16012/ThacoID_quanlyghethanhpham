@@ -10,7 +10,7 @@ import 'package:ghethanhpham_thaco/ultis/sign_out.dart';
 import 'package:ghethanhpham_thaco/widgets/menu_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key, featureName}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,11 +22,14 @@ class _HomePageState extends State<HomePage> {
   late UserBloc _userBloc;
   String _fullName = "No name";
 
-  final tabs = [
+  final pages = [
     const MainPage(),
     const HistoryPage(),
     const SettingPage(),
   ];
+
+  // GlobalKey for managing Navigator
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -40,7 +43,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MenuWidget(),
       appBar: AppBar(
         title: const Image(
           image: AssetImage(Config.logoId),
@@ -72,7 +74,22 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(width: 10),
         ],
       ),
-      body: tabs[_currentIndex],
+      drawer: MenuWidget(
+        // Pass the onMenuItemTap callback
+        onMenuItemTap: (index) {
+          _navigatorKey.currentState!.pushReplacement(
+            MaterialPageRoute(builder: (context) => pages[index]),
+          );
+        },
+      ),
+      body: Navigator(
+        key: _navigatorKey,
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => pages[_currentIndex],
+          );
+        },
+      ),
       // BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -87,7 +104,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Cấu hình',
-          )
+          ),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {

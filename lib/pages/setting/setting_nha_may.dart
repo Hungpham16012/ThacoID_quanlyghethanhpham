@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
-import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/pages/home/main.dart';
 
-// ignore: must_be_immutable
 class SettingNhaMay extends StatefulWidget {
-  List<ChucNangItemModel> listFeatures;
-  String? optionItem;
-  Function onChangeSelect;
+  final List<ChucNangItemModel> listFeatures;
+  final String? optionItem;
+  final Function onChangeSelect;
 
-  SettingNhaMay({
+  const SettingNhaMay({
     super.key,
     required this.listFeatures,
     required this.optionItem,
@@ -25,19 +24,30 @@ class _SettingNhaMayState extends State<SettingNhaMay> {
   Widget build(BuildContext context) {
     return Column(
       children: widget.listFeatures.map((feature) {
-        return ListTile(
-          leading: const Icon(
-            Feather.archive,
-          ),
-          title: Text(feature.tenChucNang),
-          trailing: Radio(
-            value: feature.chuyenId,
-            onChanged: (value) => widget.onChangeSelect(
-              value,
-              feature.tenChucNang,
+        return InkWell(
+          onTap: () {
+            // Navigate to MainPage with the feature name
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    MainPage(featureName: feature.tenChucNang),
+              ),
+            );
+          },
+          child: ListTile(
+            leading: const Icon(
+              Feather.archive,
             ),
-            groupValue: widget.optionItem,
-            activeColor: Theme.of(context).primaryColor,
+            title: Text(feature.tenChucNang),
+            trailing: Radio(
+              value: feature.chuyenId,
+              onChanged: (value) => widget.onChangeSelect(
+                value,
+                feature.tenChucNang,
+              ),
+              groupValue: widget.optionItem,
+              activeColor: Theme.of(context).primaryColor,
+            ),
           ),
         );
       }).toList(),
