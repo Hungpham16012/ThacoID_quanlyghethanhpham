@@ -5,6 +5,7 @@ import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
 import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -36,7 +38,7 @@ class _MainPageState extends State<MainPage> {
   Timer? _debounce;
   List<String>? _results = [];
   ScanModel? _data;
-  List<ScanModel> listScannedProduct = [];
+  final MobileScannerController scannerController = MobileScannerController();
 
   bool _loading = false;
 
@@ -46,29 +48,6 @@ class _MainPageState extends State<MainPage> {
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _scanBloc = Provider.of<ScanBloc>(context, listen: false);
   }
-
-  // Future<void> _scanQRCode() async {
-  //   try {
-  //     final result = await FlutterBarcodeScanner.scanBarcode(
-  //       '#ff6666', // Color of the scan line
-  //       'Hủy', // text button
-  //       true, // show flash icon
-  //       ScanMode.QR, // scan feature (QR or BARCODE)
-  //     );
-
-  //     if (!mounted) return;
-
-  //     setState(() {
-  //       _qrData = result;
-  //     });
-
-  //     // call resolve scan data function
-  //     _onScan(_qrData);
-  //   } catch (e) {
-  //     // print error
-  //     print('Lỗi khi quét mã QR: $e');
-  //   }
-  // }
 
   void _onSearchChanged(String query) {
     if (query.isNotEmpty) {
@@ -104,6 +83,43 @@ class _MainPageState extends State<MainPage> {
         _loading = false;
       });
     }
+  }
+
+  // ignore: unused_element
+  void _showQRCodeScannerDialog(BuildContext context) {
+    final MobileScannerController scannerController = MobileScannerController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Scan QR Code'),
+          content: MobileScanner(
+            controller: scannerController,
+            onDetect: (Barcode barcode, MobileScannerArguments? args) {
+              // Handle the detected QR code here
+              final qrData = barcode.rawValue;
+              _onScan(qrData);
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    scannerController.dispose();
+    super.dispose();
   }
 
   _onScan(qrCode) {
@@ -227,10 +243,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showQRCodeScannerDialog(context);
+                    },
                     icon: const Icon(Icons.camera),
                     label: const Text('Quét mã'),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -303,6 +321,8 @@ class _MainPageState extends State<MainPage> {
     }
   }
 }
+
+// ignore: unused_element
 
 Widget showInfoXe(String title, String value) {
   return Row(
