@@ -4,6 +4,7 @@ import 'package:ghethanhpham_thaco/blocs/history_bloc.dart';
 import 'package:ghethanhpham_thaco/models/history.dart';
 import 'package:ghethanhpham_thaco/pages/history/nhap_kho.dart';
 import 'package:ghethanhpham_thaco/pages/history/xuat_kho.dart';
+import 'package:ghethanhpham_thaco/pages/home/main.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
 import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
 import 'package:provider/provider.dart';
