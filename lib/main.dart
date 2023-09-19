@@ -39,6 +39,8 @@ void main() async {
     // default language
     startLocale: const Locale('vi'),
     useOnlyLangCode: true,
-    child: const MyApp(),
+    child: const MyApp(
+      
+    ),
   ));
 }

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
-import 'package:ghethanhpham_thaco/pages/home.dart';
 
-// ignore: must_be_immutable
 class SettingNhaMay extends StatefulWidget {
-  List<ChucNangItemModel> listFeatures;
-  String? optionItem;
-  Function onChangeSelect;
+  final List<ChucNangItemModel> listFeatures;
+  final String? optionItem;
+  final Function onChangeSelect;
 
-  SettingNhaMay({
+  const SettingNhaMay({
     super.key,
     required this.listFeatures,
     required this.optionItem,

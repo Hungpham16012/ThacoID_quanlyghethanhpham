@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/pages/history/history.dart';
 import 'package:ghethanhpham_thaco/pages/home/main.dart';
@@ -10,7 +9,7 @@ import 'package:ghethanhpham_thaco/ultis/sign_out.dart';
 import 'package:ghethanhpham_thaco/widgets/menu_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key, featureName}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,15 +17,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-
   late UserBloc _userBloc;
   String _fullName = "No name";
 
-  final tabs = [
+  final pages = [
     const MainPage(),
     const HistoryPage(),
     const SettingPage(),
   ];
+
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MenuWidget(),
       appBar: AppBar(
         title: const Image(
           image: AssetImage(Config.logoId),
@@ -72,8 +71,25 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(width: 10),
         ],
       ),
-      body: tabs[_currentIndex],
-      // BottomNavigationBar
+      drawer: MenuWidget(
+        onMenuItemTap: (index) {
+          _navigatorKey.currentState!.pushReplacement(
+            MaterialPageRoute(builder: (context) => pages[index]),
+          );
+
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+      body: Navigator(
+        key: _navigatorKey,
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => pages[_currentIndex],
+          );
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -87,10 +103,14 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Cấu hình',
-          )
+          ),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
+          _navigatorKey.currentState!.pushReplacement(
+            MaterialPageRoute(builder: (context) => pages[index]),
+          );
+
           setState(() {
             _currentIndex = index;
           });

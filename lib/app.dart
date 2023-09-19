@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghethanhpham_thaco/blocs/index_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         builder: (_, mode, child) {
           return MultiProvider(
             providers: [
+              ChangeNotifierProvider<CurrentIndexProvider>(
+                create: (context) => CurrentIndexProvider(),
+              ),
               ChangeNotifierProvider<AppBloc>(
                 create: (context) => AppBloc(),
               ),
