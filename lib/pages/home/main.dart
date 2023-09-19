@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
+import 'package:ghethanhpham_thaco/models/export_model.dart';
 import 'package:ghethanhpham_thaco/models/scan.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
@@ -38,6 +38,7 @@ class _MainPageState extends State<MainPage> {
   Timer? _debounce;
   List<String>? _results = [];
   ScanModel? _data;
+  ExportModel? _exportData;
   final MobileScannerController scannerController = MobileScannerController();
 
   bool _loading = false;
@@ -58,6 +59,7 @@ class _MainPageState extends State<MainPage> {
     } else {
       setState(() {
         _data = null;
+        _exportData = null;
       });
     }
   }
@@ -127,26 +129,52 @@ class _MainPageState extends State<MainPage> {
       _loading = true;
     });
 
-    _scanBloc.getData(qrCode, _appBloc.isNhapKho).then(
-      (_) {
-        setState(
-          () {
-            _qrData = _qrData;
-            if (_scanBloc.data == null) {
-              _qrData = '';
-              _qrDataController.text = '';
-              if (_scanBloc.success == false && _scanBloc.message!.isNotEmpty) {
-                openSnackBar(context, _scanBloc.message!);
-              } else {
-                openSnackBar(context, 'Không có dữ liệu');
+    if (_appBloc.isNhapKho) {
+      _scanBloc.getData(qrCode, _appBloc.isNhapKho).then(
+        (_) {
+          setState(
+            () {
+              _qrData = qrCode;
+              if (_scanBloc.data == null) {
+                // if (_scanBloc.exportData == null) {
+                _qrData = '';
+                _qrDataController.text = '';
+                if (_scanBloc.success == false &&
+                    _scanBloc.message!.isNotEmpty) {
+                  openSnackBar(context, _scanBloc.message!);
+                } else {
+                  openSnackBar(context, 'Không có dữ liệu');
+                }
               }
-            }
-            _loading = false;
-            _data = _scanBloc.data;
-          },
-        );
-      },
-    );
+              _loading = false;
+              _data = _scanBloc.data;
+            },
+          );
+        },
+      );
+    } else {
+      _scanBloc.getExportData(qrCode).then(
+        (_) {
+          setState(
+            () {
+              _qrData = qrCode;
+              if (_scanBloc.exportData == null) {
+                _qrData = '';
+                _qrDataController.text = '';
+                if (_scanBloc.success == false &&
+                    _scanBloc.message!.isNotEmpty) {
+                  openSnackBar(context, _scanBloc.message!);
+                } else {
+                  openSnackBar(context, 'Không có dữ liệu');
+                }
+              }
+              _loading = false;
+              _exportData = _scanBloc.exportData;
+            },
+          );
+        },
+      );
+    }
   }
 
   _onSave() {
@@ -155,27 +183,156 @@ class _MainPageState extends State<MainPage> {
         _loading = true;
       },
     );
-    _data!.chuyenId = _appBloc.chuyenId!;
     // call api
     AppService().checkInternet().then((hasInternet) {
       if (!hasInternet!) {
         openSnackBar(context, 'no internet'.tr());
       } else {
-        _scanBloc.postData(_data!).then((_) {
-          if (_scanBloc.success) {
-            openSnackBar(context, 'Lưu thành công');
-          } else {
-            openSnackBar(context, 'Lưu thất bại');
-          }
-          setState(() {
-            _data = null;
-            _qrData = '';
-            _qrDataController.text = '';
-            _loading = false;
+        if (_appBloc.isNhapKho) {
+          _data!.chuyenId = _appBloc.chuyenId!;
+          _scanBloc.postData(_data!).then((_) {
+            if (_scanBloc.success) {
+              openSnackBar(context, 'Lưu thành công');
+            } else {
+              openSnackBar(context, 'Lưu thất bại. ${_scanBloc.message}');
+            }
           });
+        } else {
+          _scanBloc.postExportData(_exportData!).then((_) {
+            if (_scanBloc.success) {
+              openSnackBar(context, 'Lưu thành công');
+            } else {
+              openSnackBar(context, 'Lưu thất bại. ${_scanBloc.message}');
+            }
+          });
+        }
+        setState(() {
+          _data = null;
+          _exportData = null;
+          _qrData = '';
+          _qrDataController.text = '';
+          _loading = false;
         });
       }
     });
+  }
+
+  checkNhapXuatKho(isNhapkho) {
+    if (isNhapkho) {
+      return _data == null
+          ? const SizedBox.shrink()
+          : Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.all(10),
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: Column(
+                children: [
+                  showInfoXe('Tên', _data!.tenChiTiet),
+                  const SizedBox(height: 10),
+                  showInfoXe('Model', _data!.tenDongXe),
+                  const SizedBox(height: 10),
+                  showInfoXe('Loại xe', _data!.tenLoaiXe),
+                  const SizedBox(height: 10),
+                  // ignore: unnecessary_null_comparison
+                  if (_data!.ngay != null)
+                    // if (_data!.ngay != null)
+                    SizedBox(
+                      child: Column(
+                        children: [
+                          showInfoXe('Ngày', _data!.ngay.toString()),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            );
+    } else {
+      return _exportData == null
+          ? const SizedBox.shrink()
+          : Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.all(10),
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: Column(
+                children: [
+                  // showInfoXe('Tên', _exportData!.tenChiTiet),
+                  // const SizedBox(height: 10),
+                  showInfoXe('Model', _exportData!.tenDongXe),
+                  const SizedBox(height: 10),
+                  showInfoXe('Loại xe', _exportData!.tenLoaiXe),
+                  const SizedBox(height: 10),
+                  // ignore: unnecessary_null_comparison
+                  if (_exportData!.ngay != null)
+                    // if (_data!.ngay != null)
+                    SizedBox(
+                      child: Column(
+                        children: [
+                          showInfoXe('Ngày', _exportData!.ngay.toString()),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            );
+    }
+  }
+
+  checkButton(isNhapKho) {
+    if (isNhapKho) {
+      return _data == null || _loading
+          ? const SizedBox.shrink()
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+                onPressed: _onSave,
+                icon: Icon(
+                  FontAwesomeIcons.tablet,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                label: Text(
+                  _data!.nhapXuatKhoId == null ? 'Nhập kho' : 'Huỷ xác nhận',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            );
+    } else {
+      return _exportData == null || _loading
+          ? const SizedBox.shrink()
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+                onPressed: _onSave,
+                icon: Icon(
+                  FontAwesomeIcons.tablet,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                label: Text(
+                  _exportData!.isXuat ? 'Hủy xuất kho' : 'Xuất kho',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            );
+    }
   }
 
   @override
@@ -255,66 +412,9 @@ class _MainPageState extends State<MainPage> {
             const SizedBox(height: 10),
             _loading
                 ? LoadingWidget(height: 200)
-                : _data == null
-                    ? const SizedBox.shrink()
-                    : Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        padding: const EdgeInsets.all(10),
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        child: Column(
-                          children: [
-                            showInfoXe('Tên', _data!.tenChiTiet),
-                            const SizedBox(height: 10),
-                            showInfoXe('Model', _data!.tenDongXe),
-                            const SizedBox(height: 10),
-                            showInfoXe('Loại xe', _data!.tenLoaiXe),
-                            const SizedBox(height: 10),
-                            // ignore: unnecessary_null_comparison
-                            if (_data!.ngay != null)
-                              // if (_data!.ngay != null)
-                              SizedBox(
-                                child: Column(
-                                  children: [
-                                    showInfoXe('Ngày', _data!.ngay.toString()),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+                : checkNhapXuatKho(_appBloc.isNhapKho),
             const SizedBox(height: 10),
-            _data == null || _loading
-                ? const SizedBox.shrink()
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                      onPressed: _onSave,
-                      icon: Icon(
-                        FontAwesomeIcons.tablet,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      label: Text(
-                        _appBloc.isNhapKho
-                            ? (_data!.nhapXuatKhoId == null
-                                ? 'Nhập kho'
-                                : 'Huỷ xác nhận')
-                            : (_data!.nhapXuatKhoId == null
-                                ? 'Xuất kho'
-                                : 'Huỷ xác nhận'),
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  )
+            checkButton(_appBloc.isNhapKho),
           ],
         ),
       );

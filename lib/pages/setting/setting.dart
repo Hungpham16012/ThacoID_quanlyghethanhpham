@@ -69,7 +69,6 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   callGetSettingData() {
-    var tryTime = 0;
     // call API
     _featureBloc.getData().then((_) {
       _appBloc.getData().then((_) {
