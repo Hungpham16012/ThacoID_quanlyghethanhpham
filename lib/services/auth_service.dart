@@ -19,12 +19,26 @@ class AuthService extends ChangeNotifier {
   Future loginWithUsernamePassword(String userName, String password) async {
     try {
       _hasError = false;
+      String domain = userName.contains('@') ? "thaco.com.vn" : "";
+
+      // Check if userName contains '@' to determine if it includes a domain
+      if (userName.contains('@')) {
+        // Split the userName into parts using '@' as a delimiter
+        final parts = userName.split('@');
+
+        // The first part will be the username, and the second part will be the domain
+        if (parts.length == 2) {
+          userName = parts[0]; // Extract the username
+          domain = parts[1]; // Extract the domain
+        }
+      }
+
       final http.Response response = await requestHelper.loginAction(
         jsonEncode(
           {
             "username": userName,
             "password": password,
-            "domain": "",
+            "domain": domain,
           },
         ),
       );

@@ -298,7 +298,7 @@ class _MainPageState extends State<MainPage> {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 label: Text(
-                  _data!.nhapXuatKhoId == null ? 'Nhập kho' : 'Huỷ xác nhận',
+                  _data!.nhapXuatKhoId == null ? 'Nhập kho' : 'Huỷ nhập kho',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
                     fontSize: 20,
