@@ -327,7 +327,7 @@ class _MainPageState extends State<MainPage> {
 
   //  nhập kho theo chi tiet
   _handleSaveNhapKhoChiTiet() {
-    _data!.chuyenId = _appBloc.chuyenId!;
+    _data!.chuyenId = _appBloc.maChucNang!;
     _scanBloc.postData(_data!);
 
     if (_scanBloc.success) {
@@ -601,7 +601,7 @@ class _MainPageState extends State<MainPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _appBloc.tenChuyen!,
+                    _appBloc.tenChucNang!,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 10),

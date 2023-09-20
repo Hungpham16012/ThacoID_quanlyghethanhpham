@@ -25,28 +25,66 @@ class ChucNangModel {
     );
   }
 
+  get tenChucNang => null;
+
+  get lstChuyenIds => null;
+
   map(Column Function(dynamic feature) param0) {}
 }
 
 class ChucNangItemModel {
-  String chuyenId;
-  String tenChucNang;
   bool checked;
+  String tenChucNang;
+  bool isNhapKho;
+  bool isNem;
+  String maChucNang;
   int thuTu;
+  List<Chuyen>? lstChuyenIds;
+  String? selected;
 
   ChucNangItemModel({
-    required this.chuyenId,
-    required this.tenChucNang,
     required this.checked,
+    required this.tenChucNang,
+    required this.isNhapKho,
+    required this.isNem,
+    required this.maChucNang,
     required this.thuTu,
+    this.lstChuyenIds,
+    this.selected = '',
   });
 
   factory ChucNangItemModel.fromJson(Map<String, dynamic> json) {
     return ChucNangItemModel(
-      chuyenId: json["chuyenId"].toString(),
-      tenChucNang: json["tenChucNang"].toString(),
-      checked: json["checked"],
-      thuTu: json["thuTu"],
+      checked: json['checked'],
+      tenChucNang: json['tenChucNang'],
+      isNhapKho: json['isNhapKho'],
+      isNem: json['isNem'],
+      maChucNang: json['maChucNang'],
+      thuTu: json['thuTu'],
+      lstChuyenIds: json['chuyenIds'],
+    );
+  }
+}
+
+class Chuyen {
+  String maChucNang;
+  int thuTu;
+  String tenChuyen;
+  String chuyenId;
+
+  Chuyen({
+    required this.maChucNang,
+    required this.thuTu,
+    required this.tenChuyen,
+    required this.chuyenId,
+  });
+
+  factory Chuyen.fromJson(Map<String, dynamic> json) {
+    return Chuyen(
+      maChucNang: json['maChucNang'],
+      thuTu: json['thuTu'],
+      tenChuyen: json['tenChuyen'],
+      chuyenId: json['chuyenId'],
     );
   }
 }
