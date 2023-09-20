@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:ghethanhpham_thaco/models/AoNem.dart';
+import 'package:ghethanhpham_thaco/models/export_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:ghethanhpham_thaco/models/scan.dart';
@@ -9,6 +11,12 @@ class ScanBloc extends ChangeNotifier {
 
   ScanModel? _data;
   ScanModel? get data => _data;
+
+  ExportModel? _exportData;
+  ExportModel? get exportData => _exportData;
+
+  AoNemGheModel? _aonemData;
+  AoNemGheModel? get aonemData => _aonemData;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -54,6 +62,80 @@ class ScanBloc extends ChangeNotifier {
       var decodedData = jsonDecode(response.body);
       _isLoading = false;
       _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Export data
+  Future getExportData(String qrCode) async {
+    _isLoading = true;
+    _exportData = null;
+    try {
+      final http.Response response =
+          await requestHelper.getData('Mobile/xuat-ke?QrcodeMaKe=$qrCode');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _exportData = ExportModel.fromJson(decodedData["data"]);
+      } else {
+        _exportData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future postExportData(ExportModel exportScanData) async {
+    _isLoading = true;
+    try {
+      var newScanData = exportScanData.listChiTietKe;
+      int newScanDataLength = newScanData.length;
+      var exportDataArray = List.generate(
+        newScanDataLength,
+        (index) => newScanData[index],
+      );
+      final http.Response response = await requestHelper.postData(
+        'Mobile/xuat-ke',
+        exportDataArray,
+      );
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future aoNemGetData(qrCode) async {
+    _isLoading = true;
+    _aonemData = null;
+    try {
+      final http.Response response =
+          await requestHelper.getData('NhapKhoNemAo?Macode$qrCode');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _aonemData = AoNemGheModel.fromJson(decodedData["data"]);
+      } else {
+        _aonemData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
     } catch (e) {
       _message = e.toString();
       _isLoading = false;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
-import 'package:ghethanhpham_thaco/pages/home/main.dart';
 
 class SettingNhaMay extends StatefulWidget {
   final List<ChucNangItemModel> listFeatures;
@@ -24,30 +23,19 @@ class _SettingNhaMayState extends State<SettingNhaMay> {
   Widget build(BuildContext context) {
     return Column(
       children: widget.listFeatures.map((feature) {
-        return InkWell(
-          onTap: () {
-            // Navigate to MainPage with the feature name
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    MainPage(featureName: feature.tenChucNang),
-              ),
-            );
-          },
-          child: ListTile(
-            leading: const Icon(
-              Feather.archive,
+        return ListTile(
+          leading: const Icon(
+            Feather.archive,
+          ),
+          title: Text(feature.tenChucNang),
+          trailing: Radio(
+            value: feature.chuyenId,
+            onChanged: (value) => widget.onChangeSelect(
+              value,
+              feature.tenChucNang,
             ),
-            title: Text(feature.tenChucNang),
-            trailing: Radio(
-              value: feature.chuyenId,
-              onChanged: (value) => widget.onChangeSelect(
-                value,
-                feature.tenChucNang,
-              ),
-              groupValue: widget.optionItem,
-              activeColor: Theme.of(context).primaryColor,
-            ),
+            groupValue: widget.optionItem,
+            activeColor: Theme.of(context).primaryColor,
           ),
         );
       }).toList(),

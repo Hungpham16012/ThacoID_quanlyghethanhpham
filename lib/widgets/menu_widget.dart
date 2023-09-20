@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ghethanhpham_thaco/config/config.dart';
+import 'package:ghethanhpham_thaco/widgets/divider.dart';
 
 class MenuWidget extends StatelessWidget {
   final Function(int) onMenuItemTap;
@@ -14,8 +15,8 @@ class MenuWidget extends StatelessWidget {
     int? index,
     BuildContext? context,
   }) {
-    const color = Color.fromARGB(255, 0, 0, 0);
-    const hoverColor = Color.fromARGB(221, 75, 75, 221);
+    const color = Color.fromARGB(255, 1, 1, 9);
+    const hoverColor = Color.fromARGB(221, 21, 21, 22);
 
     return ListTile(
       leading: Icon(icon),
@@ -48,13 +49,14 @@ class MenuWidget extends StatelessWidget {
             height: MediaQuery.of(context).size.width - 300,
             fit: BoxFit.contain,
           ),
+          const DividerWidget(),
           ExpansionTile(
             title: const Text(
               'Nhập kho',
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-              ),
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             leading: const Icon(
               Icons.import_export_sharp,
@@ -65,27 +67,34 @@ class MenuWidget extends StatelessWidget {
                 fontSize: 17,
                 index: 2,
                 context: context,
+                icon: Icons.add_circle,
               ),
               MenuItem(
                 text: 'Nhập nệm ghế',
                 fontSize: 17,
                 index: 2,
                 context: context,
+                icon: Icons.add_circle,
               ),
               MenuItem(
                 text: 'Nhập thành phẩm ghế',
                 fontSize: 17,
                 index: 2,
                 context: context,
+                icon: Icons.add_circle,
               ),
             ],
+          ),
+          const SizedBox(
+            height: 10,
           ),
           ExpansionTile(
             title: const Text(
               'Xuất kho',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 17,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
             leading: const Icon(Icons.import_export_sharp),
@@ -95,18 +104,21 @@ class MenuWidget extends StatelessWidget {
                 fontSize: 17,
                 index: 2,
                 context: context,
+                icon: Icons.add_circle,
               ),
               MenuItem(
                 text: 'Xuất kho theo chi tiết (BMW)',
                 fontSize: 17,
                 index: 2,
                 context: context,
+                icon: Icons.add_circle,
               ),
               MenuItem(
                 text: 'Xuất bán lẻ',
                 fontSize: 17,
                 index: 2,
                 context: context,
+                icon: Icons.add_circle,
               ),
             ],
           ),

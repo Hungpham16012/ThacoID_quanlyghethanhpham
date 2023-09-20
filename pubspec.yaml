@@ -52,6 +52,7 @@ dependencies:
   easy_autocomplete: ^1.6.0
   install_plugin: ^2.1.0
   flutter_barcode_scanner: ^2.0.0
+  mobile_scanner: ^2.1.0
   
  
 
