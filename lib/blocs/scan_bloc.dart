@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ghethanhpham_thaco/models/AoNem.dart';
 import 'package:ghethanhpham_thaco/models/export_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -13,6 +14,9 @@ class ScanBloc extends ChangeNotifier {
 
   ExportModel? _exportData;
   ExportModel? get exportData => _exportData;
+
+  AoNemGheModel? _aonemData;
+  AoNemGheModel? get aonemData => _aonemData;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -108,6 +112,30 @@ class ScanBloc extends ChangeNotifier {
       _isLoading = false;
       _success = decodedData["success"];
       _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future aoNemGetData(qrCode) async {
+    _isLoading = true;
+    _aonemData = null;
+    try {
+      final http.Response response =
+          await requestHelper.getData('NhapKhoNemAo?Macode$qrCode');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _aonemData = AoNemGheModel.fromJson(decodedData["data"]);
+      } else {
+        _aonemData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
     } catch (e) {
       _message = e.toString();
       _isLoading = false;
