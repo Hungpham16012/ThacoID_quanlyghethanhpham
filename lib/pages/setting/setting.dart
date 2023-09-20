@@ -3,15 +3,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
+import 'package:ghethanhpham_thaco/pages/home.dart';
+import 'package:ghethanhpham_thaco/pages/home/main.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
 import 'package:ghethanhpham_thaco/pages/setting/setting_nha_may.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
 import 'package:ghethanhpham_thaco/widgets/dialog.dart';
-import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
 import 'package:install_plugin/install_plugin.dart';
 import 'package:path_provider/path_provider.dart';
@@ -34,7 +36,7 @@ class SettingOptions {
 }
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({super.key});
+  const SettingPage({Key? key});
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -47,7 +49,7 @@ class _SettingPageState extends State<SettingPage> {
   late UserBloc _userBloc;
 
   String? _version;
-  List<ChucNangModel> _listFeatures = [];
+  List<ChucNangModel> _listGroupFeatures = [];
   List<SettingOptions> _options = [];
   Map<String, dynamic>? values;
   int? statusCode;
@@ -56,16 +58,15 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
+    super.initState();
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _featureBloc = Provider.of<FeatureBloc>(context, listen: false);
     _userBloc = Provider.of<UserBloc>(context, listen: false);
-    if (_featureBloc.data.isEmpty) {}
     setState(() {
       _loading = true;
     });
     callGetSettingData();
     FlutterDownloader.registerCallback(downloadCallback, step: 1);
-    super.initState();
   }
 
   callGetSettingData() {
@@ -75,13 +76,13 @@ class _SettingPageState extends State<SettingPage> {
         if (_featureBloc.statusCode == 200) {
           setState(() {
             _loading = false;
-            _listFeatures = _featureBloc.data;
-            _options = _featureBloc.data.map((cn) {
+            _listGroupFeatures.addAll(_featureBloc.data);
+            _options = _featureBloc.data.map((feature) {
               if (_appBloc.tenNhomChucNang != null &&
-                  _appBloc.tenNhomChucNang == cn.tenNhomChucNang) {}
+                  _appBloc.tenNhomChucNang == feature.tenNhomChucNang) {}
               return SettingOptions(
-                parentName: cn.tenNhomChucNang,
-                childId: _appBloc.chuyenId,
+                parentName: feature.tenNhomChucNang,
+                childId: _appBloc.maChucNang,
               );
             }).toList();
           });
@@ -89,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
         setState(() {
           _loading = false;
         });
-        checkUpdate(_appBloc.appVersion);
+        checkUpdate(_appBloc.appVersion ?? "1.0.3");
         statusCode = _featureBloc.statusCode;
         Future.delayed(const Duration(seconds: 2), () async {
           if (_featureBloc.statusCode == 401) {
@@ -149,7 +150,6 @@ class _SettingPageState extends State<SettingPage> {
       setState(() {
         _version = tmpVal["maPhienBan"];
         values = tmpVal;
-        // callUpdateAction(tmpVal);
       });
     }
   }
@@ -165,8 +165,6 @@ class _SettingPageState extends State<SettingPage> {
 
   callUpdateAction(values) async {
     if ((values["maPhienBan"] != _appBloc.appVersion) && values["isCapNhat"]) {
-      // show a dialog to ask the user to download the update
-      // ignore: use_build_context_synchronously
       bool shouldUpdate = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -209,10 +207,9 @@ class _SettingPageState extends State<SettingPage> {
           savedDir: '${downloadsDirectory.path}/Download',
           showNotification: true,
           openFileFromNotification: true,
-          // fileName: values["fileName"],
+          fileName: values["fileName"],
         );
 
-        // wait for the download to complete
         bool isComplete = false;
         while (!isComplete) {
           List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
@@ -222,7 +219,7 @@ class _SettingPageState extends State<SettingPage> {
             isComplete = true;
           }
         }
-        // Install the update using install_plugin
+
         await InstallPlugin.installApk(
           '${downloadsDirectory.path}/Download/${tmpArr.last}',
           appId: 'com.thaco.id.autocom.ghe',
@@ -236,9 +233,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   createDownloadDirectory() async {
-    // Get the directory where the downloaded files should be saved
     Directory? downloadsDirectory = await getExternalStorageDirectory();
-    // Create a new directory called "downloads" within the downloadsDirectory
     String downloadsPath = "${downloadsDirectory!.path}/Download";
     Directory downloadsDir = Directory(downloadsPath);
     if (!await downloadsDir.exists()) {
@@ -252,13 +247,13 @@ class _SettingPageState extends State<SettingPage> {
     // Call the action when the screen becomes active after clicking on a tab menu
     if (_featureBloc.data.isNotEmpty) {
       setState(() {
-        _listFeatures = _featureBloc.data;
+        _listGroupFeatures = _featureBloc.data;
         _options = _featureBloc.data.map((feature) {
           if (_appBloc.tenNhomChucNang != null &&
               _appBloc.tenNhomChucNang == feature.tenNhomChucNang) {}
           return SettingOptions(
             parentName: feature.tenNhomChucNang,
-            childId: _appBloc.chuyenId,
+            childId: _appBloc.maChucNang,
           );
         }).toList();
       });
@@ -266,14 +261,17 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   _renderListFeatures() {
-    var values = _listFeatures.isEmpty ? _featureBloc.data : _listFeatures;
+    var values =
+        _listGroupFeatures.isEmpty ? _featureBloc.data : _listGroupFeatures;
+
     return values.isEmpty
-        ? const Text("Nothing")
+        ? const Text('Nothing')
         : Column(
-            children: _listFeatures.map((feature) {
+            children: _featureBloc.data.map((group) {
               var parentItem = _options.firstWhere(
-                  (name) => name.parentName == feature.tenNhomChucNang);
+                  (name) => name.parentName == group.tenNhomChucNang);
               var index = _options.indexOf(parentItem);
+              var tenNhomChucNang = group.tenNhomChucNang;
               return Column(
                 children: [
                   const SizedBox(height: 15),
@@ -285,7 +283,7 @@ class _SettingPageState extends State<SettingPage> {
                     child: Column(
                       children: [
                         Text(
-                          feature.tenNhomChucNang,
+                          group.tenNhomChucNang,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -295,42 +293,52 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const DividerWidget(),
+                        const Divider(),
                         const SizedBox(height: 10),
-                        feature.lstChucNangs.isEmpty
+                        group.lstChucNangs.isEmpty
                             ? const Text("Không có tuỳ chọn")
-                            : SettingNhaMay(
-                                listFeatures: feature.lstChucNangs,
-                                optionItem: parentItem.childId,
-                                onChangeSelect: (value, tenChucNang) {
-                                  setState(() {
-                                    if (index == 0) {
-                                      _options[1] = SettingOptions(
-                                        parentName: _options[1].parentName,
-                                        childId: null,
-                                      );
-                                      // save to local value
-                                      _appBloc.saveData(
-                                        value,
-                                        tenChucNang,
-                                        feature.tenNhomChucNang,
-                                        true,
-                                      );
-                                    } else {
-                                      _options[0] = SettingOptions(
-                                        parentName: _options[0].parentName,
-                                        childId: null,
-                                      );
-                                      _appBloc.saveData(
-                                        value,
-                                        tenChucNang,
-                                        feature.tenNhomChucNang,
-                                        false,
-                                      );
-                                    }
-                                    parentItem.childId = value;
-                                  });
-                                },
+                            : Column(
+                                children: group.lstChucNangs.map((feature) {
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        leading: const Icon(Feather.archive),
+                                        title: Text(feature.tenChucNang),
+                                        trailing: Radio<String>(
+                                          value: feature.selected ??
+                                              '', // Use the selected value from your model
+                                          groupValue: feature
+                                              .tenChucNang, // Group by the group's name
+                                          onChanged: (String? value) {
+                                            // Update the selected value in your data model
+                                            setState(
+                                              () {
+                                                feature.selected = value!;
+                                                _appBloc.saveData(
+                                                  feature.tenChucNang,
+                                                  tenNhomChucNang,
+                                                  feature.maChucNang,
+                                                  feature.isNhapKho,
+                                                );
+                                              },
+                                            );
+                                            // // Navigate to the homepage or perform other actions based on the selected value
+                                            // Navigator.pushReplacement(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) =>
+                                            //         const MainPage(),
+                                            //   ),
+                                            // );
+                                          },
+                                          activeColor:
+                                              Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      // Add additional logic or widgets as needed
+                                    ],
+                                  );
+                                }).toList(),
                               ),
                       ],
                     ),
@@ -343,35 +351,37 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Column(
-          children: [
-            _loading ? LoadingWidget(height: 350) : _renderListFeatures(),
-            const SizedBox(
-              height: 15,
-            ),
-            // Setting for the application
-            const SettingGeneral(),
-            const SizedBox(height: 15),
-            Container(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 10,
-                bottom: 10,
+    return Scaffold(
+      body: Material(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Column(
+            children: [
+              _loading ? LoadingWidget(height: 350) : _renderListFeatures(),
+              const SizedBox(
+                height: 15,
               ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimary,
+              // Setting for the application
+              const SettingGeneral(),
+              const SizedBox(height: 15),
+              Container(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 10,
+                  bottom: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                child: UserUI(
+                  onlineVersion: _version,
+                  callUpdateAction: callUpdateAction,
+                  values: values,
+                ),
               ),
-              child: UserUI(
-                onlineVersion: _version,
-                callUpdateAction: callUpdateAction,
-                values: values,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

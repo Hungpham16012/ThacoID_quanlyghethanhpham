@@ -189,7 +189,7 @@ class _MainPageState extends State<MainPage> {
         openSnackBar(context, 'no internet'.tr());
       } else {
         if (_appBloc.isNhapKho) {
-          _data!.chuyenId = _appBloc.chuyenId!;
+          _data!.chuyenId = _appBloc.maChucNang!;
           _scanBloc.postData(_data!).then((_) {
             if (_scanBloc.success) {
               openSnackBar(context, 'Lưu thành công');
@@ -356,7 +356,7 @@ class _MainPageState extends State<MainPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _appBloc.tenChuyen!,
+                    _appBloc.tenChucNang!,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 10),

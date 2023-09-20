@@ -23,24 +23,26 @@ class FeatureBloc extends ChangeNotifier {
   int? _statusCode;
   int? get statusCode => _statusCode;
 
-  Future getData() async {
+  Future<void> getData() async {
     _isLoading = true;
     try {
       final http.Response response =
           await requestHelper.getData('Mobile/ChucNang');
-      if (response.statusCode == 200) {
+      _statusCode = response.statusCode;
+
+      if (_statusCode == 200) {
         var decodedData = jsonDecode(response.body);
         _data = (decodedData['data'] as List).map((item) {
           return ChucNangModel.fromJson(item);
         }).toList();
         _success = decodedData["success"];
         _message = decodedData["message"];
+      } else {
+        _message = 'HTTP Error $_statusCode: ${response.reasonPhrase}';
       }
-      _statusCode = response.statusCode;
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
-      _message = e.toString();
+      _message = 'Error: ${e.toString()}';
+    } finally {
       _isLoading = false;
       notifyListeners();
     }
