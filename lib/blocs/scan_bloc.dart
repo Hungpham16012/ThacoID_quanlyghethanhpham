@@ -52,7 +52,7 @@ class ScanBloc extends ChangeNotifier {
     try {
       var newScanData = scanData;
       newScanData.chuyenId =
-          (newScanData.chuyenId == 'null' ? null : newScanData.chuyenId)!;
+          (newScanData.chuyenId == 'null' ? null : newScanData.chuyenId);
       final http.Response response =
           await requestHelper.postData('Mobile/ThongTin', newScanData.toJson());
       var decodedData = jsonDecode(response.body);

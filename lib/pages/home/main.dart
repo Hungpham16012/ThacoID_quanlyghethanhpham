@@ -124,52 +124,45 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
+  getDataScan(qrCode, dataScanBloc) {
+    _qrData = qrCode;
+    if (dataScanBloc == null) {
+      _qrData = '';
+      _qrDataController.text = '';
+      if (_scanBloc.success == false && _scanBloc.message!.isNotEmpty) {
+        openSnackBar(context, _scanBloc.message!);
+      } else {
+        openSnackBar(context, 'Không có dữ liệu');
+      }
+    }
+  }
+
   _onScan(qrCode) {
     setState(() {
       _loading = true;
     });
 
-    if (_appBloc.isNhapKho) {
-      _scanBloc.getData(qrCode, _appBloc.isNhapKho).then(
+    // case xuất kho
+    if (_appBloc.maChucNang == 'XUATKHOTHEOKE') {
+      _scanBloc.getExportData(qrCode).then(
         (_) {
           setState(
             () {
-              _qrData = qrCode;
-              if (_scanBloc.data == null) {
-                // if (_scanBloc.exportData == null) {
-                _qrData = '';
-                _qrDataController.text = '';
-                if (_scanBloc.success == false &&
-                    _scanBloc.message!.isNotEmpty) {
-                  openSnackBar(context, _scanBloc.message!);
-                } else {
-                  openSnackBar(context, 'Không có dữ liệu');
-                }
-              }
+              getDataScan(qrCode, _scanBloc.exportData);
               _loading = false;
-              _data = _scanBloc.data;
+              _exportData = _scanBloc.exportData;
             },
           );
         },
       );
     } else {
-      _scanBloc.getExportData(qrCode).then(
+      _scanBloc.getData(qrCode, _appBloc.isNhapKho).then(
         (_) {
           setState(
             () {
-              _qrData = qrCode;
-              if (_scanBloc.exportData == null) {
-                _qrData = '';
-                _qrDataController.text = '';
-                if (_scanBloc.success == false &&
-                    _scanBloc.message!.isNotEmpty) {
-                  openSnackBar(context, _scanBloc.message!);
-                } else {
-                  openSnackBar(context, 'Không có dữ liệu');
-                }
-              }
+              getDataScan(qrCode, _scanBloc.data);
               _loading = false;
-              _exportData = _scanBloc.exportData;
+              _data = _scanBloc.data;
             },
           );
         },
@@ -188,125 +181,109 @@ class _MainPageState extends State<MainPage> {
       if (!hasInternet!) {
         openSnackBar(context, 'no internet'.tr());
       } else {
-        if (_appBloc.isNhapKho) {
-          _data!.chuyenId = _appBloc.maChucNang!;
-          _scanBloc.postData(_data!).then((_) {
-            if (_scanBloc.success) {
-              openSnackBar(context, 'Lưu thành công');
-            } else {
-              openSnackBar(context, 'Lưu thất bại. ${_scanBloc.message}');
-            }
+        if (_appBloc.maChucNang == 'XUATKHOTHEOKE') {
+          _scanBloc.postExportData(_exportData!).then(
+            (_) {
+              statusMessage(_scanBloc.success, _scanBloc.message);
+            },
+          );
+
+          setState(() {
+            _exportData = null;
+            _qrData = '';
+            _qrDataController.text = '';
+            _loading = false;
           });
         } else {
-          _scanBloc.postExportData(_exportData!).then((_) {
-            if (_scanBloc.success) {
-              openSnackBar(context, 'Lưu thành công');
-            } else {
-              openSnackBar(context, 'Lưu thất bại. ${_scanBloc.message}');
-            }
+          _data!.chuyenId = null;
+          _scanBloc.postData(_data!).then((_) {
+            statusMessage(_scanBloc.success, _scanBloc.message);
+          });
+
+          setState(() {
+            _data = null;
+            _qrData = '';
+            _qrDataController.text = '';
+            _loading = false;
           });
         }
-        setState(() {
-          _data = null;
-          _exportData = null;
-          _qrData = '';
-          _qrDataController.text = '';
-          _loading = false;
-        });
       }
     });
   }
 
-  checkNhapXuatKho(isNhapkho) {
-    if (isNhapkho) {
-      return _data == null
-          ? const SizedBox.shrink()
-          : Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.all(10),
-              color: Theme.of(context).colorScheme.onPrimary,
-              child: Column(
-                children: [
-                  showInfoXe('Tên', _data!.tenChiTiet),
-                  const SizedBox(height: 10),
-                  showInfoXe('Model', _data!.tenDongXe),
-                  const SizedBox(height: 10),
-                  showInfoXe('Loại xe', _data!.tenLoaiXe),
-                  const SizedBox(height: 10),
-                  // ignore: unnecessary_null_comparison
-                  if (_data!.ngay != null)
-                    // if (_data!.ngay != null)
-                    SizedBox(
-                      child: Column(
-                        children: [
-                          showInfoXe('Ngày', _data!.ngay.toString()),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            );
+  statusMessage(status, message) {
+    if (status) {
+      openSnackBar(context, 'Lưu thành công');
     } else {
-      return _exportData == null
-          ? const SizedBox.shrink()
-          : Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.all(10),
-              color: Theme.of(context).colorScheme.onPrimary,
-              child: Column(
-                children: [
-                  // showInfoXe('Tên', _exportData!.tenChiTiet),
-                  // const SizedBox(height: 10),
-                  showInfoXe('Model', _exportData!.tenDongXe),
-                  const SizedBox(height: 10),
-                  showInfoXe('Loại xe', _exportData!.tenLoaiXe),
-                  const SizedBox(height: 10),
-                  // ignore: unnecessary_null_comparison
-                  if (_exportData!.ngay != null)
-                    // if (_data!.ngay != null)
-                    SizedBox(
-                      child: Column(
-                        children: [
-                          showInfoXe('Ngày', _exportData!.ngay.toString()),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            );
+      openSnackBar(context, 'Lưu thất bại. $message');
     }
   }
 
-  checkButton(isNhapKho) {
-    if (isNhapKho) {
-      return _data == null || _loading
+  checkNhapXuatKho(isNhapkho) {
+    if (_appBloc.maChucNang == 'XUATKHOTHEOKE') {
+      return _exportData == null
           ? const SizedBox.shrink()
-          : Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              color: Theme.of(context).colorScheme.onPrimary,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-                onPressed: _onSave,
-                icon: Icon(
-                  FontAwesomeIcons.tablet,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                label: Text(
-                  _data!.nhapXuatKhoId == null ? 'Nhập kho' : 'Huỷ nhập kho',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            );
+          : renderInfoScanData();
     } else {
+      return _data == null ? const SizedBox.shrink() : renderInfoScanData();
+    }
+  }
+
+  renderInfoScanData() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.all(10),
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: Column(
+        children: [
+          showInfoXe(
+            (_appBloc.isNhapKho == false &&
+                    _appBloc.maChucNang == 'XUATKHOTHEOKE')
+                ? 'Mã LOT'
+                : 'Tên',
+            (_appBloc.isNhapKho == false &&
+                    _appBloc.maChucNang == 'XUATKHOTHEOKE')
+                ? _exportData!.maLot
+                : _data!.tenChiTiet,
+          ),
+          const SizedBox(height: 10),
+          showInfoXe(
+            'Model',
+            (_appBloc.isNhapKho == false &&
+                    _appBloc.maChucNang == 'XUATKHOTHEOKE')
+                ? _exportData!.tenDongXe
+                : _data!.tenDongXe,
+          ),
+          const SizedBox(height: 10),
+          showInfoXe(
+            'Loại xe',
+            (_appBloc.isNhapKho == false &&
+                    _appBloc.maChucNang == 'XUATKHOTHEOKE')
+                ? _exportData!.tenLoaiXe
+                : _data!.tenLoaiXe,
+          ),
+          const SizedBox(height: 10),
+          // ignore: unnecessary_null_comparison
+          if (_data?.ngay != null)
+            SizedBox(
+              child: Column(
+                children: [
+                  showInfoXe(
+                    'Ngày',
+                    _data!.ngay.toString(),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // k sửa
+  checkButton(isNhapKho, machucnang) {
+    if (machucnang == 'XUATKHOTHEOKE') {
       return _exportData == null || _loading
           ? const SizedBox.shrink()
           : Container(
@@ -325,6 +302,38 @@ class _MainPageState extends State<MainPage> {
                 ),
                 label: Text(
                   _exportData!.isXuat ? 'Hủy xuất kho' : 'Xuất kho',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            );
+    } else {
+      return _data == null || _loading
+          ? const SizedBox.shrink()
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+                onPressed: _onSave,
+                icon: Icon(
+                  FontAwesomeIcons.tablet,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                label: Text(
+                  isNhapKho
+                      ? (_data!.nhapXuatKhoId == null
+                          ? "Nhập kho"
+                          : "Huỷ xác nhận")
+                      : ((_data!.nhapXuatKhoId == null)
+                          ? "Xuất kho"
+                          : "Huỷ xuất kho"),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
                     fontSize: 20,
@@ -410,11 +419,13 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             const SizedBox(height: 10),
+            // render thông tin data sau khi quét
             _loading
                 ? LoadingWidget(height: 200)
+                // check nhập xuất kho để render thông tin data sau khi quét
                 : checkNhapXuatKho(_appBloc.isNhapKho),
             const SizedBox(height: 10),
-            checkButton(_appBloc.isNhapKho),
+            checkButton(_appBloc.isNhapKho, _appBloc.maChucNang),
           ],
         ),
       );

@@ -29,7 +29,7 @@ class _SettingNhaMayState extends State<SettingNhaMay> {
           ),
           title: Text(feature.tenChucNang),
           trailing: Radio(
-            value: feature.chuyenId,
+            value: feature.maChucNang,
             onChanged: (value) => widget.onChangeSelect(
               value,
               feature.tenChucNang,
