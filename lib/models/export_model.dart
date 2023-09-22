@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:ghethanhpham_thaco/models/scan.dart';
 
 class ExportModel {

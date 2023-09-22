@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:ghethanhpham_thaco/models/aonem.dart';
 import 'package:ghethanhpham_thaco/models/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/export_model.dart';
+import 'package:ghethanhpham_thaco/models/hoachat.dart';
+import 'package:ghethanhpham_thaco/models/hoachat.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:ghethanhpham_thaco/models/scan.dart';
@@ -19,6 +22,13 @@ class ScanBloc extends ChangeNotifier {
   // model xuất bán lẻ
   BanLeModel? _banleData;
   BanLeModel? get banleData => _banleData;
+
+  // model aonem
+  AoNemGheModel? _aoNemData;
+  AoNemGheModel? get aoNemData => _aoNemData;
+
+  HoaChatModel? _hoaChatData;
+  HoaChatModel? get hoaChatModel => _hoaChatData;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -157,6 +167,74 @@ class ScanBloc extends ChangeNotifier {
       _isLoading = false;
       _success = decodedData["success"];
       _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future aoNemGetData(qrCode) async {
+    _isLoading = true;
+    _aoNemData = null;
+    try {
+      final http.Response response =
+          await requestHelper.getData('NhapKhoNemAo?Macode=$qrCode');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _aoNemData = AoNemGheModel.fromJson(decodedData["data"]);
+      } else {
+        _aoNemData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future postDataAoNem(AoNemGheModel aoNemData) async {
+    _isLoading = true;
+
+    try {
+      var newScanData = aoNemData;
+      newScanData.hoaChat1Id = null;
+      newScanData.hoaChat2Id = null;
+      final http.Response response =
+          await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future hoaChatGetData(keyword) async {
+    _isLoading = true;
+    _hoaChatData = null;
+    try {
+      final http.Response response =
+          await requestHelper.getData('HoaChat?Keyword=$keyword');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _hoaChatData = HoaChatModel.fromJson(decodedData["data"]);
+      } else {
+        _hoaChatData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
     } catch (e) {
       _message = e.toString();
       _isLoading = false;
