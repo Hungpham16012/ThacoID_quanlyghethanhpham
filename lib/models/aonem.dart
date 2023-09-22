@@ -1,6 +1,6 @@
 // ignore: file_names
 class AoNemGheModel {
-  String nhapKhoAoNemId;
+  String? nhapKhoAoNemId;
   String barCodeNemAoId;
   String? maKe;
   String maNemAo;
@@ -11,7 +11,9 @@ class AoNemGheModel {
   String? tenDongXe;
   String? tenLoaiXe;
   String tenChiTiet;
-  String ngay;
+  String? ngay;
+  String? hoaChat1Id;
+  String? hoaChat2Id;
 
   AoNemGheModel({
     required this.nhapKhoAoNemId,
@@ -26,6 +28,8 @@ class AoNemGheModel {
     this.tenLoaiXe,
     required this.tenChiTiet,
     required this.ngay,
+    this.hoaChat1Id,
+    this.hoaChat2Id,
   });
 
   factory AoNemGheModel.fromJson(Map<String, dynamic> json) {
@@ -44,4 +48,18 @@ class AoNemGheModel {
       ngay: json['ngay'],
     );
   }
+  Map<String, dynamic> toJson() => {
+        "nhapKhoAoNemId": nhapKhoAoNemId,
+        "barCodeNemAoId": barCodeNemAoId,
+        "maKe": maKe,
+        "maNemAo": maNemAo,
+        "maCode": maCode,
+        "tenNemAo": tenNemAo,
+        "isNem": isNem,
+        "tenSanPham": tenSanPham,
+        "tenDongXe": tenDongXe,
+        "tenLoaiXe": tenLoaiXe,
+        "tenChiTiet": tenChiTiet,
+        "ngay": ngay,
+      };
 }

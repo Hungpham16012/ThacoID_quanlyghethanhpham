@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:ghethanhpham_thaco/models/aonem.dart';
+import 'package:ghethanhpham_thaco/models/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/export_model.dart';
+import 'package:ghethanhpham_thaco/models/hoachat.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:ghethanhpham_thaco/models/scan.dart';
@@ -17,6 +19,12 @@ class ScanBloc extends ChangeNotifier {
 
   AoNemGheModel? _aonemData;
   AoNemGheModel? get aonemData => _aonemData;
+
+  BanLeModel? _banLeData;
+  BanLeModel? get banLeData => _banLeData;
+
+  HoaChatModel? _hoaChatData;
+  HoaChatModel? get hoaChatModel => _hoaChatData;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -124,12 +132,98 @@ class ScanBloc extends ChangeNotifier {
     _aonemData = null;
     try {
       final http.Response response =
-          await requestHelper.getData('NhapKhoNemAo?Macode$qrCode');
+          await requestHelper.getData('NhapKhoNemAo?Macode=$qrCode');
       var decodedData = jsonDecode(response.body);
       if (decodedData["data"] != null) {
         _aonemData = AoNemGheModel.fromJson(decodedData["data"]);
       } else {
         _aonemData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future postDataAoGhe(AoNemGheModel aoNemData) async {
+    _isLoading = true;
+
+    try {
+      var newScanData = aoNemData;
+      newScanData.hoaChat1Id = null;
+      newScanData.hoaChat2Id = null;
+      final http.Response response =
+          await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future banLeGetData(qrCode, isNhapKho) async {
+    _isLoading = true;
+    _banLeData = null;
+    try {
+      final http.Response response = await requestHelper
+          .getData('NhapXuatKhoBanLe?MaCode=$qrCode&IsNhapKho=$isNhapKho');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _banLeData = BanLeModel.fromJson(decodedData["data"]);
+      } else {
+        _banLeData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future banLePostData(BanLeModel banLeData) async {
+    _isLoading = true;
+
+    try {
+      var newScanData = banLeData;
+      final http.Response response = await requestHelper.postData(
+          'NhapXuatKhoBanLe', newScanData.toJson());
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future hoaChatGetData(keyword) async {
+    _isLoading = true;
+    _hoaChatData = null;
+    try {
+      final http.Response response =
+          await requestHelper.getData('HoaChat?Keyword=$keyword');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _hoaChatData = HoaChatModel.fromJson(decodedData["data"]);
+      } else {
+        _hoaChatData = null;
       }
 
       _isLoading = false;

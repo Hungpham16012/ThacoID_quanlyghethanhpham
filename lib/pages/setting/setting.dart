@@ -10,7 +10,6 @@ import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/pages/home.dart';
 import 'package:ghethanhpham_thaco/pages/home/main.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
-import 'package:ghethanhpham_thaco/pages/setting/setting_nha_may.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
 import 'package:ghethanhpham_thaco/widgets/dialog.dart';
@@ -76,7 +75,6 @@ class _SettingPageState extends State<SettingPage> {
         if (_featureBloc.statusCode == 200) {
           setState(() {
             _loading = false;
-            _listGroupFeatures.addAll(_featureBloc.data);
             _options = _featureBloc.data.map((feature) {
               if (_appBloc.tenNhomChucNang != null &&
                   _appBloc.tenNhomChucNang == feature.tenNhomChucNang) {}
