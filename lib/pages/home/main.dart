@@ -49,6 +49,7 @@ class _MainPageState extends State<MainPage> {
   static const xuatTheoKe = 'XUATKHOTHEOKE';
   static const xuatChiTiet = 'XUATKHOCHITIET';
   static const xuatBanLe = 'XUATKHOBANLE';
+  static const nhapBanLe = 'NHAPKHOBANLE';
 
   @override
   void initState() {
@@ -182,7 +183,7 @@ class _MainPageState extends State<MainPage> {
             );
           },
         );
-      case xuatBanLe:
+      case xuatBanLe || nhapBanLe:
         _scanBloc.getDataBanLe(qrCode, _appBloc.isNhapKho).then((_) {
           setState(
             () {
@@ -228,7 +229,7 @@ class _MainPageState extends State<MainPage> {
               _data = null;
             });
 
-          case xuatBanLe:
+          case xuatBanLe || nhapBanLe:
             _scanBloc.banLePostData(_banleData!).then((value) {
               statusMessage(_scanBloc.success, _scanBloc.message);
             });
@@ -258,7 +259,7 @@ class _MainPageState extends State<MainPage> {
         return _data == null
             ? const SizedBox.shrink()
             : renderThongTinChiTietKe();
-      case xuatBanLe:
+      case xuatBanLe || nhapBanLe:
         return _banleData == null
             ? const SizedBox.shrink()
             : renderThongTinBanLe();
@@ -276,10 +277,12 @@ class _MainPageState extends State<MainPage> {
         return _data == null || _loading
             ? const SizedBox.shrink()
             : renderButtonNhapXuat(isNhapKho, _data?.nhapXuatKhoId);
-      case xuatBanLe:
+      case xuatBanLe || nhapBanLe:
         return _banleData == null || _loading
             ? const SizedBox.shrink()
             : renderButtonNhapXuat(isNhapKho, _banleData?.nhapXuatKhoId);
+      default:
+        return const SizedBox.shrink();
     }
   }
 
@@ -300,11 +303,11 @@ class _MainPageState extends State<MainPage> {
         ),
         label: Text(
           isNhapkho
-              ? (nhapxuatkhoId == null ? "Nhập kho" : "Huỷ xác nhận")
+              ? (nhapxuatkhoId == null ? "Nhập kho" : "Huỷ nhập kho")
               : (nhapxuatkhoId == null ? "Xuất kho" : "Huỷ xuất kho"),
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
       ),
@@ -507,7 +510,8 @@ class _MainPageState extends State<MainPage> {
                 : checkNhapXuatKho(_appBloc.maChucNang) ??
                     const SizedBox.shrink(),
             const SizedBox(height: 10),
-            checkButton(_appBloc.isNhapKho, _appBloc.maChucNang),
+            checkButton(_appBloc.isNhapKho, _appBloc.maChucNang) ??
+                const SizedBox.shrink(),
           ],
         ),
       );
