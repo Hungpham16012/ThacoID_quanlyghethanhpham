@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ghethanhpham_thaco/models/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/export_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -11,8 +12,13 @@ class ScanBloc extends ChangeNotifier {
   ScanModel? _data;
   ScanModel? get data => _data;
 
+  // model xuất theo kệ
   ExportModel? _exportData;
   ExportModel? get exportData => _exportData;
+
+  // model xuất bán lẻ
+  BanLeModel? _banleData;
+  BanLeModel? get banleData => _banleData;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -30,15 +36,15 @@ class ScanBloc extends ChangeNotifier {
       final http.Response response = await requestHelper
           .getData('Mobile/ThongTin?Qrcode=$qrCode&IsNhapKho=$isNhapKho');
       var decodedData = jsonDecode(response.body);
-      if (decodedData["data"] != null) {
-        _data = ScanModel.fromJson(decodedData["data"]);
+      if (decodedData['data'] != null) {
+        _data = ScanModel.fromJson(decodedData['data']);
       } else {
         _data = null;
       }
 
       _isLoading = false;
-      _success = decodedData["success"];
-      _message = decodedData["message"];
+      _success = decodedData['success'];
+      _message = decodedData['message'];
       notifyListeners();
     } catch (e) {
       _message = e.toString();
@@ -57,7 +63,7 @@ class ScanBloc extends ChangeNotifier {
           await requestHelper.postData('Mobile/ThongTin', newScanData.toJson());
       var decodedData = jsonDecode(response.body);
       _isLoading = false;
-      _success = decodedData["success"];
+      _success = decodedData['success'];
       _message = decodedData['message'];
     } catch (e) {
       _message = e.toString();
@@ -74,15 +80,15 @@ class ScanBloc extends ChangeNotifier {
       final http.Response response =
           await requestHelper.getData('Mobile/xuat-ke?QrcodeMaKe=$qrCode');
       var decodedData = jsonDecode(response.body);
-      if (decodedData["data"] != null) {
-        _exportData = ExportModel.fromJson(decodedData["data"]);
+      if (decodedData['data'] != null) {
+        _exportData = ExportModel.fromJson(decodedData['data']);
       } else {
         _exportData = null;
       }
 
       _isLoading = false;
-      _success = decodedData["success"];
-      _message = decodedData["message"];
+      _success = decodedData['success'];
+      _message = decodedData['message'];
       notifyListeners();
     } catch (e) {
       _message = e.toString();
@@ -104,6 +110,49 @@ class ScanBloc extends ChangeNotifier {
         'Mobile/xuat-ke',
         exportDataArray,
       );
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData['success'];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // xuất bán lẻ
+  Future getDataBanLe(String qrCode, bool isNhapKho) async {
+    _isLoading = true;
+    _banleData = null;
+    try {
+      final http.Response response = await requestHelper
+          .getData('NhapXuatKhoBanLe?MaCode=$qrCode&IsNhapKho=$isNhapKho');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData['data'] != null) {
+        _banleData = BanLeModel.fromJson(decodedData['data']);
+      } else {
+        _banleData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData['success'];
+      _message = decodedData['message'];
+      notifyListeners();
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future banLePostData(BanLeModel banLeData) async {
+    _isLoading = true;
+
+    try {
+      var newScanData = banLeData;
+      final http.Response response = await requestHelper.postData(
+          'NhapXuatKhoBanLe', newScanData.toJson());
       var decodedData = jsonDecode(response.body);
       _isLoading = false;
       _success = decodedData["success"];

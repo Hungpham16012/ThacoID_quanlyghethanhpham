@@ -10,6 +10,7 @@ class ScanModel {
   String maCode;
   String? ngay;
   bool isNhapKho;
+  String? type;
 
   ScanModel({
     this.nhapXuatKhoId,
@@ -23,6 +24,7 @@ class ScanModel {
     required this.maCode,
     this.ngay,
     required this.isNhapKho,
+    this.type,
   });
 
   factory ScanModel.fromJson(Map<String, dynamic> json) {
