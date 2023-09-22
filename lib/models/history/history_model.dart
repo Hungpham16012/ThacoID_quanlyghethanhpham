@@ -1,4 +1,4 @@
-class HistoryModal {
+class HistoryModel {
   // {
   //     "maChiTiet": null,
   //     "tenChiTiet": null,
@@ -12,7 +12,7 @@ class HistoryModal {
   String thoiGianNhap;
   String thoiGianHuy;
 
-  HistoryModal({
+  HistoryModel({
     required this.maChiTiet,
     required this.tenChiTiet,
     required this.maCode,
@@ -20,8 +20,8 @@ class HistoryModal {
     required this.thoiGianHuy,
   });
 
-  factory HistoryModal.fromJson(Map<String, dynamic> json) {
-    return HistoryModal(
+  factory HistoryModel.fromJson(Map<String, dynamic> json) {
+    return HistoryModel(
       maChiTiet: json["maChiTiet"],
       tenChiTiet: json["tenChiTiet"],
       maCode: json["maCode"],

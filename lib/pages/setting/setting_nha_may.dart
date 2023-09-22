@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
+import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 
 class SettingNhaMay extends StatefulWidget {
   final List<ChucNangItemModel> listFeatures;

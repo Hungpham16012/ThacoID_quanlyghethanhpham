@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
+import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:http/http.dart' as http;
 

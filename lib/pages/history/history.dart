@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/history_bloc.dart';
-import 'package:ghethanhpham_thaco/models/history.dart';
+import 'package:ghethanhpham_thaco/models/history/history_model.dart';
 import 'package:ghethanhpham_thaco/pages/history/nhap_kho.dart';
 import 'package:ghethanhpham_thaco/pages/history/xuat_kho.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
@@ -20,8 +20,8 @@ class _HistoryPageState extends State<HistoryPage> {
   late AppBloc _appBloc;
   late HistoryBloc _historyBloc;
   bool _loading = false;
-  List<HistoryModal> _listNhapKho = [];
-  List<HistoryModal> _listXuatKho = [];
+  List<HistoryModel> _listNhapKho = [];
+  List<HistoryModel> _listXuatKho = [];
 
   int selectedValue = 1;
   bool _firstLoad = false;

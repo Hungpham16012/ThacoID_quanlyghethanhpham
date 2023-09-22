@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
+import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBloc extends ChangeNotifier {

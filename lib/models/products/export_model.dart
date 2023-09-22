@@ -1,4 +1,4 @@
-import 'package:ghethanhpham_thaco/models/scan.dart';
+import 'package:ghethanhpham_thaco/models/products/scan.dart';
 
 class ExportModel {
   String id;

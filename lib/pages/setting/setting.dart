@@ -6,11 +6,8 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
-import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
-import 'package:ghethanhpham_thaco/pages/home.dart';
-import 'package:ghethanhpham_thaco/pages/home/main.dart';
+import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
-import 'package:ghethanhpham_thaco/pages/setting/setting_nha_may.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
 import 'package:ghethanhpham_thaco/widgets/dialog.dart';
@@ -268,9 +265,6 @@ class _SettingPageState extends State<SettingPage> {
         ? const Text('Nothing')
         : Column(
             children: _featureBloc.data.map((group) {
-              var parentItem = _options.firstWhere(
-                  (name) => name.parentName == group.tenNhomChucNang);
-              var index = _options.indexOf(parentItem);
               var tenNhomChucNang = group.tenNhomChucNang;
               return Column(
                 children: [

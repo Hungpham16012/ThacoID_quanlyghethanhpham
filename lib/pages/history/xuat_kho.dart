@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ghethanhpham_thaco/models/history.dart';
+import 'package:ghethanhpham_thaco/models/history/history_model.dart';
 import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class HistoryXuatKhoPage extends StatefulWidget {
-  List<HistoryModal> list;
+  List<HistoryModel> list;
   Function callApi;
   bool loading;
   bool firstLoad;

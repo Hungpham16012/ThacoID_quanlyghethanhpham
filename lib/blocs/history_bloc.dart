@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:ghethanhpham_thaco/models/history.dart';
+import 'package:ghethanhpham_thaco/models/history/history_model.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:http/http.dart' as http;
 
 class HistoryBloc extends ChangeNotifier {
   static RequestHelper requestHelper = RequestHelper();
 
-  List<HistoryModal> _listNhapKho = [];
-  List<HistoryModal> get listNhapKho => _listNhapKho;
+  List<HistoryModel> _listNhapKho = [];
+  List<HistoryModel> get listNhapKho => _listNhapKho;
 
-  List<HistoryModal> _listXuatKho = [];
-  List<HistoryModal> get listXuatKho => _listXuatKho;
+  List<HistoryModel> _listXuatKho = [];
+  List<HistoryModel> get listXuatKho => _listXuatKho;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -30,11 +30,11 @@ class HistoryBloc extends ChangeNotifier {
       var decodedData = jsonDecode(response.body);
       if (isNhapKho) {
         _listNhapKho = (decodedData['data'] as List).map((item) {
-          return HistoryModal.fromJson(item);
+          return HistoryModel.fromJson(item);
         }).toList();
       } else {
         _listXuatKho = (decodedData['data'] as List).map((item) {
-          return HistoryModal.fromJson(item);
+          return HistoryModel.fromJson(item);
         }).toList();
       }
       _isLoading = false;
