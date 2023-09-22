@@ -3,7 +3,7 @@ import 'package:ghethanhpham_thaco/models/aonem.dart';
 import 'package:ghethanhpham_thaco/models/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/export_model.dart';
 import 'package:ghethanhpham_thaco/models/hoachat.dart';
-import 'package:ghethanhpham_thaco/models/hoachat.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:ghethanhpham_thaco/models/scan.dart';

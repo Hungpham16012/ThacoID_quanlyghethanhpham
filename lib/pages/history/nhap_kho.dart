@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/models/history.dart';
 import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
@@ -91,28 +92,48 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: widget.list.map((item) {
                         id++;
+                        Color textColor = item.isNemAo
+                            ? Config().nemAoTrue
+                            : Config().nemAoFalse;
+
                         return Column(
                           children: [
                             ListTile(
                               contentPadding: const EdgeInsets.all(5),
                               horizontalTitleGap: 1.0,
-                              tileColor: Colors.amber,
+                              tileColor: item.isNemAo
+                                  ? Config().nemAoTrue
+                                  : Config().nemAoFalse,
                               leading: Text("$id"),
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(item.maChiTiet),
-                                  Text(item.tenChiTiet),
-                                  Text(item.maCode),
+                                  Text(
+                                    item.maChiTiet,
+                                    style: TextStyle(color: textColor),
+                                  ),
+                                  Text(
+                                    item.tenChiTiet,
+                                    style: TextStyle(color: textColor),
+                                  ),
+                                  Text(
+                                    item.maCode,
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ],
                               ),
                               trailing: Column(
                                 children: [
-                                  Text(item.thoiGianNhap),
+                                  Text(
+                                    item.thoiGianNhap,
+                                    style: TextStyle(color: textColor),
+                                  ),
                                   Text(
                                     item.thoiGianHuy,
-                                    style: const TextStyle(
-                                      color: Colors.redAccent,
+                                    style: TextStyle(
+                                      color: !item.isNemAo
+                                          ? Colors.redAccent
+                                          : textColor,
                                     ),
                                   ),
                                 ],
