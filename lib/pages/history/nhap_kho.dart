@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/models/history.dart';
 import 'package:ghethanhpham_thaco/widgets/divider.dart';
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
@@ -92,8 +93,8 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                       children: widget.list.map((item) {
                         id++;
                         Color textColor = item.isNemAo
-                            ? const Color.fromARGB(255, 2, 14, 3)
-                            : const Color.fromARGB(255, 144, 165, 69);
+                            ? Config().nemAoTrue
+                            : Config().nemAoFalse;
 
                         return Column(
                           children: [
@@ -101,8 +102,8 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                               contentPadding: const EdgeInsets.all(5),
                               horizontalTitleGap: 1.0,
                               tileColor: item.isNemAo
-                                  ? const Color.fromARGB(255, 2, 14, 3)
-                                  : null,
+                                  ? Config().nemAoTrue
+                                  : Config().nemAoFalse,
                               leading: Text("$id"),
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
