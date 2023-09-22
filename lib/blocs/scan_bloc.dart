@@ -5,7 +5,7 @@ import 'package:ghethanhpham_thaco/models/products/export_model.dart';
 import 'package:ghethanhpham_thaco/models/products/hoachat.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:ghethanhpham_thaco/models/scan.dart';
+import 'package:ghethanhpham_thaco/models/products/scan.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 
 class ScanBloc extends ChangeNotifier {
