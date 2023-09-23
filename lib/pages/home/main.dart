@@ -22,9 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
-  final String? featureName; // Define the featureName parameter here
-
-  const MainPage({Key? key, this.featureName}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
