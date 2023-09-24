@@ -81,7 +81,7 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
-  // Export data
+  // Export data - xuất kệ
   Future getExportData(String qrCode) async {
     _isLoading = true;
     _exportData = null;
@@ -173,6 +173,7 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
+  // Nhập áo nệm ghế
   Future aoNemGetData(qrCode) async {
     _isLoading = true;
     _aoNemData = null;
@@ -217,6 +218,7 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
+  // lấy thông tin hóa chất
   Future hoaChatGetData(keyword) async {
     _isLoading = true;
     _hoaChatData = null;

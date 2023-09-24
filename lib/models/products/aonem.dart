@@ -8,8 +8,8 @@ class AoNemGheModel {
   String tenNemAo;
   bool isNem;
   String? tenSanPham;
-  String? tenDongXe;
-  String? tenLoaiXe;
+  String tenDongXe;
+  String tenLoaiXe;
   String tenChiTiet;
   String? ngay;
   String? hoaChat1Id;
@@ -24,8 +24,8 @@ class AoNemGheModel {
     required this.tenNemAo,
     required this.isNem,
     this.tenSanPham,
-    this.tenDongXe,
-    this.tenLoaiXe,
+    required this.tenDongXe,
+    required this.tenLoaiXe,
     required this.tenChiTiet,
     required this.ngay,
     this.hoaChat1Id,

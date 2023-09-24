@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
+import 'package:ghethanhpham_thaco/models/products/aonem.dart';
 import 'package:ghethanhpham_thaco/models/products/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/products/export_model.dart';
 import 'package:ghethanhpham_thaco/models/products/scan.dart';
@@ -41,6 +42,7 @@ class _MainPageState extends State<MainPage> {
   ScanModel? _data;
   ExportModel? _exportData;
   BanLeModel? _banleData;
+  AoNemGheModel? _aoNemGheData;
   final MobileScannerController scannerController = MobileScannerController();
 
   bool _loading = false;
@@ -50,6 +52,7 @@ class _MainPageState extends State<MainPage> {
   static const xuatChiTiet = 'XUATKHOCHITIET';
   static const xuatBanLe = 'XUATKHOBANLE';
   static const nhapBanLe = 'NHAPKHOBANLE';
+  static const nhapAoGhe = 'NHAPKHOAO';
 
   @override
   void initState() {
@@ -184,15 +187,29 @@ class _MainPageState extends State<MainPage> {
           },
         );
       case xuatBanLe || nhapBanLe:
-        _scanBloc.getDataBanLe(qrCode, _appBloc.isNhapKho).then((_) {
-          setState(
-            () {
-              getDataScan(qrCode, _scanBloc.banleData);
-              _loading = false;
-              _banleData = _scanBloc.banleData;
-            },
-          );
-        });
+        _scanBloc.getDataBanLe(qrCode, _appBloc.isNhapKho).then(
+          (_) {
+            setState(
+              () {
+                getDataScan(qrCode, _scanBloc.banleData);
+                _loading = false;
+                _banleData = _scanBloc.banleData;
+              },
+            );
+          },
+        );
+      case nhapAoGhe:
+        _scanBloc.aoNemGetData(qrCode).then(
+          (_) {
+            setState(
+              () {
+                getDataScan(qrCode, _scanBloc.aoNemData);
+                _loading = false;
+                _aoNemGheData = _scanBloc.aoNemData;
+              },
+            );
+          },
+        );
     }
   }
 
@@ -237,6 +254,17 @@ class _MainPageState extends State<MainPage> {
             setState(() {
               _banleData = null;
             });
+          case nhapAoGhe:
+            _scanBloc.postDataAoNem(_aoNemGheData!).then(
+              (value) {
+                statusMessage(_scanBloc.success, _scanBloc.message);
+              },
+            );
+            setState(
+              () {
+                _aoNemGheData = null;
+              },
+            );
         }
 
         setState(() {
@@ -263,6 +291,10 @@ class _MainPageState extends State<MainPage> {
         return _banleData == null
             ? const SizedBox.shrink()
             : renderThongTinBanLe();
+      case nhapAoGhe:
+        return _aoNemGheData == null
+            ? const SizedBox.shrink()
+            : renderThongTinAoGhe();
     }
   }
 
@@ -281,6 +313,10 @@ class _MainPageState extends State<MainPage> {
         return _banleData == null || _loading
             ? const SizedBox.shrink()
             : renderButtonNhapXuat(isNhapKho, _banleData?.nhapXuatKhoId);
+      case nhapAoGhe:
+        return _aoNemGheData == null || _loading
+            ? const SizedBox.shrink()
+            : renderButtonNhapAo(_aoNemGheData?.nhapKhoAoNemId);
       default:
         return const SizedBox.shrink();
     }
@@ -331,6 +367,32 @@ class _MainPageState extends State<MainPage> {
         ),
         label: Text(
           _exportData!.isXuat ? 'Hủy xuất kho' : 'Xuất kho',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontSize: 17,
+          ),
+        ),
+      ),
+    );
+  }
+
+  renderButtonNhapAo(nhapKhoAoNemId) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        onPressed: _onSave,
+        icon: Icon(
+          FontAwesomeIcons.tablet,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        label: Text(
+          nhapKhoAoNemId == null ? "Nhập kho" : "Huỷ nhập kho",
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
             fontSize: 17,
@@ -420,6 +482,31 @@ class _MainPageState extends State<MainPage> {
               child: Column(
                 children: [
                   showInfoXe('Ngày', _banleData!.ngay.toString()),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  renderThongTinAoGhe() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.all(10),
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: Column(
+        children: [
+          showInfoXe('Tên nệm áo', _aoNemGheData!.tenNemAo),
+          showInfoXe('Model', _aoNemGheData!.tenDongXe),
+          showInfoXe('Loại xe', _aoNemGheData!.tenLoaiXe),
+          // ignore: unnecessary_null_comparison
+          if (_aoNemGheData!.ngay != null)
+            SizedBox(
+              child: Column(
+                children: [
+                  showInfoXe('Ngày', _aoNemGheData!.ngay.toString()),
                   const SizedBox(height: 10),
                 ],
               ),
