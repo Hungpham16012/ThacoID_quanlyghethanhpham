@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:ghethanhpham_thaco/models/hoachat.dart';
+import 'package:ghethanhpham_thaco/models/products/hoachat_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';

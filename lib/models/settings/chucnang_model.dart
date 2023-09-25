@@ -16,9 +16,9 @@ class ChucNangModel {
 
   factory ChucNangModel.fromJson(Map<String, dynamic> json) {
     return ChucNangModel(
-      tenNhomChucNang: json["tenNhomChucNang"].toString(),
-      isNhapKho: json["isNhapKho"],
-      thuTu: json["thuTu"],
+      tenNhomChucNang: json['tenNhomChucNang'].toString(),
+      isNhapKho: json['isNhapKho'],
+      thuTu: json['thuTu'],
       lstChucNangs: (json['lstChucNangs'] as List)
           .map((e) => ChucNangItemModel.fromJson(e))
           .toList(),

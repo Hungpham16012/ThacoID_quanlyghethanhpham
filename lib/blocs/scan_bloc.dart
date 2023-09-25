@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:ghethanhpham_thaco/models/products/aonem.dart';
+import 'package:ghethanhpham_thaco/models/products/aonem_model.dart';
 import 'package:ghethanhpham_thaco/models/products/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/products/export_model.dart';
-import 'package:ghethanhpham_thaco/models/products/hoachat.dart';
+import 'package:ghethanhpham_thaco/models/products/hoachat_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:ghethanhpham_thaco/models/products/scan.dart';

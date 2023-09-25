@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/hoachat_bloc.dart';
-import 'package:ghethanhpham_thaco/models/hoachat.dart';
+import 'package:ghethanhpham_thaco/models/products/hoachat_model.dart';
 import 'package:provider/provider.dart';
 
 class HienThiHoaChat extends StatefulWidget {

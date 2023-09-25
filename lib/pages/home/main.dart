@@ -8,7 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
-import 'package:ghethanhpham_thaco/models/products/aonem.dart';
+import 'package:ghethanhpham_thaco/models/products/aonem_model.dart';
 import 'package:ghethanhpham_thaco/models/products/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/products/export_model.dart';
 import 'package:ghethanhpham_thaco/models/products/scan.dart';
