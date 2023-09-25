@@ -1,5 +1,5 @@
 class HoaChatModel {
-  String id;
+  String? id;
   String maHoaChat;
   String tenHoaChat;
   String soLot;
@@ -7,7 +7,7 @@ class HoaChatModel {
   String ngaySanXuat;
 
   HoaChatModel({
-    required this.id,
+    this.id,
     required this.maHoaChat,
     required this.tenHoaChat,
     required this.soLot,

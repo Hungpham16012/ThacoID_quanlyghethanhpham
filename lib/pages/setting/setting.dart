@@ -7,8 +7,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 import 'package:ghethanhpham_thaco/models/chucnang_model.dart';
-import 'package:ghethanhpham_thaco/pages/home.dart';
-import 'package:ghethanhpham_thaco/pages/home/main.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
@@ -54,6 +52,8 @@ class _SettingPageState extends State<SettingPage> {
   int? statusCode;
   bool allowRefresh = true;
   late bool _loading = false;
+  String? _selectedValue;
+  bool _isHovered = false;
 
   @override
   void initState() {
@@ -299,38 +299,60 @@ class _SettingPageState extends State<SettingPage> {
                                 children: group.lstChucNangs.map((feature) {
                                   return Column(
                                     children: [
-                                      ListTile(
-                                        leading: const Icon(Feather.archive),
-                                        title: Text(feature.tenChucNang),
-                                        trailing: Radio<String>(
-                                          value: feature.selected ??
-                                              '', // Use the selected value from your model
-                                          groupValue: feature
-                                              .tenChucNang, // Group by the group's name
-                                          onChanged: (String? value) {
-                                            // Update the selected value in your data model
-                                            setState(
-                                              () {
-                                                feature.selected = value!;
-                                                _appBloc.saveData(
-                                                  feature.tenChucNang,
-                                                  tenNhomChucNang,
-                                                  feature.maChucNang,
-                                                  feature.isNhapKho,
-                                                );
+                                      GestureDetector(
+                                        onDoubleTap: () {
+                                          setState(() {
+                                            _selectedValue =
+                                                feature.tenChucNang;
+                                          });
+                                        },
+                                        onDoubleTapCancel: () {
+                                          setState(() {
+                                            _isHovered = false;
+                                          });
+                                        },
+                                        onDoubleTapDown: (details) {
+                                          setState(() {
+                                            _isHovered = true;
+                                          });
+                                        },
+                                        onTapUp: (details) {
+                                          setState(() {
+                                            _isHovered = false;
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: _isHovered
+                                                  ? Colors.blue // Màu khi hover
+                                                  : Colors
+                                                      .transparent, // Màu mặc định
+                                            ),
+                                          ),
+                                          child: ListTile(
+                                            leading:
+                                                const Icon(Feather.archive),
+                                            title: Text(feature.tenChucNang),
+                                            trailing: Radio<String>(
+                                              value: feature.tenChucNang,
+                                              groupValue: _selectedValue,
+                                              onChanged: (String? value) {
+                                                setState(() {
+                                                  _selectedValue = value;
+                                                  feature.selected = value!;
+                                                  _appBloc.saveData(
+                                                    feature.tenChucNang,
+                                                    tenNhomChucNang,
+                                                    feature.maChucNang,
+                                                    feature.isNhapKho,
+                                                  );
+                                                });
                                               },
-                                            );
-                                            // // Navigate to the homepage or perform other actions based on the selected value
-                                            // Navigator.pushReplacement(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) =>
-                                            //         const MainPage(),
-                                            //   ),
-                                            // );
-                                          },
-                                          activeColor:
-                                              Theme.of(context).primaryColor,
+                                              activeColor: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       // Add additional logic or widgets as needed

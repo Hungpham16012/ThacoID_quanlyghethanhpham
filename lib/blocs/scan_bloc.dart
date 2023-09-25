@@ -17,14 +17,20 @@ class ScanBloc extends ChangeNotifier {
   ExportModel? _exportData;
   ExportModel? get exportData => _exportData;
 
-  AoNemGheModel? _aonemData;
-  AoNemGheModel? get aonemData => _aonemData;
+  AoNemGheModel? _aoNemData;
+  AoNemGheModel? get aoNemData => _aoNemData;
 
   BanLeModel? _banLeData;
   BanLeModel? get banLeData => _banLeData;
 
   HoaChatModel? _hoaChatData;
   HoaChatModel? get hoaChatModel => _hoaChatData;
+
+  List<HoaChatModel?> _listHoaChatISO = [];
+  List<HoaChatModel?> get listHoaChatISO => _listHoaChatISO;
+
+  List<HoaChatModel?> _listHoaChatPoly = [];
+  List<HoaChatModel?> get listHoaChatPoly => _listHoaChatPoly;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -129,15 +135,15 @@ class ScanBloc extends ChangeNotifier {
 
   Future aoNemGetData(qrCode) async {
     _isLoading = true;
-    _aonemData = null;
+    _aoNemData = null;
     try {
       final http.Response response =
           await requestHelper.getData('NhapKhoNemAo?Macode=$qrCode');
       var decodedData = jsonDecode(response.body);
       if (decodedData["data"] != null) {
-        _aonemData = AoNemGheModel.fromJson(decodedData["data"]);
+        _aoNemData = AoNemGheModel.fromJson(decodedData["data"]);
       } else {
-        _aonemData = null;
+        _aoNemData = null;
       }
 
       _isLoading = false;
@@ -213,19 +219,51 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
-  Future hoaChatGetData(keyword) async {
+  Future postDataNemGhe(AoNemGheModel aoNemData) async {
     _isLoading = true;
-    _hoaChatData = null;
+
     try {
-      final http.Response response =
-          await requestHelper.getData('HoaChat?Keyword=$keyword');
-      var decodedData = jsonDecode(response.body);
-      if (decodedData["data"] != null) {
-        _hoaChatData = HoaChatModel.fromJson(decodedData["data"]);
-      } else {
-        _hoaChatData = null;
+      if (aoNemData.hoaChat1Id == null && aoNemData.hoaChat2Id == null) {
+        throw Exception("Both hoaChat1Id and hoaChat2Id cannot be null.");
       }
 
+      var newScanData = aoNemData;
+
+      newScanData.hoaChat1Id =
+          (newScanData.hoaChat1Id == 'null' ? null : newScanData.hoaChat1Id);
+      newScanData.hoaChat2Id =
+          (newScanData.hoaChat2Id == 'null' ? null : newScanData.hoaChat2Id);
+
+      final http.Response response =
+          await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
+
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future getDataHoaChat(String mahoachat) async {
+    _isLoading = true;
+    try {
+      final http.Response response =
+          await requestHelper.getData('HoaChat?Keyword=$mahoachat');
+      var decodedData = jsonDecode(response.body);
+      if (mahoachat == 'ISO') {
+        _listHoaChatISO = (decodedData['data'] as List).map((item) {
+          return HoaChatModel.fromJson(item);
+        }).toList();
+      }
+      if (mahoachat == 'POLY') {
+        _listHoaChatPoly = (decodedData['data'] as List).map((item) {
+          return HoaChatModel.fromJson(item);
+        }).toList();
+      }
       _isLoading = false;
       _success = decodedData["success"];
       _message = decodedData["message"];

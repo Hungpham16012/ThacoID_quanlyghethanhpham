@@ -1,33 +1,30 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
 import 'package:ghethanhpham_thaco/models/aonem.dart';
 import 'package:ghethanhpham_thaco/models/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/export_model.dart';
+import 'package:ghethanhpham_thaco/models/hoachat.dart';
 import 'package:ghethanhpham_thaco/models/scan.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
 import 'package:ghethanhpham_thaco/widgets/divider.dart';
+
 import 'package:ghethanhpham_thaco/widgets/loading.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:dropdown_search/dropdown_search.dart';
-
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
-  final String? featureName; // Define the featureName parameter here
-
-  const MainPage({Key? key, this.featureName}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -41,19 +38,47 @@ class _MainPageState extends State<MainPage> {
   final _qrDataController = TextEditingController();
   Timer? _debounce;
   List<String>? _results = [];
-  ScanModel? _data;
-  ExportModel? _exportData;
   BanLeModel? _banLeData;
-  AoNemGheModel? _aonemData;
+  AoNemGheModel? _aoNemData;
   final MobileScannerController scannerController = MobileScannerController();
+  HoaChatModel? _hoaChatData;
+  String? selectedISO;
+  String? hoachat1Id;
+  String? hoachat2Id;
+  String? selectedPoly;
+  List<HoaChatModel?> listHoaChatISO1 = [];
+  List<HoaChatModel?> listHoaChatPoly1 = [];
 
   bool _loading = false;
+
+  getDataHoaChat(String mahoachat) {
+    setState(() {
+      if (mahoachat == 'ISO') {
+        listHoaChatISO1 = _scanBloc.listHoaChatISO;
+      }
+      if (mahoachat == 'POLY') {
+        listHoaChatPoly1 = _scanBloc.listHoaChatPoly;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _scanBloc = Provider.of<ScanBloc>(context, listen: false);
+    // _scanBloc.getDataHoaChat("ISO");
+    // _scanBloc.getDataHoaChat("POLY");
+    _scanBloc.getDataHoaChat("ISO").then((_) {
+      setState(() {
+        listHoaChatISO1 = _scanBloc.listHoaChatISO;
+      });
+    });
+    _scanBloc.getDataHoaChat("POLY").then((_) {
+      setState(() {
+        listHoaChatPoly1 = _scanBloc.listHoaChatPoly;
+      });
+    });
   }
 
   void _onSearchChanged(String query) {
@@ -64,9 +89,7 @@ class _MainPageState extends State<MainPage> {
       });
     } else {
       setState(() {
-        _data = null;
-        _exportData = null;
-        _aonemData = null;
+        _aoNemData = null;
       });
     }
   }
@@ -94,7 +117,6 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  // ignore: unused_element
   void _showQRCodeScannerDialog(BuildContext context) {
     final MobileScannerController scannerController = MobileScannerController();
 
@@ -135,10 +157,10 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _loading = true;
     });
-    _scanBloc.banLeGetData(qrCode, _appBloc.isNhapKho).then((_) {
+    _scanBloc.aoNemGetData(qrCode).then((_) {
       setState(() {
         _qrData = qrCode;
-        if (_scanBloc.banLeData == null) {
+        if (_scanBloc.aoNemData == null) {
           _qrData = '';
           _qrDataController.text = '';
           if (_scanBloc.success == false && _scanBloc.message!.isNotEmpty) {
@@ -148,7 +170,7 @@ class _MainPageState extends State<MainPage> {
           }
         }
         _loading = false;
-        _banLeData = _scanBloc.banLeData;
+        _aoNemData = _scanBloc.aoNemData;
       });
     });
   }
@@ -157,12 +179,15 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _loading = true;
     });
-    // call api
+
+    _aoNemData?.hoaChat1Id = selectedISO;
+    _aoNemData?.hoaChat2Id = selectedPoly;
+
     AppService().checkInternet().then((hasInternet) {
       if (!hasInternet!) {
         openSnackBar(context, 'no internet'.tr());
       } else {
-        _scanBloc.banLePostData(_banLeData!).then((_) {
+        _scanBloc.postDataNemGhe(_aoNemData!).then((_) {
           if (_scanBloc.success) {
             openSnackBar(context, 'Lưu thành công');
           } else {
@@ -171,9 +196,7 @@ class _MainPageState extends State<MainPage> {
         });
       }
       setState(() {
-        _aonemData = null;
-        _data = null;
-        _exportData = null;
+        _aoNemData = null;
         _banLeData = null;
         _qrData = '';
         _qrDataController.text = '';
@@ -203,7 +226,7 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "abc",
+                  "Nhập kho nệm",
                   style: Theme.of(context).textTheme.titleLarge,
                 ).tr(),
                 const SizedBox(height: 5),
@@ -254,24 +277,80 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-          DropdownSearch<String>(
-            popupProps: PopupProps.menu(
-              showSelectedItems: true,
-              disabledItemFn: (String s) => s.startsWith('I'),
-            ),
-            items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-            dropdownDecoratorProps: DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(
-                labelText: "Menu mode",
-                hintText: "country in menu mode",
-              ),
-            ),
-            onChanged: print,
-          ),
           const SizedBox(height: 5),
+          Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2, // Spread radius
+                      blurRadius: 4, // Blur radius
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: DropdownButton<String>(
+                  hint: const Text('Chọn Hoá Chất POLY'),
+                  value: selectedPoly,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPoly = newValue;
+                    });
+                  },
+                  items: listHoaChatPoly1
+                      .map<DropdownMenuItem<String>>(
+                        (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                          value: hoaChat?.maHoaChat,
+                          child: Text(hoaChat?.maHoaChat ?? ""),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white, // Background color
+                  borderRadius: BorderRadius.circular(8.0), // Border radius
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5), // Shadow color
+                      spreadRadius: 2, // Spread radius
+                      blurRadius: 4, // Blur radius
+                      offset: const Offset(0, 3), // Offset in x and y
+                    ),
+                  ],
+                ),
+                child: DropdownButton<String>(
+                  hint: const Text('Chọn Hoá Chất ISO'),
+                  value: selectedISO,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedISO = newValue;
+                    });
+                  },
+                  items: listHoaChatISO1
+                      .map<DropdownMenuItem<String>>(
+                        (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                          value: hoaChat?.maHoaChat,
+                          child: Text(hoaChat?.maHoaChat ?? ""),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 5),
+          // Button "Quét mã" và phần hiển thị thông tin
           _loading
               ? LoadingWidget(height: 200)
-              : _banLeData == null
+              : _aoNemData == null
                   ? const SizedBox.shrink()
                   : Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -279,17 +358,17 @@ class _MainPageState extends State<MainPage> {
                       color: Theme.of(context).colorScheme.onPrimary,
                       child: Column(
                         children: [
-                          showInfoXe("Tên", _banLeData!.maHangHoa),
+                          showInfoXe("Tên", _aoNemData!.maNemAo),
                           const SizedBox(height: 10),
-                          showInfoXe("Model", _banLeData!.maCode),
+                          showInfoXe("Model", _aoNemData!.tenNemAo),
                           const SizedBox(height: 10),
-                          showInfoXe("Loại xe", _banLeData!.maHangHoa),
+                          showInfoXe("Loại xe", _aoNemData!.barCodeNemAoId),
                           const SizedBox(height: 10),
-                          if (_banLeData!.ngay != null)
+                          if (_aoNemData!.ngay != null)
                             SizedBox(
                                 child: Column(
                               children: [
-                                showInfoXe("Ngày", _banLeData!.ngay.toString()),
+                                showInfoXe("Ngày", _aoNemData!.ngay.toString()),
                                 const SizedBox(height: 10),
                               ],
                             )),
@@ -297,7 +376,8 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
           const SizedBox(height: 5),
-          _banLeData == null || _loading
+
+          _aoNemData == null || _loading
               ? const SizedBox.shrink()
               : Container(
                   width: MediaQuery.of(context).size.width,
@@ -309,16 +389,14 @@ class _MainPageState extends State<MainPage> {
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
                     onPressed: _onSaveExpostData,
-                    icon: Icon(
+                    icon: const Icon(
                       Feather.tablet,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Colors.white,
                     ),
                     label: Text(
-                      _banLeData!.nhapXuatKhoId == null
-                          ? 'Xuất kho'
-                          : 'Hủy xuất kho',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                      _aoNemData!.ngay == null ? 'Nhập kho' : 'Hủy nhập kho',
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 20,
                       ),
                     ),
