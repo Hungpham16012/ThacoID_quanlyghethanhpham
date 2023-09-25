@@ -53,4 +53,5 @@ class HoaChatBloc extends ChangeNotifier {
       notifyListeners();
     }
   }
+  
 }
