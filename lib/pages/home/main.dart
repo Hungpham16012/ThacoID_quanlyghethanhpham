@@ -7,11 +7,13 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
 import 'package:ghethanhpham_thaco/models/products/aonem_model.dart';
 import 'package:ghethanhpham_thaco/models/products/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/products/export_model.dart';
 import 'package:ghethanhpham_thaco/models/products/scan.dart';
+import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
 import 'package:ghethanhpham_thaco/services/request_helper.dart';
 import 'package:ghethanhpham_thaco/ultis/snackbar.dart';
@@ -33,6 +35,7 @@ class _MainPageState extends State<MainPage> {
   static RequestHelper requestHelper = RequestHelper();
   late AppBloc _appBloc;
   late ScanBloc _scanBloc;
+  late FeatureBloc _featureBloc;
   String _qrData = '';
   final _qrDataController = TextEditingController();
   Timer? _debounce;
@@ -41,9 +44,12 @@ class _MainPageState extends State<MainPage> {
   ExportModel? _exportData;
   BanLeModel? _banleData;
   AoNemGheModel? _aoNemGheData;
+  List<ChuyenModel> listChuyens = [];
   final MobileScannerController scannerController = MobileScannerController();
 
   bool _loading = false;
+
+  String? selectedChuyen;
 
   // const machucnang
   static const xuatTheoKe = 'XUATKHOTHEOKE';
@@ -51,12 +57,21 @@ class _MainPageState extends State<MainPage> {
   static const xuatBanLe = 'XUATKHOBANLE';
   static const nhapBanLe = 'NHAPKHOBANLE';
   static const nhapAoGhe = 'NHAPKHOAO';
+  static const nhapThanhPham = 'NHAPKHOTHANHPHAM';
 
   @override
   void initState() {
     super.initState();
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _scanBloc = Provider.of<ScanBloc>(context, listen: false);
+    _featureBloc = Provider.of<FeatureBloc>(context, listen: false);
+    if (_appBloc.maChucNang == nhapThanhPham) {
+      _featureBloc.getData().then((_) {
+        setState(() {
+          listChuyens = _featureBloc.listChuyenModel;
+        });
+      });
+    }
   }
 
   void _onSearchChanged(String query) {
@@ -133,6 +148,12 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
+  // getListChuyen() {
+  //   if (_appBloc.maChucNang == nhapThanhPham) {
+  //     _listChuyens = _featureBloc.listChuyenModel;
+  //   }
+  // }
+
   getDataScan(qrCode, dataScanBloc) {
     _qrData = qrCode;
     if (dataScanBloc == null) {
@@ -208,6 +229,18 @@ class _MainPageState extends State<MainPage> {
             );
           },
         );
+      case nhapThanhPham:
+        _scanBloc.getData(qrCode, true).then(
+          (_) {
+            setState(
+              () {
+                getDataScan(qrCode, _scanBloc.data);
+                _loading = false;
+                _data = _scanBloc.data;
+              },
+            );
+          },
+        );
     }
   }
 
@@ -234,11 +267,13 @@ class _MainPageState extends State<MainPage> {
               _exportData = null;
             });
 
-          case xuatChiTiet:
-            _data!.chuyenId = null;
-            _scanBloc.postData(_data!).then((_) {
-              statusMessage(_scanBloc.success, _scanBloc.message);
-            });
+          case xuatChiTiet || nhapThanhPham:
+            if (_data != null) {
+              _data!.chuyenId = selectedChuyen;
+              _scanBloc.postData(_data!).then((_) {
+                statusMessage(_scanBloc.success, _scanBloc.message);
+              });
+            }
 
             setState(() {
               _data = null;
@@ -281,7 +316,7 @@ class _MainPageState extends State<MainPage> {
         return _exportData == null
             ? const SizedBox.shrink()
             : renderThongTinKe();
-      case xuatChiTiet:
+      case xuatChiTiet || nhapThanhPham:
         return _data == null
             ? const SizedBox.shrink()
             : renderThongTinChiTietKe();
@@ -315,11 +350,16 @@ class _MainPageState extends State<MainPage> {
         return _aoNemGheData == null || _loading
             ? const SizedBox.shrink()
             : renderButtonNhapAo(_aoNemGheData?.nhapKhoAoNemId);
+      case nhapThanhPham:
+        return _data == null || _loading
+            ? const SizedBox.shrink()
+            : renderButtonNhapXuat(true, _data?.nhapXuatKhoId);
       default:
         return const SizedBox.shrink();
     }
   }
 
+  // render button ở các trường hợp nhập xuất sản phẩm khác nhau
   renderButtonNhapXuat(isNhapkho, nhapxuatkhoId) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -514,6 +554,42 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  // chuyen
+  dropdownChuyen(listChuyen) {
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2, // Spread radius
+            blurRadius: 2, // Blur radius
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: DropdownButton<String>(
+        hint: const Text('Chọn Chuyền'),
+        value: selectedChuyen,
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedChuyen = newValue!;
+          });
+        },
+        items: listChuyen
+            .map<DropdownMenuItem<String>>(
+              (ChuyenModel? chuyen) => DropdownMenuItem<String>(
+                value: chuyen?.chuyenId,
+                child: Text(chuyen?.tenChuyen ?? ''),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_appBloc.tenNhomChucNang == null) {
@@ -540,6 +616,13 @@ class _MainPageState extends State<MainPage> {
                   ),
                   const SizedBox(height: 10),
                   const DividerWidget(),
+                  const SizedBox(height: 10),
+                  // hiển thị dropdown chuyền
+                  listChuyens.isEmpty
+                      ? const SizedBox.shrink()
+                      : dropdownChuyen(listChuyens),
+                  // const SizedBox(height: 10),
+                  // const DividerWidget(),
                   const SizedBox(height: 10),
                   EasyAutocomplete(
                     controller: _qrDataController,

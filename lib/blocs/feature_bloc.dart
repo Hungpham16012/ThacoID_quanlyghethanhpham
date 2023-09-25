@@ -23,6 +23,9 @@ class FeatureBloc extends ChangeNotifier {
   int? _statusCode;
   int? get statusCode => _statusCode;
 
+  List<ChuyenModel> _listChuyenModel = [];
+  List<ChuyenModel> get listChuyenModel => _listChuyenModel;
+
   Future<void> getData() async {
     _isLoading = true;
     try {
@@ -35,6 +38,8 @@ class FeatureBloc extends ChangeNotifier {
         _data = (decodedData['data'] as List).map((item) {
           return ChucNangModel.fromJson(item);
         }).toList();
+        var listChuyens = _data[0].lstChucNangs[0].lstChuyenIds;
+        _listChuyenModel = listChuyens ?? [];
         _success = decodedData["success"];
         _message = decodedData["message"];
       } else {
@@ -47,4 +52,6 @@ class FeatureBloc extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Get list chuyen
 }

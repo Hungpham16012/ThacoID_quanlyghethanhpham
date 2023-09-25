@@ -39,7 +39,7 @@ class ChucNangItemModel {
   bool isNem;
   String maChucNang;
   int thuTu;
-  List<Chuyen>? lstChuyenIds;
+  List<ChuyenModel>? lstChuyenIds;
   String? selected;
 
   ChucNangItemModel({
@@ -54,6 +54,14 @@ class ChucNangItemModel {
   });
 
   factory ChucNangItemModel.fromJson(Map<String, dynamic> json) {
+    List<ChuyenModel>? lstChuyenIds;
+    if (json['lstChuyenIds'] is List) {
+      lstChuyenIds = (json['lstChuyenIds'] as List)
+          .map((e) => ChuyenModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } else {
+      lstChuyenIds = null;
+    }
     return ChucNangItemModel(
       checked: json['checked'],
       tenChucNang: json['tenChucNang'],
@@ -61,26 +69,26 @@ class ChucNangItemModel {
       isNem: json['isNem'],
       maChucNang: json['maChucNang'],
       thuTu: json['thuTu'],
-      lstChuyenIds: json['chuyenIds'],
+      lstChuyenIds: lstChuyenIds,
     );
   }
 }
 
-class Chuyen {
+class ChuyenModel {
   String maChucNang;
   int thuTu;
   String tenChuyen;
   String chuyenId;
 
-  Chuyen({
+  ChuyenModel({
     required this.maChucNang,
     required this.thuTu,
     required this.tenChuyen,
     required this.chuyenId,
   });
 
-  factory Chuyen.fromJson(Map<String, dynamic> json) {
-    return Chuyen(
+  factory ChuyenModel.fromJson(Map<String, dynamic> json) {
+    return ChuyenModel(
       maChucNang: json['maChucNang'],
       thuTu: json['thuTu'],
       tenChuyen: json['tenChuyen'],

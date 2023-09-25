@@ -23,9 +23,6 @@ class AppBloc extends ChangeNotifier {
   bool _isNhapKho = false;
   bool get isNhapKho => _isNhapKho;
 
-  List<Chuyen>? _listChuyens;
-  List<Chuyen>? get listChuyens => _listChuyens;
-
   String? _appVersion = '1.0.0';
   String? get appVersion => _appVersion;
 
@@ -63,8 +60,6 @@ class AppBloc extends ChangeNotifier {
     await _pref!.setString('maChucNang', maChucnang);
     await _pref!.setBool('_isNhapKho', isNhapKho);
 
-    // _chuyenId = chuyenId;
-    // _tenChuyen = tenchuyen;
     _tenNhomChucNang = tenNhomchucnang;
     _maChucNang = maChucnang;
     _tenChucNang = tenChucnang;
@@ -84,7 +79,6 @@ class AppBloc extends ChangeNotifier {
   }
 
   Future clearData() async {
-    _listChuyens = [];
     _tenNhomChucNang = null;
     _maChucNang = null;
     _isNhapKho = false;
