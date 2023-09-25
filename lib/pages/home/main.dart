@@ -269,6 +269,8 @@ class _MainPageState extends State<MainPage> {
           Column(
             children: [
               Container(
+                width: 400,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
@@ -281,54 +283,98 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ],
                 ),
-                child: DropdownButton<String>(
-                  hint: const Text('Chọn Hoá Chất POLY'),
-                  value: selectedPoly,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedPoly = newValue;
-                    });
-                  },
-                  items: listHoaChatPoly1
-                      .map<DropdownMenuItem<String>>(
-                        (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
-                          value: hoaChat?.id,
-                          child: Text(hoaChat?.maHoaChat ?? ""),
-                        ),
-                      )
-                      .toList(),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.blue, fontSize: 16),
+                    isDense: true,
+                    focusColor: Colors.blue,
+                    dropdownColor: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 10),
+                    hint: const Text('Chọn Hoá Chất POLY'),
+                    value: selectedPoly,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedPoly = newValue;
+                      });
+                    },
+                    items: [
+                      DropdownMenuItem<String>(
+                        value:
+                            null, // Set the value to null to clear the selection
+                        child: const Text('Chọn Hoá Chất POLY'),
+                      ),
+                      // Add your actual items
+                      ...listHoaChatPoly1
+                          .map<DropdownMenuItem<String>>(
+                            (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                              value: hoaChat?.id,
+                              child: Text(hoaChat?.maHoaChat ?? ""),
+                            ),
+                          )
+                          .toList(),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 20.0),
               Container(
+                width: 400,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white, // Background color
                   borderRadius: BorderRadius.circular(8.0), // Border radius
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5), // Shadow color
-                      spreadRadius: 2, // Spread radius
+                      spreadRadius: 2, // Spread radiusrr
                       blurRadius: 4, // Blur radius
                       offset: const Offset(0, 3), // Offset in x and y
                     ),
                   ],
                 ),
-                child: DropdownButton<String>(
-                  hint: const Text('Chọn Hoá Chất ISO'),
-                  value: selectedISO,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedISO = newValue;
-                    });
-                  },
-                  items: listHoaChatISO1
-                      .map<DropdownMenuItem<String>>(
-                        (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
-                          value: hoaChat?.id,
-                          child: Text(hoaChat?.maHoaChat ?? ""),
-                        ),
-                      )
-                      .toList(),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                    hint: const Text('Chọn Hoá Chất ISO'),
+                    isDense: true,
+                    focusColor: Colors.blue,
+                    dropdownColor: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    value: selectedISO,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedISO = newValue;
+                      });
+                    },
+                    items: [
+                      // Add a "Chọn Hoá Chất ISO" option
+                      DropdownMenuItem<String>(
+                        value:
+                            null, // Set the value to null to clear the selection
+                        child: const Text('Chọn Hoá Chất ISO'),
+                      ),
+                      // Add your actual items
+                      ...listHoaChatISO1
+                          .map<DropdownMenuItem<String>>(
+                            (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                              value: hoaChat?.id,
+                              child: Text(hoaChat?.maHoaChat ?? ""),
+                            ),
+                          )
+                          .toList(),
+                    ],
+                  ),
                 ),
               ),
             ],

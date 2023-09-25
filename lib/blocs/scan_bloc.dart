@@ -224,16 +224,10 @@ class ScanBloc extends ChangeNotifier {
 
     try {
       if (aoNemData.hoaChat1Id == null && aoNemData.hoaChat2Id == null) {
-        throw Exception("Hai hóa chất không thể cùng nhận giá trị null.");
+        _success = false;
       }
 
       var newScanData = aoNemData;
-
-      newScanData.hoaChat1Id =
-          (newScanData.hoaChat1Id == 'null' ? null : newScanData.hoaChat1Id);
-      newScanData.hoaChat2Id =
-          (newScanData.hoaChat2Id == 'null' ? null : newScanData.hoaChat2Id);
-
       final http.Response response =
           await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
 

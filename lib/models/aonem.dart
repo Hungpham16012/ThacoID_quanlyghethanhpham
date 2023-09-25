@@ -1,6 +1,6 @@
 // ignore: file_names
 class AoNemGheModel {
-  String nhapKhoAoNemId;
+  String? nhapKhoAoNemId;
   String barCodeNemAoId;
   String? maKe;
   String maNemAo;
@@ -16,7 +16,7 @@ class AoNemGheModel {
   String? hoaChat2Id;
 
   AoNemGheModel({
-    required this.nhapKhoAoNemId,
+    this.nhapKhoAoNemId,
     required this.barCodeNemAoId,
     this.maKe,
     required this.maNemAo,
@@ -27,7 +27,7 @@ class AoNemGheModel {
     this.tenDongXe,
     this.tenLoaiXe,
     required this.tenChiTiet,
-    required this.ngay,
+    this.ngay,
     this.hoaChat1Id,
     this.hoaChat2Id,
   });
