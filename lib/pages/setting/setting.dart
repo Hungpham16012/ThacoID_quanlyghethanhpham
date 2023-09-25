@@ -53,6 +53,8 @@ class _SettingPageState extends State<SettingPage> {
   bool allowRefresh = true;
   late bool _loading = false;
 
+  String? _selectedValue; // Variable to store the selected value
+
   @override
   void initState() {
     super.initState();
@@ -73,7 +75,6 @@ class _SettingPageState extends State<SettingPage> {
         if (_featureBloc.statusCode == 200) {
           setState(() {
             _loading = false;
-            _listGroupFeatures.addAll(_featureBloc.data);
             _options = _featureBloc.data.map((feature) {
               if (_appBloc.tenNhomChucNang != null &&
                   _appBloc.tenNhomChucNang == feature.tenNhomChucNang) {}
@@ -299,31 +300,19 @@ class _SettingPageState extends State<SettingPage> {
                                         leading: const Icon(Feather.archive),
                                         title: Text(feature.tenChucNang),
                                         trailing: Radio<String>(
-                                          value: feature.selected ??
-                                              '', // Use the selected value from your model
-                                          groupValue: feature
-                                              .tenChucNang, // Group by the group's name
+                                          value: feature.tenChucNang,
+                                          groupValue: _selectedValue,
                                           onChanged: (String? value) {
-                                            // Update the selected value in your data model
-                                            setState(
-                                              () {
-                                                feature.selected = value!;
-                                                _appBloc.saveData(
-                                                  feature.tenChucNang,
-                                                  tenNhomChucNang,
-                                                  feature.maChucNang,
-                                                  feature.isNhapKho,
-                                                );
-                                              },
-                                            );
-                                            // // Navigate to the homepage or perform other actions based on the selected value
-                                            // Navigator.pushReplacement(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) =>
-                                            //         const MainPage(),
-                                            //   ),
-                                            // );
+                                            setState(() {
+                                              _selectedValue = value;
+                                              feature.selected = value!;
+                                              _appBloc.saveData(
+                                                feature.tenChucNang,
+                                                tenNhomChucNang,
+                                                feature.maChucNang,
+                                                feature.isNhapKho,
+                                              );
+                                            });
                                           },
                                           activeColor:
                                               Theme.of(context).primaryColor,

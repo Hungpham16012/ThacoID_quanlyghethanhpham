@@ -15,19 +15,14 @@ class MenuWidget extends StatelessWidget {
     int? index,
     BuildContext? context,
   }) {
-    const color = Color.fromARGB(255, 1, 1, 9);
-    const hoverColor = Color.fromARGB(221, 21, 21, 22);
-
     return ListTile(
       leading: Icon(icon),
       title: Text(
         text,
         style: TextStyle(
-          color: color,
           fontSize: fontSize,
         ),
       ),
-      hoverColor: hoverColor,
       onTap: () {
         Navigator.pop(context!);
         onMenuItemTap(index!);
@@ -53,10 +48,7 @@ class MenuWidget extends StatelessWidget {
           ExpansionTile(
             title: const Text(
               'Nhập kho',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             leading: const Icon(
               Icons.import_export_sharp,
@@ -92,7 +84,6 @@ class MenuWidget extends StatelessWidget {
             title: const Text(
               'Xuất kho',
               style: TextStyle(
-                color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),

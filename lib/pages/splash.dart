@@ -7,13 +7,6 @@ import 'package:ghethanhpham_thaco/ultis/next_screen.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 import 'package:provider/provider.dart';
-// import 'package:provider/provider.dart';
-// import 'package:th_ghe_thanh_pham/blocs/user_bloc.dart';
-
-// import '../blocs/user_bloc.dart';
-// import '../blocs/app_bloc.dart';
-// import 'home.dart';
-//import 'login.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

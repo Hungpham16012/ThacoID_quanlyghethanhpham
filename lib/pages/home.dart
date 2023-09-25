@@ -45,9 +45,7 @@ class _HomePageState extends State<HomePage> {
           image: AssetImage(Config.logoId),
           width: 140,
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
+        iconTheme: const IconThemeData(),
         actions: [
           Container(
             margin: const EdgeInsets.only(top: 21),
