@@ -43,32 +43,18 @@ class _MainPageState extends State<MainPage> {
   final MobileScannerController scannerController = MobileScannerController();
   HoaChatModel? _hoaChatData;
   String? selectedISO;
-  String? hoachat1Id;
-  String? hoachat2Id;
   String? selectedPoly;
   List<HoaChatModel?> listHoaChatISO1 = [];
   List<HoaChatModel?> listHoaChatPoly1 = [];
 
   bool _loading = false;
 
-  getDataHoaChat(String mahoachat) {
-    setState(() {
-      if (mahoachat == 'ISO') {
-        listHoaChatISO1 = _scanBloc.listHoaChatISO;
-      }
-      if (mahoachat == 'POLY') {
-        listHoaChatPoly1 = _scanBloc.listHoaChatPoly;
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _scanBloc = Provider.of<ScanBloc>(context, listen: false);
-    // _scanBloc.getDataHoaChat("ISO");
-    // _scanBloc.getDataHoaChat("POLY");
+
     _scanBloc.getDataHoaChat("ISO").then((_) {
       setState(() {
         listHoaChatISO1 = _scanBloc.listHoaChatISO;
@@ -187,13 +173,15 @@ class _MainPageState extends State<MainPage> {
       if (!hasInternet!) {
         openSnackBar(context, 'no internet'.tr());
       } else {
-        _scanBloc.postDataNemGhe(_aoNemData!).then((_) {
-          if (_scanBloc.success) {
-            openSnackBar(context, 'Lưu thành công');
-          } else {
-            openSnackBar(context, 'Lưu thất bại. ${_scanBloc.message}');
-          }
-        });
+        if (_aoNemData != null) {
+          _scanBloc.postDataNemGhe(_aoNemData!).then((_) {
+            if (_scanBloc.success) {
+              openSnackBar(context, 'Lưu thành công');
+            } else {
+              openSnackBar(context, 'Lưu thất bại. ${_scanBloc.message}');
+            }
+          });
+        }
       }
       setState(() {
         _aoNemData = null;
@@ -304,7 +292,7 @@ class _MainPageState extends State<MainPage> {
                   items: listHoaChatPoly1
                       .map<DropdownMenuItem<String>>(
                         (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
-                          value: hoaChat?.maHoaChat,
+                          value: hoaChat?.id,
                           child: Text(hoaChat?.maHoaChat ?? ""),
                         ),
                       )
@@ -336,7 +324,7 @@ class _MainPageState extends State<MainPage> {
                   items: listHoaChatISO1
                       .map<DropdownMenuItem<String>>(
                         (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
-                          value: hoaChat?.maHoaChat,
+                          value: hoaChat?.id,
                           child: Text(hoaChat?.maHoaChat ?? ""),
                         ),
                       )
@@ -362,7 +350,7 @@ class _MainPageState extends State<MainPage> {
                           const SizedBox(height: 10),
                           showInfoXe("Model", _aoNemData!.tenNemAo),
                           const SizedBox(height: 10),
-                          showInfoXe("Loại xe", _aoNemData!.barCodeNemAoId),
+                          showInfoXe("Loại xe", _aoNemData!.tenChiTiet),
                           const SizedBox(height: 10),
                           if (_aoNemData!.ngay != null)
                             SizedBox(

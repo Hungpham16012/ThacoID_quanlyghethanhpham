@@ -224,7 +224,7 @@ class ScanBloc extends ChangeNotifier {
 
     try {
       if (aoNemData.hoaChat1Id == null && aoNemData.hoaChat2Id == null) {
-        throw Exception("Both hoaChat1Id and hoaChat2Id cannot be null.");
+        throw Exception("Hai hóa chất không thể cùng nhận giá trị null.");
       }
 
       var newScanData = aoNemData;
