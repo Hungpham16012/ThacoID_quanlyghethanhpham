@@ -48,6 +48,7 @@ class _MainPageState extends State<MainPage> {
   static const xuatChiTiet = 'XUATKHOCHITIET';
   static const xuatBanLe = 'XUATKHOBANLE';
   static const nhapBanLe = 'NHAPKHOBANLE';
+  static const nhapKhoNem = 'NHAPKHONEM';
 
   @override
   void initState() {
@@ -191,6 +192,16 @@ class _MainPageState extends State<MainPage> {
             },
           );
         });
+      case nhapKhoNem:
+        _scanBloc.getDataBanLe(qrCode, _appBloc.isNhapKho).then((_) {
+          setState(
+            () {
+              getDataScan(qrCode, _scanBloc.banleData);
+              _loading = false;
+              _banleData = _scanBloc.banleData;
+            },
+          );
+        });
     }
   }
 
@@ -234,6 +245,16 @@ class _MainPageState extends State<MainPage> {
 
             setState(() {
               _banleData = null;
+            });
+          case nhapKhoNem:
+            _scanBloc.postExportData(_exportData!).then(
+              (_) {
+                statusMessage(_scanBloc.success, _scanBloc.message);
+              },
+            );
+
+            setState(() {
+              _exportData = null;
             });
         }
 

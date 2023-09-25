@@ -241,4 +241,23 @@ class ScanBloc extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future postDataNemGhe(AoNemGheModel aoNemData) async {
+    _isLoading = true;
+
+    try {
+      var newScanData = aoNemData;
+      newScanData.hoaChat1Id == null || newScanData.hoaChat2Id == null;
+      final http.Response response =
+          await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
