@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
+import 'package:ghethanhpham_thaco/blocs/index_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/user_bloc.dart';
 import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/pages/login.dart';
@@ -44,7 +45,7 @@ class _SettingPageState extends State<SettingPage> {
   late FeatureBloc _featureBloc;
   late AppBloc _appBloc;
   late UserBloc _userBloc;
-
+  String? _selectedValue;
   String? _version;
   List<ChucNangModel> _listGroupFeatures = [];
   List<SettingOptions> _options = [];
@@ -54,14 +55,14 @@ class _SettingPageState extends State<SettingPage> {
   late bool _loading = false;
   bool _isHovered = false;
 
-  String? _selectedValue; // Variable to store the selected value
-
   @override
   void initState() {
     super.initState();
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _featureBloc = Provider.of<FeatureBloc>(context, listen: false);
     _userBloc = Provider.of<UserBloc>(context, listen: false);
+    _selectedValue = Provider.of<SelectedValueProvider>(context, listen: false)
+        .selectedValue;
     setState(() {
       _loading = true;
     });
@@ -302,6 +303,11 @@ class _SettingPageState extends State<SettingPage> {
                                           setState(() {
                                             _selectedValue =
                                                 feature.tenChucNang;
+                                            Provider.of<SelectedValueProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .setSelectedValue(
+                                                    feature.tenChucNang);
                                           });
                                         },
                                         onDoubleTapCancel: () {
@@ -345,6 +351,10 @@ class _SettingPageState extends State<SettingPage> {
                                                     feature.maChucNang,
                                                     feature.isNhapKho,
                                                   );
+                                                  Provider.of<SelectedValueProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .setSelectedValue(value);
                                                 });
                                               },
                                               activeColor: Theme.of(context)

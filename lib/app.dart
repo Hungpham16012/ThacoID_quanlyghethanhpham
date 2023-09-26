@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
         builder: (_, mode, child) {
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider<CurrentIndexProvider>(
-                create: (context) => CurrentIndexProvider(),
+              ChangeNotifierProvider<SelectedValueProvider>(
+                create: (context) => SelectedValueProvider(),
               ),
               ChangeNotifierProvider<AppBloc>(
                 create: (context) => AppBloc(),

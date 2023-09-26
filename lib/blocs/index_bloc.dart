@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CurrentIndexProvider extends ChangeNotifier {
-  int _currentIndex = 0;
+class SelectedValueProvider extends ChangeNotifier {
+  String? _selectedValue;
 
-  int get currentIndex => _currentIndex;
+  String? get selectedValue => _selectedValue;
 
-  void setIndex(int index) {
-    _currentIndex = index;
-    notifyListeners();
+  void setSelectedValue(String value) {
+    _selectedValue = value;
+    notifyListeners(); // Notify listeners of the change
   }
 }
