@@ -100,7 +100,28 @@ class _MainPageState extends State<MainPage> {
     if (query.isNotEmpty) {
       _debounce?.cancel();
       _debounce = Timer(const Duration(milliseconds: 500), () {
-        _getListCode(query);
+        switch (_appBloc.maChucNang) {
+          case nhapThanhPham || xuatChiTiet:
+            _getListCode(
+              'Mobile/BarCode?keyword=$query',
+              _appBloc.maChucNang,
+            );
+          case nhapAoGhe || nhapNemGhe:
+            _getListCode(
+              'Mobile/barCode-nem-ao?keyword=$query',
+              _appBloc.maChucNang,
+            );
+          case xuatBanLe || nhapBanLe:
+            _getListCode(
+              'NhapXuatKhoBanLe/macode',
+              _appBloc.maChucNang,
+            );
+          case xuatTheoKe:
+            _getListCode(
+              'Mobile/barCode-ma-ke?keyword=$query',
+              _appBloc.maChucNang,
+            );
+        }
       });
     } else {
       setState(() {
@@ -112,19 +133,29 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  Future<void> _getListCode(String query) async {
+  Future<void> _getListCode(String url, String? maChucNang) async {
     setState(() {
       _loading = true;
     });
     try {
-      final http.Response response =
-          await requestHelper.getData('Mobile/BarCode?keyword=$query');
+      final http.Response response = await requestHelper.getData(url);
       var decodedData = jsonDecode(response.body);
-      setState(() {
-        _results = decodedData['data'] == null
-            ? []
-            : List<String>.from(decodedData['data']);
-      });
+      if (maChucNang == xuatBanLe || maChucNang == nhapBanLe) {
+        List<Map<String, dynamic>> results =
+            decodedData['data'] == null ? [] : List.from(decodedData['data']);
+        List<String> listMaCode = results.map((item) {
+          return item['maCode'] as String;
+        }).toList();
+        setState(() {
+          _results = listMaCode;
+        });
+      } else {
+        setState(() {
+          _results = decodedData['data'] == null
+              ? []
+              : List<String>.from(decodedData['data']);
+        });
+      }
       setState(() {
         _loading = false;
       });
