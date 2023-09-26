@@ -594,35 +594,70 @@ class _MainPageState extends State<MainPage> {
   // render dropdown chọn chuyền
   dropdownChuyen(listChuyen) {
     return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      width: 400,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2, // Spread radius
-            blurRadius: 2, // Blur radius
+            spreadRadius: 2,
+            blurRadius: 4,
             offset: const Offset(0, 3),
           ),
         ],
       ),
-      child: DropdownButton<String>(
-        hint: const Text('Chọn Chuyền'),
-        value: selectedChuyen,
-        onChanged: (String? newValue) {
-          setState(() {
-            selectedChuyen = newValue!;
-          });
-        },
-        items: listChuyen
-            .map<DropdownMenuItem<String>>(
-              (ChuyenModel? chuyen) => DropdownMenuItem<String>(
-                value: chuyen?.chuyenId,
-                child: Text(chuyen?.tenChuyen ?? ''),
-              ),
-            )
-            .toList(),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(
+            fontSize: 16,
+            color: selectedChuyen != null
+                ? Colors.red
+                : Colors.blue, // Change text color when selected
+          ),
+          isDense: true,
+          focusColor: Colors.blue,
+          dropdownColor: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          hint: const Text('Chọn Chuyền'),
+          value: selectedChuyen,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedChuyen = newValue;
+            });
+          },
+          items: listChuyen
+              .map<DropdownMenuItem<String>>(
+                (ChuyenModel? chuyen) => DropdownMenuItem<String>(
+                  value: chuyen?.chuyenId,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 180, // Adjust this value as needed
+                      ),
+                      child: Text(
+                        chuyen?.tenChuyen ?? "",
+                        style: TextStyle(
+                          overflow: TextOverflow.visible,
+                          fontSize: 15,
+                          color: selectedChuyen == chuyen?.chuyenId
+                              ? Colors.red
+                              : Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
   }
@@ -640,24 +675,30 @@ class _MainPageState extends State<MainPage> {
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2, // Spread radius
-                blurRadius: 4, // Blur radius
+                spreadRadius: 2,
+                blurRadius: 4,
                 offset: const Offset(0, 3),
               ),
             ],
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
+              isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
               iconSize: 24,
               elevation: 16,
-              style: const TextStyle(color: Colors.blue, fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                color: selectedPoly != null
+                    ? Colors.red
+                    : Colors.blue, // Change text color when selected
+              ),
+              hint: const Text('Chọn Hoá Chất Poly'),
               isDense: true,
               focusColor: Colors.blue,
               dropdownColor: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-              hint: const Text('Chọn Hoá Chất POLY'),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               value: selectedPoly,
               onChanged: (String? newValue) {
                 setState(() {
@@ -666,15 +707,29 @@ class _MainPageState extends State<MainPage> {
               },
               items: [
                 const DropdownMenuItem<String>(
-                  value: null, // Set the value to null to clear the selection
-                  child: Text('Chọn Hoá Chất POLY'),
+                  value: null,
+                  child: Text('Chọn Hoá Chất Poly',
+                      style: TextStyle(color: Colors.blue)),
                 ),
-                // Add your actual items
                 ...listHoaChatPoly1
                     .map<DropdownMenuItem<String>>(
                       (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
                         value: hoaChat?.id,
-                        child: Text(hoaChat?.maHoaChat ?? ""),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 200, // Adjust this value as needed
+                          ),
+                          child: Text(
+                            hoaChat?.maHoaChat ?? "",
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              fontSize: 15,
+                              color: selectedPoly == hoaChat?.id
+                                  ? Colors.red
+                                  : Colors.blue,
+                            ),
+                          ),
+                        ),
                       ),
                     )
                     .toList(),
@@ -687,14 +742,14 @@ class _MainPageState extends State<MainPage> {
           width: 400,
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white, // Background color
-            borderRadius: BorderRadius.circular(8.0), // Border radius
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5), // Shadow color
-                spreadRadius: 2, // Spread radiusrr
-                blurRadius: 4, // Blur radius
-                offset: const Offset(0, 3), // Offset in x and y
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -704,7 +759,12 @@ class _MainPageState extends State<MainPage> {
               icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
               iconSize: 24,
               elevation: 16,
-              style: const TextStyle(color: Colors.blue, fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                color: selectedISO != null
+                    ? Colors.red
+                    : Colors.blue, // Change text color when selected
+              ),
               hint: const Text('Chọn Hoá Chất ISO'),
               isDense: true,
               focusColor: Colors.blue,
@@ -718,17 +778,30 @@ class _MainPageState extends State<MainPage> {
                 });
               },
               items: [
-                // Add a "Chọn Hoá Chất ISO" option
                 const DropdownMenuItem<String>(
                   value: null,
-                  child: Text('Chọn Hoá Chất ISO'),
+                  child: Text('Chọn Hoá Chất ISO',
+                      style: TextStyle(color: Colors.blue)),
                 ),
-
                 ...listHoaChatISO1
                     .map<DropdownMenuItem<String>>(
                       (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
                         value: hoaChat?.id,
-                        child: Text(hoaChat?.maHoaChat ?? ""),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 200, // Adjust this value as needed
+                          ),
+                          child: Text(
+                            hoaChat?.maHoaChat ?? "",
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              fontSize: 15,
+                              color: selectedISO == hoaChat?.id
+                                  ? Colors.red
+                                  : Colors.blue,
+                            ),
+                          ),
+                        ),
                       ),
                     )
                     .toList(),
@@ -736,6 +809,7 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
         ),
+        const DividerWidget(),
       ],
     );
   }
