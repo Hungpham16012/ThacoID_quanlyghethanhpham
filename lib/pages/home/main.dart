@@ -23,7 +23,6 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -49,7 +48,6 @@ class _MainPageState extends State<MainPage> {
   List<HoaChatModel?> listHoaChatPoly1 = [];
 
   bool _loading = false;
-  
 
   @override
   void initState() {
@@ -272,55 +270,55 @@ class _MainPageState extends State<MainPage> {
             children: [
               Container(
                 width: 400,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2, // Spread radius
-                      blurRadius: 4, // Blur radius
+                      spreadRadius: 2,
+                      blurRadius: 4,
                       offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.blue, fontSize: 16),
-                    isDense: true,
-                    focusColor: Colors.blue,
-                    dropdownColor: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 10),
-                    hint: const Text('Chọn Hoá Chất POLY'),
-                    value: selectedPoly,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedPoly = newValue;
-                      });
-                    },
-                    items: [
-                      DropdownMenuItem<String>(
-                        value:
-                            null, // Set the value to null to clear the selection
-                        child: const Text('Chọn Hoá Chất POLY'),
-                      ),
-                      // Add your actual items
-                      ...listHoaChatPoly1
-                          .map<DropdownMenuItem<String>>(
-                            (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
-                              value: hoaChat?.id,
-                              child: Text(hoaChat?.maHoaChat ?? ""),
+                child: DropdownButtonFormField<String>(
+                  icon: const Icon(Icons.arrow_drop_down,
+                      color: Colors.blue, size: 24),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.blue, fontSize: 16),
+                  hint: const Text('Chọn Hoá Chất POLY'),
+                  value: selectedPoly,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPoly = newValue;
+                    });
+                  },
+                  items: [
+                    const DropdownMenuItem<String>(
+                      value: null,
+                      child: Text('Chọn Hoá Chất POLY'),
+                    ),
+                    ...listHoaChatPoly1
+                        .map<DropdownMenuItem<String>>(
+                          (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                            value: hoaChat?.id,
+                            child: Text(
+                              hoaChat?.maHoaChat ?? "",
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: selectedPoly == hoaChat?.id
+                                    ? Colors.red
+                                    : Colors.blue,
+                              ),
                             ),
-                          )
-                          .toList(),
-                    ],
-                  ),
+                          ),
+                        )
+                        .toList(),
+                  ],
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -328,54 +326,54 @@ class _MainPageState extends State<MainPage> {
                 width: 400,
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Background color
-                  borderRadius: BorderRadius.circular(8.0), // Border radius
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5), // Shadow color
-                      spreadRadius: 2, // Spread radiusrr
-                      blurRadius: 4, // Blur radius
-                      offset: const Offset(0, 3), // Offset in x and y
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.blue, fontSize: 16),
-                    hint: const Text('Chọn Hoá Chất ISO'),
-                    isDense: true,
-                    focusColor: Colors.blue,
-                    dropdownColor: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    value: selectedISO,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedISO = newValue;
-                      });
-                    },
-                    items: [
-                      // Add a "Chọn Hoá Chất ISO" option
-                      DropdownMenuItem<String>(
-                        value: null,
-                        child: const Text('Chọn Hoá Chất ISO'),
-                      ),
-
-                      ...listHoaChatISO1
-                          .map<DropdownMenuItem<String>>(
-                            (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
-                              value: hoaChat?.id,
-                              child: Text(hoaChat?.maHoaChat ?? ""),
+                child: DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  icon: const Icon(Icons.arrow_drop_down,
+                      color: Colors.blue, size: 24),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.blue, fontSize: 16),
+                  hint: const Text('Chọn Hoá Chất ISO'),
+                  value: selectedISO,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedISO = newValue;
+                    });
+                  },
+                  items: [
+                    const DropdownMenuItem<String>(
+                      value: null,
+                      child: Text('Chọn Hoá Chất ISO'),
+                    ),
+                    ...listHoaChatISO1
+                        .map<DropdownMenuItem<String>>(
+                          (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                            value: hoaChat?.id,
+                            child: Text(
+                              hoaChat?.maHoaChat ?? "",
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: selectedISO == hoaChat?.id
+                                    ? Colors.red
+                                    : Colors.blue,
+                              ),
                             ),
-                          )
-                          .toList(),
-                    ],
-                  ),
+                          ),
+                        )
+                        .toList(),
+                  ],
                 ),
               ),
             ],
