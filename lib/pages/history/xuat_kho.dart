@@ -94,6 +94,7 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                         Color textColor = item.isNemAo
                             ? Config().nemAoTrue
                             : Config().nemAoFalse;
+
                         return Column(
                           children: [
                             ListTile(
@@ -102,21 +103,36 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                               tileColor: item.isNemAo
                                   ? Config().nemAoTrue
                                   : Config().nemAoFalse,
-                              leading: Text("$id"),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              title: Row(
                                 children: [
                                   Text(
-                                    item.maChiTiet,
+                                    "$id",
                                     style: TextStyle(color: textColor),
                                   ),
-                                  Text(
-                                    item.tenChiTiet,
-                                    style: TextStyle(color: textColor),
-                                  ),
-                                  Text(
-                                    item.maCode,
-                                    style: TextStyle(color: textColor),
+                                  const SizedBox(width: 10),
+                                  item.isNemAo
+                                      ? const Icon(Icons.check,
+                                          color: Colors.green) //
+                                      : const Icon(Icons.check,
+                                          color: Colors.yellow),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.maChiTiet,
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      Text(
+                                        item.tenChiTiet,
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      Text(
+                                        item.maCode,
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -128,11 +144,8 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                                   ),
                                   Text(
                                     item.thoiGianHuy,
-                                    style: TextStyle(
-                                      color: !item.isNemAo
-                                          ? Colors.redAccent
-                                          : textColor,
-                                    ),
+                                    style: const TextStyle(
+                                        color: Colors.redAccent),
                                   ),
                                 ],
                               ),

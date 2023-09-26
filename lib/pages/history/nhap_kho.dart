@@ -114,8 +114,8 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                                   item.isNemAo
                                       ? const Icon(Icons.check,
                                           color: Colors.green) //
-                                      : const Icon(Icons.close,
-                                          color: Colors.red),
+                                      : const Icon(Icons.check,
+                                          color: Colors.yellow),
                                   const SizedBox(width: 10),
                                   Column(
                                     crossAxisAlignment:
@@ -145,11 +145,8 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                                   ),
                                   Text(
                                     item.thoiGianHuy,
-                                    style: TextStyle(
-                                      color: !item.isNemAo
-                                          ? Colors.redAccent
-                                          : textColor,
-                                    ),
+                                    style: const TextStyle(
+                                        color: Colors.redAccent),
                                   ),
                                 ],
                               ),
