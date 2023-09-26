@@ -23,6 +23,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -48,6 +49,7 @@ class _MainPageState extends State<MainPage> {
   List<HoaChatModel?> listHoaChatPoly1 = [];
 
   bool _loading = false;
+  
 
   @override
   void initState() {
@@ -360,11 +362,10 @@ class _MainPageState extends State<MainPage> {
                     items: [
                       // Add a "Chọn Hoá Chất ISO" option
                       DropdownMenuItem<String>(
-                        value:
-                            null, // Set the value to null to clear the selection
+                        value: null,
                         child: const Text('Chọn Hoá Chất ISO'),
                       ),
-                      // Add your actual items
+
                       ...listHoaChatISO1
                           .map<DropdownMenuItem<String>>(
                             (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
@@ -379,9 +380,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ],
           ),
-
           const SizedBox(height: 5),
-          // Button "Quét mã" và phần hiển thị thông tin
           _loading
               ? LoadingWidget(height: 200)
               : _aoNemData == null
@@ -410,7 +409,6 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
           const SizedBox(height: 5),
-
           _aoNemData == null || _loading
               ? const SizedBox.shrink()
               : Container(
