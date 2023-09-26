@@ -12,6 +12,7 @@ import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
 import 'package:ghethanhpham_thaco/models/products/aonem_model.dart';
 import 'package:ghethanhpham_thaco/models/products/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/products/export_model.dart';
+import 'package:ghethanhpham_thaco/models/products/hoachat_model.dart';
 import 'package:ghethanhpham_thaco/models/products/scan.dart';
 import 'package:ghethanhpham_thaco/models/settings/chucnang_model.dart';
 import 'package:ghethanhpham_thaco/services/app_service.dart';
@@ -47,6 +48,12 @@ class _MainPageState extends State<MainPage> {
   List<ChuyenModel> listChuyens = [];
   final MobileScannerController scannerController = MobileScannerController();
 
+  HoaChatModel? _hoaChatData;
+  String? selectedISO;
+  String? selectedPoly;
+  List<HoaChatModel?> listHoaChatISO1 = [];
+  List<HoaChatModel?> listHoaChatPoly1 = [];
+
   bool _loading = false;
 
   String? selectedChuyen;
@@ -58,6 +65,7 @@ class _MainPageState extends State<MainPage> {
   static const nhapBanLe = 'NHAPKHOBANLE';
   static const nhapAoGhe = 'NHAPKHOAO';
   static const nhapThanhPham = 'NHAPKHOTHANHPHAM';
+  static const nhapNemGhe = 'NHAPKHONEM';
 
   @override
   void initState() {
@@ -65,6 +73,8 @@ class _MainPageState extends State<MainPage> {
     _appBloc = Provider.of<AppBloc>(context, listen: false);
     _scanBloc = Provider.of<ScanBloc>(context, listen: false);
     _featureBloc = Provider.of<FeatureBloc>(context, listen: false);
+
+    // set giá trị list chuyền
     if (_appBloc.maChucNang == nhapThanhPham) {
       _featureBloc.getData().then((_) {
         setState(() {
@@ -72,6 +82,18 @@ class _MainPageState extends State<MainPage> {
         });
       });
     }
+
+    // set giá trị hóa chất
+    _scanBloc.getDataHoaChat("ISO").then((_) {
+      setState(() {
+        listHoaChatISO1 = _scanBloc.listHoaChatISO;
+      });
+    });
+    _scanBloc.getDataHoaChat("POLY").then((_) {
+      setState(() {
+        listHoaChatPoly1 = _scanBloc.listHoaChatPoly;
+      });
+    });
   }
 
   void _onSearchChanged(String query) {
@@ -84,6 +106,8 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         _data = null;
         _exportData = null;
+        _banLeData = null;
+        _aoNemGheData = null;
       });
     }
   }
@@ -148,12 +172,6 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
-  // getListChuyen() {
-  //   if (_appBloc.maChucNang == nhapThanhPham) {
-  //     _listChuyens = _featureBloc.listChuyenModel;
-  //   }
-  // }
-
   getDataScan(qrCode, dataScanBloc) {
     _qrData = qrCode;
     if (dataScanBloc == null) {
@@ -217,7 +235,7 @@ class _MainPageState extends State<MainPage> {
             );
           },
         );
-      case nhapAoGhe:
+      case nhapAoGhe || nhapNemGhe:
         _scanBloc.aoNemGetData(qrCode).then(
           (_) {
             setState(
@@ -250,6 +268,7 @@ class _MainPageState extends State<MainPage> {
         _loading = true;
       },
     );
+
     // call api
     AppService().checkInternet().then((hasInternet) {
       if (!hasInternet!) {
@@ -257,11 +276,13 @@ class _MainPageState extends State<MainPage> {
       } else {
         switch (_appBloc.maChucNang) {
           case xuatTheoKe:
-            _scanBloc.postExportData(_exportData!).then(
-              (_) {
-                statusMessage(_scanBloc.success, _scanBloc.message);
-              },
-            );
+            if (_exportData != null) {
+              _scanBloc.postExportData(_exportData!).then(
+                (_) {
+                  statusMessage(_scanBloc.success, _scanBloc.message);
+                },
+              );
+            }
 
             setState(() {
               _exportData = null;
@@ -288,11 +309,27 @@ class _MainPageState extends State<MainPage> {
               _banLeData = null;
             });
           case nhapAoGhe:
-            _scanBloc.postDataAoNem(_aoNemGheData!).then(
-              (value) {
-                statusMessage(_scanBloc.success, _scanBloc.message);
+            if (_aoNemGheData != null) {
+              _scanBloc.postDataNemGhe(_aoNemGheData!).then(
+                (value) {
+                  statusMessage(_scanBloc.success, _scanBloc.message);
+                },
+              );
+            }
+            setState(
+              () {
+                _aoNemGheData = null;
               },
             );
+          case nhapNemGhe:
+            if (_aoNemGheData != null) {
+              _aoNemGheData?.hoaChat1Id = selectedISO;
+              _aoNemGheData?.hoaChat2Id = selectedPoly;
+              _scanBloc.postDataNemGhe(_aoNemGheData!).then((value) {
+                statusMessage(_scanBloc.success, _scanBloc.message);
+              });
+            }
+
             setState(
               () {
                 _aoNemGheData = null;
@@ -324,7 +361,7 @@ class _MainPageState extends State<MainPage> {
         return _banLeData == null
             ? const SizedBox.shrink()
             : renderThongTinBanLe();
-      case nhapAoGhe:
+      case nhapAoGhe || nhapNemGhe:
         return _aoNemGheData == null
             ? const SizedBox.shrink()
             : renderThongTinAoGhe();
@@ -346,7 +383,7 @@ class _MainPageState extends State<MainPage> {
         return _banLeData == null || _loading
             ? const SizedBox.shrink()
             : renderButtonNhapXuat(isNhapKho, _banLeData?.nhapXuatKhoId);
-      case nhapAoGhe:
+      case nhapAoGhe || nhapNemGhe:
         return _aoNemGheData == null || _loading
             ? const SizedBox.shrink()
             : renderButtonNhapAo(_aoNemGheData?.nhapKhoAoNemId);
@@ -554,7 +591,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // chuyen
+  // render dropdown chọn chuyền
   dropdownChuyen(listChuyen) {
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -587,6 +624,119 @@ class _MainPageState extends State<MainPage> {
             )
             .toList(),
       ),
+    );
+  }
+
+  // render dropdown chọn hóa chất
+  hoaChatWidget() {
+    return Column(
+      children: [
+        Container(
+          width: 400,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2, // Spread radius
+                blurRadius: 4, // Blur radius
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+              iconSize: 24,
+              elevation: 16,
+              style: const TextStyle(color: Colors.blue, fontSize: 16),
+              isDense: true,
+              focusColor: Colors.blue,
+              dropdownColor: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+              hint: const Text('Chọn Hoá Chất POLY'),
+              value: selectedPoly,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedPoly = newValue;
+                });
+              },
+              items: [
+                const DropdownMenuItem<String>(
+                  value: null, // Set the value to null to clear the selection
+                  child: Text('Chọn Hoá Chất POLY'),
+                ),
+                // Add your actual items
+                ...listHoaChatPoly1
+                    .map<DropdownMenuItem<String>>(
+                      (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                        value: hoaChat?.id,
+                        child: Text(hoaChat?.maHoaChat ?? ""),
+                      ),
+                    )
+                    .toList(),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        Container(
+          width: 400,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white, // Background color
+            borderRadius: BorderRadius.circular(8.0), // Border radius
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5), // Shadow color
+                spreadRadius: 2, // Spread radiusrr
+                blurRadius: 4, // Blur radius
+                offset: const Offset(0, 3), // Offset in x and y
+              ),
+            ],
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              isExpanded: true,
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+              iconSize: 24,
+              elevation: 16,
+              style: const TextStyle(color: Colors.blue, fontSize: 16),
+              hint: const Text('Chọn Hoá Chất ISO'),
+              isDense: true,
+              focusColor: Colors.blue,
+              dropdownColor: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              value: selectedISO,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedISO = newValue;
+                });
+              },
+              items: [
+                // Add a "Chọn Hoá Chất ISO" option
+                const DropdownMenuItem<String>(
+                  value: null,
+                  child: Text('Chọn Hoá Chất ISO'),
+                ),
+
+                ...listHoaChatISO1
+                    .map<DropdownMenuItem<String>>(
+                      (HoaChatModel? hoaChat) => DropdownMenuItem<String>(
+                        value: hoaChat?.id,
+                        child: Text(hoaChat?.maHoaChat ?? ""),
+                      ),
+                    )
+                    .toList(),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -671,13 +821,17 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
+            // render dropdown chọn hóa chất khi machucnang = nhapNemGhe
+            _appBloc.maChucNang == nhapNemGhe
+                ? hoaChatWidget()
+                : const SizedBox.shrink(),
             // render thông tin data sau khi quét
             _loading
                 ? LoadingWidget(height: 200)
                 : checkNhapXuatKho(_appBloc.maChucNang) ??
                     const SizedBox.shrink(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             checkButton(_appBloc.isNhapKho, _appBloc.maChucNang) ??
                 const SizedBox.shrink(),
           ],

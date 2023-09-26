@@ -16,7 +16,7 @@ class AoNemGheModel {
   String? hoaChat2Id;
 
   AoNemGheModel({
-    required this.nhapKhoAoNemId,
+    this.nhapKhoAoNemId,
     required this.barCodeNemAoId,
     this.maKe,
     required this.maNemAo,
@@ -27,7 +27,7 @@ class AoNemGheModel {
     required this.tenDongXe,
     required this.tenLoaiXe,
     required this.tenChiTiet,
-    required this.ngay,
+    this.ngay,
     this.hoaChat1Id,
     this.hoaChat2Id,
   });
@@ -61,5 +61,7 @@ class AoNemGheModel {
         "tenLoaiXe": tenLoaiXe,
         "tenChiTiet": tenChiTiet,
         "ngay": ngay,
+        "hoaChat1Id": hoaChat1Id,
+        "hoaChat2Id": hoaChat2Id,
       };
 }
