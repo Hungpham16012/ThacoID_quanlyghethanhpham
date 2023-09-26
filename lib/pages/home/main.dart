@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
   List<String>? _results = [];
   ScanModel? _data;
   ExportModel? _exportData;
-  BanLeModel? _banleData;
+  BanLeModel? _banLeData;
   AoNemGheModel? _aoNemGheData;
   List<ChuyenModel> listChuyens = [];
   final MobileScannerController scannerController = MobileScannerController();
@@ -210,9 +210,9 @@ class _MainPageState extends State<MainPage> {
           (_) {
             setState(
               () {
-                getDataScan(qrCode, _scanBloc.banleData);
+                getDataScan(qrCode, _scanBloc.banLeData);
                 _loading = false;
-                _banleData = _scanBloc.banleData;
+                _banLeData = _scanBloc.banLeData;
               },
             );
           },
@@ -280,12 +280,12 @@ class _MainPageState extends State<MainPage> {
             });
 
           case xuatBanLe || nhapBanLe:
-            _scanBloc.banLePostData(_banleData!).then((value) {
+            _scanBloc.banLePostData(_banLeData!).then((value) {
               statusMessage(_scanBloc.success, _scanBloc.message);
             });
 
             setState(() {
-              _banleData = null;
+              _banLeData = null;
             });
           case nhapAoGhe:
             _scanBloc.postDataAoNem(_aoNemGheData!).then(
@@ -321,7 +321,7 @@ class _MainPageState extends State<MainPage> {
             ? const SizedBox.shrink()
             : renderThongTinChiTietKe();
       case xuatBanLe || nhapBanLe:
-        return _banleData == null
+        return _banLeData == null
             ? const SizedBox.shrink()
             : renderThongTinBanLe();
       case nhapAoGhe:
@@ -343,9 +343,9 @@ class _MainPageState extends State<MainPage> {
             ? const SizedBox.shrink()
             : renderButtonNhapXuat(isNhapKho, _data?.nhapXuatKhoId);
       case xuatBanLe || nhapBanLe:
-        return _banleData == null || _loading
+        return _banLeData == null || _loading
             ? const SizedBox.shrink()
-            : renderButtonNhapXuat(isNhapKho, _banleData?.nhapXuatKhoId);
+            : renderButtonNhapXuat(isNhapKho, _banLeData?.nhapXuatKhoId);
       case nhapAoGhe:
         return _aoNemGheData == null || _loading
             ? const SizedBox.shrink()
@@ -511,15 +511,15 @@ class _MainPageState extends State<MainPage> {
       color: Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
-          showInfoXe('Tên hàng hóa', _banleData!.tenHangHoa),
-          showInfoXe('Model', _banleData!.tenDongXe),
-          showInfoXe('Loại xe', _banleData!.tenLoaiXe),
+          showInfoXe('Tên hàng hóa', _banLeData!.tenHangHoa),
+          showInfoXe('Model', _banLeData!.tenDongXe),
+          showInfoXe('Loại xe', _banLeData!.tenLoaiXe),
           // ignore: unnecessary_null_comparison
-          if (_banleData!.ngay != null)
+          if (_banLeData!.ngay != null)
             SizedBox(
               child: Column(
                 children: [
-                  showInfoXe('Ngày', _banleData!.ngay.toString()),
+                  showInfoXe('Ngày', _banLeData!.ngay.toString()),
                   const SizedBox(height: 10),
                 ],
               ),

@@ -8,6 +8,7 @@ class Config {
   //app theme color
   final Color appThemeColor = const Color(0xFF00529C);
 
+  // mau isNemGhe
   final Color nemAoTrue = const Color.fromARGB(255, 42, 9, 142);
   final Color nemAoFalse = const Color.fromARGB(255, 6, 110, 4);
 

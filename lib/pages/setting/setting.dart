@@ -52,6 +52,7 @@ class _SettingPageState extends State<SettingPage> {
   int? statusCode;
   bool allowRefresh = true;
   late bool _loading = false;
+  bool _isHovered = false;
 
   String? _selectedValue; // Variable to store the selected value
 
@@ -296,26 +297,60 @@ class _SettingPageState extends State<SettingPage> {
                                 children: group.lstChucNangs.map((feature) {
                                   return Column(
                                     children: [
-                                      ListTile(
-                                        leading: const Icon(Feather.archive),
-                                        title: Text(feature.tenChucNang),
-                                        trailing: Radio<String>(
-                                          value: feature.tenChucNang,
-                                          groupValue: _selectedValue,
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              _selectedValue = value;
-                                              feature.selected = value!;
-                                              _appBloc.saveData(
-                                                feature.tenChucNang,
-                                                tenNhomChucNang,
-                                                feature.maChucNang,
-                                                feature.isNhapKho,
-                                              );
-                                            });
-                                          },
-                                          activeColor:
-                                              Theme.of(context).primaryColor,
+                                      GestureDetector(
+                                        onDoubleTap: () {
+                                          setState(() {
+                                            _selectedValue =
+                                                feature.tenChucNang;
+                                          });
+                                        },
+                                        onDoubleTapCancel: () {
+                                          setState(() {
+                                            _isHovered = false;
+                                          });
+                                        },
+                                        onDoubleTapDown: (details) {
+                                          setState(() {
+                                            _isHovered = true;
+                                          });
+                                        },
+                                        onTapUp: (details) {
+                                          setState(() {
+                                            _isHovered = false;
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: _isHovered
+                                                  ? Colors.blue // Màu khi hover
+                                                  : Colors
+                                                      .transparent, // Màu mặc định
+                                            ),
+                                          ),
+                                          child: ListTile(
+                                            leading:
+                                                const Icon(Feather.archive),
+                                            title: Text(feature.tenChucNang),
+                                            trailing: Radio<String>(
+                                              value: feature.tenChucNang,
+                                              groupValue: _selectedValue,
+                                              onChanged: (String? value) {
+                                                setState(() {
+                                                  _selectedValue = value;
+                                                  feature.selected = value!;
+                                                  _appBloc.saveData(
+                                                    feature.tenChucNang,
+                                                    tenNhomChucNang,
+                                                    feature.maChucNang,
+                                                    feature.isNhapKho,
+                                                  );
+                                                });
+                                              },
+                                              activeColor: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       // Add additional logic or widgets as needed

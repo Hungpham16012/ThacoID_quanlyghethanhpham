@@ -18,16 +18,20 @@ class ScanBloc extends ChangeNotifier {
   ExportModel? _exportData;
   ExportModel? get exportData => _exportData;
 
-  // model xuất bán lẻ
-  BanLeModel? _banleData;
-  BanLeModel? get banleData => _banleData;
-
-  // model aonem
   AoNemGheModel? _aoNemData;
   AoNemGheModel? get aoNemData => _aoNemData;
 
+  BanLeModel? _banLeData;
+  BanLeModel? get banLeData => _banLeData;
+
   HoaChatModel? _hoaChatData;
   HoaChatModel? get hoaChatModel => _hoaChatData;
+
+  List<HoaChatModel?> _listHoaChatISO = [];
+  List<HoaChatModel?> get listHoaChatISO => _listHoaChatISO;
+
+  List<HoaChatModel?> _listHoaChatPoly = [];
+  List<HoaChatModel?> get listHoaChatPoly => _listHoaChatPoly;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -133,15 +137,15 @@ class ScanBloc extends ChangeNotifier {
   // xuất bán lẻ
   Future getDataBanLe(String qrCode, bool isNhapKho) async {
     _isLoading = true;
-    _banleData = null;
+    _banLeData = null;
     try {
       final http.Response response = await requestHelper
           .getData('NhapXuatKhoBanLe?MaCode=$qrCode&IsNhapKho=$isNhapKho');
       var decodedData = jsonDecode(response.body);
       if (decodedData['data'] != null) {
-        _banleData = BanLeModel.fromJson(decodedData['data']);
+        _banLeData = BanLeModel.fromJson(decodedData['data']);
       } else {
-        _banleData = null;
+        _banLeData = null;
       }
 
       _isLoading = false;
@@ -243,18 +247,69 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
-  Future postDataNemGhe(AoNemGheModel aoNemData) async {
+  Future postDataAoGhe(AoNemGheModel aoNemData) async {
     _isLoading = true;
 
     try {
       var newScanData = aoNemData;
-      newScanData.hoaChat1Id == null || newScanData.hoaChat2Id == null;
+      newScanData.hoaChat1Id = null;
+      newScanData.hoaChat2Id = null;
       final http.Response response =
           await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
       var decodedData = jsonDecode(response.body);
       _isLoading = false;
       _success = decodedData["success"];
       _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future postDataNemGhe(AoNemGheModel aoNemData) async {
+    _isLoading = true;
+
+    try {
+      if (aoNemData.hoaChat1Id == null && aoNemData.hoaChat2Id == null) {
+        _success = false;
+      }
+
+      var newScanData = aoNemData;
+      final http.Response response =
+          await requestHelper.postData('NhapKhoNemAo', newScanData.toJson());
+
+      var decodedData = jsonDecode(response.body);
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData['message'];
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future getDataHoaChat(String mahoachat) async {
+    _isLoading = true;
+    try {
+      final http.Response response =
+          await requestHelper.getData('HoaChat?Keyword=$mahoachat');
+      var decodedData = jsonDecode(response.body);
+      if (mahoachat == 'ISO') {
+        _listHoaChatISO = (decodedData['data'] as List).map((item) {
+          return HoaChatModel.fromJson(item);
+        }).toList();
+      }
+      if (mahoachat == 'POLY') {
+        _listHoaChatPoly = (decodedData['data'] as List).map((item) {
+          return HoaChatModel.fromJson(item);
+        }).toList();
+      }
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
     } catch (e) {
       _message = e.toString();
       _isLoading = false;
