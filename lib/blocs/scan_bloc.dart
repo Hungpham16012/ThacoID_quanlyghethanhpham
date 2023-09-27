@@ -223,12 +223,12 @@ class ScanBloc extends ChangeNotifier {
   }
 
   // lấy thông tin hóa chất
-  Future hoaChatGetData(keyword) async {
+  Future hoaChatGetData(qrCode) async {
     _isLoading = true;
     _hoaChatData = null;
     try {
       final http.Response response =
-          await requestHelper.getData('HoaChat?Keyword=$keyword');
+          await requestHelper.getData('HoaChat/ma-code?MaCode=$qrCode');
       var decodedData = jsonDecode(response.body);
       if (decodedData["data"] != null) {
         _hoaChatData = HoaChatModel.fromJson(decodedData["data"]);

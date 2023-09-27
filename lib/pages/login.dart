@@ -363,7 +363,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 50,
                 ),
                 const Text(
                   'Bản quyền thuộc về THACO INDUSTRIES @ 2023',
