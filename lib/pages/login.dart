@@ -25,19 +25,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late AppBloc _ab;
-  late UserBloc _ub;
-
-  var scaffoldKey = GlobalKey<ScaffoldState>();
+  Color usernameBorderColor = Colors.grey;
+  Color passwordBorderColor = Colors.grey;
   var formKey = GlobalKey<FormState>();
-  var userNameCtrl = TextEditingController();
-  var passwordCtrl = TextEditingController();
-  final _btnController = RoundedLoadingButtonController();
-
-  bool offsecureText = true;
   Icon lockIcon = LockIcon().lock;
+  bool offsecureText = true;
+  var passwordCtrl = TextEditingController();
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  var userNameCtrl = TextEditingController();
+  final FocusNode usernameFocus = FocusNode();
+  final FocusNode passwordFocus = FocusNode();
 
+  late AppBloc _ab;
+  final _btnController = RoundedLoadingButtonController();
   final TextEditingController _diaChiApi = TextEditingController();
+  late UserBloc _ub;
 
   @override
   void initState() {
@@ -163,143 +165,217 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _displayLoginForm() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(
-        left: 30,
-        right: 30,
-        top: 20,
-        bottom: 50,
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 10,
-            right: 5,
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: InkWell(
-                onTap: () {
-                  _settingApi();
-                },
-                child: const Icon(
-                  FontAwesomeIcons.cloud,
-                  color: Colors.white,
+    return Scaffold(
+      backgroundColor: Config().buttonColor,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+          left: 30,
+          right: 30,
+          top: 30,
+          bottom: 30,
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 10,
+              right: 0,
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: InkWell(
+                  onTap: () {
+                    _settingApi();
+                  },
+                  child: const Icon(
+                    FontAwesomeIcons.cloud,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: Image(
-                  height: MediaQuery.of(context).size.width - 150,
-                  width: MediaQuery.of(context).size.width - 150,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image(
+                  height: MediaQuery.of(context).size.width - 170,
+                  // height: 200,
+                  width: MediaQuery.of(context).size.width - 100,
                   image: const AssetImage(Config.logoId),
                   fit: BoxFit.contain,
+                  color: Colors.white,
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'username',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        wordSpacing: 1,
-                        letterSpacing: -0.7,
-                        color: Colors.white,
+                const Text(
+                  'XIN CHÀO!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  height: 70,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ).tr(),
-                    Container(
-                      height: 45,
-                      margin: const EdgeInsets.only(top: 10, bottom: 30),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(10),
+                      Text(
+                        'ĐĂNG NHẬP',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Config().appThemeColor,
+                        ),
                       ),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'enter username'.tr(),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                          border: InputBorder.none,
-                          prefixIcon: const Icon(
-                            Icons.person,
-                            size: 18,
+                      const Text(
+                        'username',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          wordSpacing: 1,
+                          letterSpacing: -0.7,
+                          color: Colors.white,
+                        ),
+                      ).tr(),
+                      Container(
+                        height: 40,
+                        margin: const EdgeInsets.only(top: 5, bottom: 5),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: usernameBorderColor,
+                            width: 2.0,
                           ),
                         ),
-                        controller: userNameCtrl,
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                    const Text(
-                      'password',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        wordSpacing: 1,
-                        letterSpacing: -0.7,
-                        color: Colors.white,
-                      ),
-                    ).tr(),
-                    Container(
-                      height: 45,
-                      margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'enter password'.tr(),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                          border: InputBorder.none,
-                          suffixIcon: IconButton(
-                            icon: lockIcon,
-                            onPressed: () => _onlockPressed(),
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.lock,
-                            size: 18,
+                        child: Focus(
+                          onFocusChange: (hasFocus) {
+                            setState(() {
+                              usernameBorderColor = hasFocus
+                                  ? Config().appThemeColor
+                                  : Colors.grey; //
+                              passwordBorderColor =
+                                  hasFocus ? Colors.grey : passwordBorderColor;
+                            });
+                          },
+                          child: TextFormField(
+                            focusNode: usernameFocus,
+                            decoration: InputDecoration(
+                              hintText: 'enter username'.tr(),
+                              hintStyle: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                              border: InputBorder.none,
+                              prefixIcon: const Icon(
+                                Icons.person_2,
+                                size: 23,
+                              ),
+                            ),
+                            controller: userNameCtrl,
+                            keyboardType: TextInputType.text,
                           ),
                         ),
-                        controller: passwordCtrl,
-                        obscureText: offsecureText,
-                        keyboardType: TextInputType.text,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    loadingButton(
-                      context,
-                      _btnController,
-                      _handleLoginWithUsernamePassword,
-                      'login',
-                      Theme.of(context).primaryColor,
-                      Colors.black,
-                    ),
-                  ],
+                      const Text(
+                        'password',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          wordSpacing: 1,
+                          letterSpacing: -0.7,
+                          color: Colors.white,
+                        ),
+                      ).tr(),
+                      Container(
+                        height: 40,
+                        margin: const EdgeInsets.only(top: 5, bottom: 5),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: passwordBorderColor,
+                            width: 2.0,
+                          ),
+                        ),
+                        child: Focus(
+                          onFocusChange: (hasFocus) {
+                            setState(() {
+                              usernameBorderColor = hasFocus
+                                  ? Config().appThemeColor
+                                  : Colors.blue;
+                              passwordBorderColor = hasFocus
+                                  ? Colors.blue // d
+                                  : passwordBorderColor;
+                            });
+                          },
+                          child: TextFormField(
+                            focusNode: passwordFocus,
+                            decoration: InputDecoration(
+                              hintText: 'enter password'.tr(),
+                              hintStyle: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                              border: InputBorder.none,
+                              suffixIcon: IconButton(
+                                icon: lockIcon,
+                                onPressed: () => _onlockPressed(),
+                              ),
+                              prefixIcon: const Icon(
+                                Icons.lock,
+                                size: 23,
+                              ),
+                            ),
+                            controller: passwordCtrl,
+                            obscureText: offsecureText,
+                            keyboardType: TextInputType.text,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      loadingButton(
+                        context,
+                        _btnController,
+                        _handleLoginWithUsernamePassword,
+                        'login',
+                        Theme.of(context).primaryColor,
+                        Colors.white,
+                      ),
+                      const SizedBox(
+                        height: 35,
+                      )
+                    ],
+                  ),
                 ),
-              )
-            ],
-          ),
-        ],
+                const SizedBox(
+                  height: 100,
+                ),
+                const Text(
+                  'Bản quyền thuộc về THACO INDUSTRIES @ 2023',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

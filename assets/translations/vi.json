@@ -2,13 +2,13 @@
   "welcome to": "Chào mừng bạn",
   "login to continue": "Đăng nhập để tiếp tục",
   "login": "Đăng nhập",
-  "username": "MNV/Email",
+  "username": "Mã nhân viên /Email",
   "password": "Mật khẩu",
-  "username is required": "MNV/Email là bắt buộc",
+  "username is required": "Mã nhân viên/Email là bắt buộc",
   "password is required": "Mật khẩu là bắt buộc",
   "username or password is incorrect": "Mã nhân viên hoặc mật khẩu không đúng.",
-  "enter username": "Nhập MNV/Email",
-  "enter password": "Nhập mật khẩu",
+  "enter username": " Mã nhân viên hoặc Email",
+  "enter password": " Mật khẩu",
   "no internet": "Không có kết nối internet.",
   "settings": "Thiết lập",
   "general settings": "Thiết lập chung",
@@ -25,5 +25,6 @@
   "notification": "Thông báo",
   "result": "Kết quả",
   "about app": "Về ứng dụng",
-  "copyright": "© 2022 Bản quyền thuộc về THACO Chu Lai"
+  "copyright": "© 2023 Bản quyền thuộc về THACO Chu Lai"
+
 }

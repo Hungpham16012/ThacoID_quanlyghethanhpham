@@ -55,21 +55,28 @@ class MenuWidget extends StatelessWidget {
             ),
             children: [
               MenuItem(
-                text: 'Nhập áo ghế',
+                text: 'Nhập kho thành phẩm',
                 fontSize: 17,
                 index: 2,
                 context: context,
                 icon: Icons.add_circle,
               ),
               MenuItem(
-                text: 'Nhập nệm ghế',
+                text: 'Nhập kho áo',
                 fontSize: 17,
                 index: 2,
                 context: context,
                 icon: Icons.add_circle,
               ),
               MenuItem(
-                text: 'Nhập thành phẩm ghế',
+                text: 'Nhập kho nệm',
+                fontSize: 17,
+                index: 2,
+                context: context,
+                icon: Icons.add_circle,
+              ),
+              MenuItem(
+                text: 'Nhập kho bán lẻ',
                 fontSize: 17,
                 index: 2,
                 context: context,
@@ -105,7 +112,7 @@ class MenuWidget extends StatelessWidget {
                 icon: Icons.add_circle,
               ),
               MenuItem(
-                text: 'Xuất bán lẻ',
+                text: 'Xuất kho bán lẻ',
                 fontSize: 17,
                 index: 2,
                 context: context,

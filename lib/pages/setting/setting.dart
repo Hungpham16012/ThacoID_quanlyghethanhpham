@@ -90,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
         setState(() {
           _loading = false;
         });
-        checkUpdate(_appBloc.appVersion ?? "1.0.3");
+        checkUpdate(_appBloc.appVersion ?? "1.0.4");
         statusCode = _featureBloc.statusCode;
         Future.delayed(const Duration(seconds: 2), () async {
           if (_featureBloc.statusCode == 401) {
@@ -298,68 +298,39 @@ class _SettingPageState extends State<SettingPage> {
                                 children: group.lstChucNangs.map((feature) {
                                   return Column(
                                     children: [
-                                      GestureDetector(
-                                        onDoubleTap: () {
-                                          setState(() {
-                                            _selectedValue =
-                                                feature.tenChucNang;
-                                            Provider.of<SelectedValueProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .setSelectedValue(
-                                                    feature.tenChucNang);
-                                          });
-                                        },
-                                        onDoubleTapCancel: () {
-                                          setState(() {
-                                            _isHovered = false;
-                                          });
-                                        },
-                                        onDoubleTapDown: (details) {
-                                          setState(() {
-                                            _isHovered = true;
-                                          });
-                                        },
-                                        onTapUp: (details) {
-                                          setState(() {
-                                            _isHovered = false;
-                                          });
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: _isHovered
-                                                  ? Colors.blue // Màu khi hover
-                                                  : Colors
-                                                      .transparent, // Màu mặc định
-                                            ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: _isHovered
+                                                ? Colors.blue // Màu khi hover
+                                                : Colors
+                                                    .transparent, // Màu mặc định
                                           ),
-                                          child: ListTile(
-                                            leading:
-                                                const Icon(Feather.archive),
-                                            title: Text(feature.tenChucNang),
-                                            trailing: Radio<String>(
-                                              value: feature.tenChucNang,
-                                              groupValue: _selectedValue,
-                                              onChanged: (String? value) {
-                                                setState(() {
-                                                  _selectedValue = value;
-                                                  feature.selected = value!;
-                                                  _appBloc.saveData(
-                                                    feature.tenChucNang,
-                                                    tenNhomChucNang,
-                                                    feature.maChucNang,
-                                                    feature.isNhapKho,
-                                                  );
-                                                  Provider.of<SelectedValueProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .setSelectedValue(value);
-                                                });
-                                              },
-                                              activeColor: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
+                                        ),
+                                        child: ListTile(
+                                          leading: const Icon(Feather.archive),
+                                          title: Text(feature.tenChucNang),
+                                          trailing: Radio<String>(
+                                            value: feature.tenChucNang,
+                                            groupValue: _selectedValue,
+                                            onChanged: (String? value) {
+                                              setState(() {
+                                                _selectedValue = value;
+                                                feature.selected = value!;
+                                                _appBloc.saveData(
+                                                  feature.tenChucNang,
+                                                  tenNhomChucNang,
+                                                  feature.maChucNang,
+                                                  feature.isNhapKho,
+                                                );
+                                                Provider.of<SelectedValueProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .setSelectedValue(value);
+                                              });
+                                            },
+                                            activeColor:
+                                                Theme.of(context).primaryColor,
                                           ),
                                         ),
                                       ),

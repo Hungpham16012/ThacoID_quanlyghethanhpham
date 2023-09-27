@@ -7,10 +7,13 @@ class Config {
 
   //app theme color
   final Color appThemeColor = const Color(0xFF00529C);
+  final Color buttonColor = const Color(0xFF0469B9);
 
   // mau isNemGhe
   final Color nemAoTrue = const Color.fromARGB(255, 42, 9, 142);
   final Color nemAoFalse = const Color.fromARGB(255, 6, 110, 4);
+  final Color defaultSelected = Colors.black;
+  final Color selected = const Color(0xFF00529C);
 
   // Icons
   static const String appIcon = 'assets/images/icon.png';

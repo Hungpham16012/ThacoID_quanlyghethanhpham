@@ -58,7 +58,7 @@ class UserUI extends StatelessWidget {
             ),
           ),
           title: Text(
-            "Phiên bản: ${appBloc.appVersion ?? '1.0.3'}",
+            "Phiên bản: ${appBloc.appVersion ?? '1.0.4'}",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,

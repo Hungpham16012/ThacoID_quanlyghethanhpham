@@ -92,18 +92,13 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: widget.list.map((item) {
                         id++;
-                        Color textColor = item.isNemAo
-                            ? Config().nemAoTrue
-                            : Config().nemAoFalse;
+                        Color textColor = Config().defaultSelected;
 
                         return Column(
                           children: [
                             ListTile(
                               contentPadding: const EdgeInsets.all(5),
                               horizontalTitleGap: 1.0,
-                              tileColor: item.isNemAo
-                                  ? Config().nemAoTrue
-                                  : Config().nemAoFalse,
                               title: Row(
                                 children: [
                                   Text(
@@ -111,16 +106,14 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                                     style: TextStyle(color: textColor),
                                   ),
                                   const SizedBox(width: 10),
-                                  item.isNemAo
-                                      ? const Icon(Icons.check,
-                                          color: Colors.green) //
-                                      : const Icon(Icons.check,
-                                          color: Colors.yellow),
                                   const SizedBox(width: 10),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      item.isNemAo
+                                          ? const Text('Nhập áo/nệm')
+                                          : const Text('Nhập ghế thành phẩm'),
                                       Text(
                                         item.maChiTiet,
                                         style: TextStyle(color: textColor),

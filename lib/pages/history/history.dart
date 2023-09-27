@@ -105,7 +105,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       groupValue: selectedValue,
                       onChanged: onChangeSelect,
                     ),
-                    const Text('Nhập kho'),
+                    const Text('Nhập kho', style: TextStyle(fontSize: 16)),
                   ],
                 ),
                 Row(
@@ -116,7 +116,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       groupValue: selectedValue,
                       onChanged: onChangeSelect,
                     ),
-                    const Text('Xuất kho'),
+                    const Text('Xuất kho', style: TextStyle(fontSize: 16)),
                   ],
                 ),
               ],

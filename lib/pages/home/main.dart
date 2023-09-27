@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ghethanhpham_thaco/blocs/app_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/feature_bloc.dart';
 import 'package:ghethanhpham_thaco/blocs/scan_bloc.dart';
+import 'package:ghethanhpham_thaco/config/config.dart';
 import 'package:ghethanhpham_thaco/models/products/aonem_model.dart';
 import 'package:ghethanhpham_thaco/models/products/banle_model.dart';
 import 'package:ghethanhpham_thaco/models/products/export_model.dart';
@@ -642,17 +643,17 @@ class _MainPageState extends State<MainPage> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+          icon: Icon(Icons.arrow_drop_down, color: Config().selected),
           iconSize: 24,
           elevation: 16,
           style: TextStyle(
             fontSize: 16,
             color: selectedChuyen != null
-                ? Colors.red
-                : Colors.blue, // Change text color when selected
+                ? Config().selected
+                : Config().defaultSelected, // Change text color when selected
           ),
           isDense: true,
-          focusColor: Colors.blue,
+          focusColor: Config().defaultSelected,
           dropdownColor: Colors.white,
           borderRadius: BorderRadius.circular(8),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -679,8 +680,8 @@ class _MainPageState extends State<MainPage> {
                           overflow: TextOverflow.visible,
                           fontSize: 15,
                           color: selectedChuyen == chuyen?.chuyenId
-                              ? Colors.red
-                              : Colors.blue,
+                              ? Config().selected
+                              : Config().defaultSelected,
                         ),
                       ),
                     ),
@@ -715,18 +716,19 @@ class _MainPageState extends State<MainPage> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+              icon: Icon(Icons.arrow_drop_down, color: Config().selected),
               iconSize: 24,
               elevation: 16,
               style: TextStyle(
                 fontSize: 16,
                 color: selectedPoly != null
-                    ? Colors.red
-                    : Colors.blue, // Change text color when selected
+                    ? Config().selected
+                    : Config()
+                        .defaultSelected, // Change text color when selected
               ),
               hint: const Text('Chọn Hoá Chất Poly'),
               isDense: true,
-              focusColor: Colors.blue,
+              focusColor: Config().defaultSelected,
               dropdownColor: Colors.white,
               borderRadius: BorderRadius.circular(8),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -737,10 +739,10 @@ class _MainPageState extends State<MainPage> {
                 });
               },
               items: [
-                const DropdownMenuItem<String>(
+                DropdownMenuItem<String>(
                   value: null,
                   child: Text('Chọn Hoá Chất Poly',
-                      style: TextStyle(color: Colors.blue)),
+                      style: TextStyle(color: Config().defaultSelected)),
                 ),
                 ...listHoaChatPoly1
                     .map<DropdownMenuItem<String>>(
@@ -756,8 +758,8 @@ class _MainPageState extends State<MainPage> {
                               overflow: TextOverflow.visible,
                               fontSize: 15,
                               color: selectedPoly == hoaChat?.id
-                                  ? Colors.red
-                                  : Colors.blue,
+                                  ? Config().selected
+                                  : Config().defaultSelected,
                             ),
                           ),
                         ),
@@ -787,18 +789,19 @@ class _MainPageState extends State<MainPage> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+              icon: Icon(Icons.arrow_drop_down, color: Config().selected),
               iconSize: 24,
               elevation: 16,
               style: TextStyle(
                 fontSize: 16,
                 color: selectedISO != null
-                    ? Colors.red
-                    : Colors.blue, // Change text color when selected
+                    ? Config().selected
+                    : Config()
+                        .defaultSelected, // Change text color when selected
               ),
               hint: const Text('Chọn Hoá Chất ISO'),
               isDense: true,
-              focusColor: Colors.blue,
+              focusColor: Config().defaultSelected,
               dropdownColor: Colors.white,
               borderRadius: BorderRadius.circular(8),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -809,10 +812,10 @@ class _MainPageState extends State<MainPage> {
                 });
               },
               items: [
-                const DropdownMenuItem<String>(
+                DropdownMenuItem<String>(
                   value: null,
                   child: Text('Chọn Hoá Chất ISO',
-                      style: TextStyle(color: Colors.blue)),
+                      style: TextStyle(color: Config().defaultSelected)),
                 ),
                 ...listHoaChatISO1
                     .map<DropdownMenuItem<String>>(
@@ -828,8 +831,8 @@ class _MainPageState extends State<MainPage> {
                               overflow: TextOverflow.visible,
                               fontSize: 15,
                               color: selectedISO == hoaChat?.id
-                                  ? Colors.red
-                                  : Colors.blue,
+                                  ? Config().selected
+                                  : Config().defaultSelected,
                             ),
                           ),
                         ),

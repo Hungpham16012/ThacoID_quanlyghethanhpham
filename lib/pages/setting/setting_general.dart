@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
-
 import 'package:ghethanhpham_thaco/blocs/theme_bloc.dart';
 
 class SettingGeneral extends StatefulWidget {
@@ -12,6 +11,7 @@ class SettingGeneral extends StatefulWidget {
 }
 
 class _SettingGeneralState extends State<SettingGeneral> {
+  String? selectedValue;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,8 +59,92 @@ class _SettingGeneralState extends State<SettingGeneral> {
               },
             ),
           ),
+          const SizedBox(height: 15),
+          _buildLanguageDropdown(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildLanguageDropdown(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        _showLanguagePicker(context);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.transparent,
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Icon(
+              Icons.language, // Thay bằng biểu tượng ngôn ngữ của bạn
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              selectedValue == null
+                  ? 'Chọn ngôn ngữ'
+                  : selectedValue == 'en'
+                      ? 'English'
+                      : selectedValue == 'vi'
+                          ? 'Tiếng Việt'
+                          : '', // Thêm các ngôn ngữ khác ở đây
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.arrow_drop_down, // Biểu tượng mũi tên xuống
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: Text('English'),
+                onTap: () {
+                  setState(() {
+                    selectedValue = 'en';
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text('Tiếng Việt'),
+                onTap: () {
+                  setState(() {
+                    selectedValue = 'vi';
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              // Thêm các ngôn ngữ khác ở đây
+            ],
+          ),
+        );
+      },
     );
   }
 }

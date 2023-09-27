@@ -26,21 +26,21 @@ void main() async {
     ignoreSsl: true,
   );
 
-  runApp(EasyLocalization(
-    supportedLocales: const [
-      Locale('en'),
-      Locale('vi'),
-      Locale('ko'),
-      Locale('ja'),
-    ],
-    path: 'assets/translations',
-    fallbackLocale: const Locale('vi'),
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en'),
+        Locale('vi'),
+        Locale('ko'),
+        Locale('ja'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('vi'),
 
-    // default language
-    startLocale: const Locale('vi'),
-    useOnlyLangCode: true,
-    child: const MyApp(
-      
+      // default language
+      startLocale: const Locale('vi'),
+      useOnlyLangCode: true,
+      child: const MyApp(),
     ),
-  ));
+  );
 }
