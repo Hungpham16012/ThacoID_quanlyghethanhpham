@@ -50,8 +50,8 @@ class _MainPageState extends State<MainPage> {
   final MobileScannerController scannerController = MobileScannerController();
 
   HoaChatModel? hoaChat;
-  HoaChatModel? hoaChat1;
-  HoaChatModel? hoaChat2;
+  HoaChatModel? hoaChatISO;
+  HoaChatModel? hoaChatPoly;
   String? selectedISO;
   String? selectedPoly;
   List<HoaChatModel?> listHoaChatISO1 = [];
@@ -86,17 +86,17 @@ class _MainPageState extends State<MainPage> {
       });
     }
 
-    // set giá trị hóa chất
-    _scanBloc.getDataHoaChat("ISO").then((_) {
-      setState(() {
-        listHoaChatISO1 = _scanBloc.listHoaChatISO;
-      });
-    });
-    _scanBloc.getDataHoaChat("POLY").then((_) {
-      setState(() {
-        listHoaChatPoly1 = _scanBloc.listHoaChatPoly;
-      });
-    });
+    // // set giá trị hóa chất
+    // _scanBloc.getDataHoaChat("ISO").then((_) {
+    //   setState(() {
+    //     listHoaChatISO1 = _scanBloc.listHoaChatISO;
+    //   });
+    // });
+    // _scanBloc.getDataHoaChat("POLY").then((_) {
+    //   setState(() {
+    //     listHoaChatPoly1 = _scanBloc.listHoaChatPoly;
+    //   });
+    // });
   }
 
   void _onSearchChanged(String query) {
@@ -200,7 +200,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void _showQRCodeScannerDialogHoaChat1(BuildContext context) {
+  void _showQRCodeScannerDialogHoaChatISO(BuildContext context) {
     final MobileScannerController scannerController = MobileScannerController();
 
     showDialog(
@@ -213,7 +213,7 @@ class _MainPageState extends State<MainPage> {
             onDetect: (Barcode barcode, MobileScannerArguments? args) {
               // Handle the detected QR code here
               final qrData = barcode.rawValue;
-              onScanHoaChat1(qrData);
+              onScanHoaChatISO(qrData);
               Navigator.of(context).pop(); // Close the dialog
             },
           ),
@@ -230,7 +230,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void _showQRCodeScannerDialogHoaChat2(BuildContext context) {
+  void _showQRCodeScannerDialogHoaChatPoly(BuildContext context) {
     final MobileScannerController scannerController = MobileScannerController();
 
     showDialog(
@@ -243,7 +243,7 @@ class _MainPageState extends State<MainPage> {
             onDetect: (Barcode barcode, MobileScannerArguments? args) {
               // Handle the detected QR code here
               final qrData = barcode.rawValue;
-              onScanHoaChat2(qrData);
+              onScanHoaChatPoly(qrData);
               Navigator.of(context).pop(); // Close the dialog
             },
           ),
@@ -429,8 +429,8 @@ class _MainPageState extends State<MainPage> {
             );
           case nhapNemGhe:
             if (_aoNemGheData != null) {
-              _aoNemGheData?.hoaChat1Id = hoaChat1?.id;
-              _aoNemGheData?.hoaChat2Id = hoaChat2?.id;
+              _aoNemGheData?.hoaChat1Id = hoaChatISO?.id;
+              _aoNemGheData?.hoaChat2Id = hoaChatPoly?.id;
               _scanBloc.postDataNemGhe(_aoNemGheData!).then((value) {
                 statusMessage(_scanBloc.success, _scanBloc.message);
               });
@@ -453,6 +453,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // kiểm tra case hiển thị thông tin sản phẩm
+
   checkNhapXuatKho(machucnang) {
     switch (machucnang) {
       case xuatTheoKe:
@@ -503,6 +504,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // render button ở các trường hợp nhập xuất sản phẩm khác nhau
+
   renderButtonNhapXuat(isNhapkho, nhapxuatkhoId) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -584,6 +586,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // render thông tin sản phẩm
+
   renderThongTinKe() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -698,6 +701,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // render dropdown chọn chuyền
+
   dropdownChuyen(listChuyen) {
     return Container(
       width: 400,
@@ -769,6 +773,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // render dropdown chọn hóa chất
+
   hoaChatWidget() {
     return Column(
       children: [
@@ -922,15 +927,15 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void removeHoaChat1(hoaChat) {
+  void removeHoaChatISO(hoaChat) {
     setState(() {
-      hoaChat1 = null;
+      hoaChatISO = null;
     });
   }
 
-  void removeHoaChat2(hoaChat) {
+  void removeoaChatPoly(hoaChat) {
     setState(() {
-      hoaChat2 = null;
+      hoaChatPoly = null;
     });
   }
 
@@ -960,9 +965,9 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        hoaChat1 == null
-                            ? 'Hóa chất 1:'
-                            : 'Hóa chất 1: ${hoaChat1?.maHoaChat}',
+                        hoaChatISO == null
+                            ? 'Hóa chất ISO:'
+                            : 'Hóa chất ISO: ${hoaChatISO?.maHoaChat}',
                         style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -971,7 +976,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
-                        _showQRCodeScannerDialogHoaChat1(context);
+                        _showQRCodeScannerDialogHoaChatISO(context);
                       },
                       icon: const Icon(
                         Icons.qr_code_2_rounded,
@@ -987,8 +992,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Hàm xóa dòng được gọi ở đây
-                        removeHoaChat1(hoaChat);
+                        removeHoaChatISO(hoaChatISO);
                       },
                       icon: const Icon(
                         Icons.delete,
@@ -1009,9 +1013,9 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        hoaChat2 == null
-                            ? 'Hóa chất 2:'
-                            : 'Hóa chất 2: ${hoaChat2?.maHoaChat}',
+                        hoaChatPoly == null
+                            ? 'Hóa chất Poly:'
+                            : 'Hóa chất Poly: ${hoaChatPoly?.maHoaChat}',
                         style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -1020,7 +1024,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
-                        _showQRCodeScannerDialogHoaChat2(context);
+                        _showQRCodeScannerDialogHoaChatPoly(context);
                       },
                       icon: const Icon(
                         Icons.qr_code_2_rounded,
@@ -1036,8 +1040,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Hàm xóa dòng được gọi ở đây
-                        removeHoaChat2(hoaChat);
+                        removeoaChatPoly(hoaChatPoly);
                       },
                       icon: const Icon(
                         Icons.delete,
@@ -1062,28 +1065,28 @@ class _MainPageState extends State<MainPage> {
   }
 
   // scan qrcode hóa chất
-  onScanHoaChat1(qrHoaChat) {
-    _scanBloc.hoaChatGetData(qrHoaChat).then(
+  onScanHoaChatISO(qrHoaChat) {
+    _scanBloc.hoaChatGetData(qrHoaChat, 'ISO').then(
       (_) {
         setState(
           () {
             getDataScan(qrHoaChat, _scanBloc.hoaChatModel);
             _loading = false;
-            hoaChat1 = _scanBloc.hoaChatModel;
+            hoaChatISO = _scanBloc.hoaChatModel;
           },
         );
       },
     );
   }
 
-  onScanHoaChat2(qrHoaChat) {
-    _scanBloc.hoaChatGetData(qrHoaChat).then(
+  onScanHoaChatPoly(qrHoaChat) {
+    _scanBloc.hoaChatGetData(qrHoaChat, 'Poly').then(
       (_) {
         setState(
           () {
             getDataScan(qrHoaChat, _scanBloc.hoaChatModel);
             _loading = false;
-            hoaChat2 = _scanBloc.hoaChatModel;
+            hoaChatPoly = _scanBloc.hoaChatModel;
           },
         );
       },

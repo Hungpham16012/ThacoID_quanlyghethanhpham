@@ -263,7 +263,7 @@ class ScanBloc extends ChangeNotifier {
   }
 
   // lấy thông tin hóa chất
-  Future hoaChatGetData(qrCode) async {
+  Future hoaChatGetData(String qrCode, String tenHoaChat) async {
     _isLoading = true;
     _hoaChatData = null;
     try {
@@ -276,9 +276,19 @@ class ScanBloc extends ChangeNotifier {
         _hoaChatData = null;
       }
 
-      _isLoading = false;
       _success = decodedData["success"];
       _message = decodedData["message"];
+
+      if (_hoaChatData != null) {
+        if (tenHoaChat != _hoaChatData?.tenHoaChat) {
+          _hoaChatData = null;
+          _success = false;
+          _message = 'Vui lòng quét đúng hóa chất';
+        }
+      }
+
+      _isLoading = false;
+
       notifyListeners();
     } catch (e) {
       _message = e.toString();
@@ -330,30 +340,30 @@ class ScanBloc extends ChangeNotifier {
     }
   }
 
-  Future getDataHoaChat(String mahoachat) async {
-    _isLoading = true;
-    try {
-      final http.Response response =
-          await requestHelper.getData('HoaChat?Keyword=$mahoachat');
-      var decodedData = jsonDecode(response.body);
-      if (mahoachat == 'ISO') {
-        _listHoaChatISO = (decodedData['data'] as List).map((item) {
-          return HoaChatModel.fromJson(item);
-        }).toList();
-      }
-      if (mahoachat == 'POLY') {
-        _listHoaChatPoly = (decodedData['data'] as List).map((item) {
-          return HoaChatModel.fromJson(item);
-        }).toList();
-      }
-      _isLoading = false;
-      _success = decodedData["success"];
-      _message = decodedData["message"];
-      notifyListeners();
-    } catch (e) {
-      _message = e.toString();
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
+  // Future getDataHoaChat(String mahoachat) async {
+  //   _isLoading = true;
+  //   try {
+  //     final http.Response response =
+  //         await requestHelper.getData('HoaChat?Keyword=$mahoachat');
+  //     var decodedData = jsonDecode(response.body);
+  //     if (mahoachat == 'ISO') {
+  //       _listHoaChatISO = (decodedData['data'] as List).map((item) {
+  //         return HoaChatModel.fromJson(item);
+  //       }).toList();
+  //     }
+  //     if (mahoachat == 'POLY') {
+  //       _listHoaChatPoly = (decodedData['data'] as List).map((item) {
+  //         return HoaChatModel.fromJson(item);
+  //       }).toList();
+  //     }
+  //     _isLoading = false;
+  //     _success = decodedData["success"];
+  //     _message = decodedData["message"];
+  //     notifyListeners();
+  //   } catch (e) {
+  //     _message = e.toString();
+  //     _isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
 }

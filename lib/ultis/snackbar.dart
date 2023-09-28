@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 void openSnackBar(context, snacMessage) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
       content: Container(
         alignment: Alignment.centerLeft,
         height: 60,
