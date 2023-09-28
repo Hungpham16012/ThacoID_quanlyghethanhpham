@@ -197,9 +197,9 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Image(
-                  height: MediaQuery.of(context).size.width - 170,
+                  height: MediaQuery.of(context).size.width - 150,
                   // height: 200,
-                  width: MediaQuery.of(context).size.width - 100,
+                  width: MediaQuery.of(context).size.width - 150,
                   image: const AssetImage(Config.logoId),
                   fit: BoxFit.contain,
                   color: Colors.white,
@@ -357,13 +357,13 @@ class _LoginPageState extends State<LoginPage> {
                         Colors.white,
                       ),
                       const SizedBox(
-                        height: 35,
+                        height: 30,
                       )
                     ],
                   ),
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 40,
                 ),
                 const Text(
                   'Bản quyền thuộc về THACO INDUSTRIES @ 2023',

@@ -7,6 +7,6 @@ class SelectedValueProvider extends ChangeNotifier {
 
   void setSelectedValue(String value) {
     _selectedValue = value;
-    notifyListeners(); // Notify listeners of the change
+    notifyListeners();
   }
 }
