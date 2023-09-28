@@ -49,7 +49,9 @@ class _MainPageState extends State<MainPage> {
   List<ChuyenModel> listChuyens = [];
   final MobileScannerController scannerController = MobileScannerController();
 
-  HoaChatModel? _hoaChatData;
+  HoaChatModel? hoaChat;
+  HoaChatModel? hoaChat1;
+  HoaChatModel? hoaChat2;
   String? selectedISO;
   String? selectedPoly;
   List<HoaChatModel?> listHoaChatISO1 = [];
@@ -182,6 +184,66 @@ class _MainPageState extends State<MainPage> {
               // Handle the detected QR code here
               final qrData = barcode.rawValue;
               _onScan(qrData);
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showQRCodeScannerDialogHoaChat1(BuildContext context) {
+    final MobileScannerController scannerController = MobileScannerController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Scan QR Code'),
+          content: MobileScanner(
+            controller: scannerController,
+            onDetect: (Barcode barcode, MobileScannerArguments? args) {
+              // Handle the detected QR code here
+              final qrData = barcode.rawValue;
+              onScanHoaChat1(qrData);
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showQRCodeScannerDialogHoaChat2(BuildContext context) {
+    final MobileScannerController scannerController = MobileScannerController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Scan QR Code'),
+          content: MobileScanner(
+            controller: scannerController,
+            onDetect: (Barcode barcode, MobileScannerArguments? args) {
+              // Handle the detected QR code here
+              final qrData = barcode.rawValue;
+              onScanHoaChat2(qrData);
               Navigator.of(context).pop(); // Close the dialog
             },
           ),
@@ -355,8 +417,8 @@ class _MainPageState extends State<MainPage> {
             );
           case nhapNemGhe:
             if (_aoNemGheData != null) {
-              _aoNemGheData?.hoaChat1Id = selectedISO;
-              _aoNemGheData?.hoaChat2Id = selectedPoly;
+              _aoNemGheData?.hoaChat1Id = hoaChat1?.id;
+              _aoNemGheData?.hoaChat2Id = hoaChat2?.id;
               _scanBloc.postDataNemGhe(_aoNemGheData!).then((value) {
                 statusMessage(_scanBloc.success, _scanBloc.message);
               });
@@ -848,6 +910,174 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  void removeHoaChat1(hoaChat) {
+    setState(() {
+      hoaChat1 = null;
+    });
+  }
+
+  void removeHoaChat2(hoaChat) {
+    setState(() {
+      hoaChat2 = null;
+    });
+  }
+
+  // render scan chọn hóa chất
+  scanHoaChat() {
+    return Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.all(10),
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            'Hóa Chất',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 3),
+          const DividerWidget(),
+          const SizedBox(height: 5),
+          // khung text hoá chất
+          Container(
+            margin: const EdgeInsets.all(5),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        hoaChat1 == null
+                            ? 'Hóa chất 1:'
+                            : 'Hóa chất 1: ${hoaChat1?.maHoaChat}',
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        _showQRCodeScannerDialogHoaChat1(context);
+                      },
+                      icon: const Icon(
+                        Icons.qr_code_2_rounded,
+                        color: Colors.black,
+                      ),
+                      label: const Text(''),
+                      style: ButtonStyle(
+                        elevation:
+                            MaterialStateProperty.all<double>(0), // Xóa đổ bóng
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Hàm xóa dòng được gọi ở đây
+                        removeHoaChat1(hoaChat);
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.black,
+                      ),
+                      label: const Text(''),
+                      style: ButtonStyle(
+                        elevation:
+                            MaterialStateProperty.all<double>(0), // Xóa đổ bóng
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        hoaChat2 == null
+                            ? 'Hóa chất 2:'
+                            : 'Hóa chất 2: ${hoaChat2?.maHoaChat}',
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        _showQRCodeScannerDialogHoaChat2(context);
+                      },
+                      icon: const Icon(
+                        Icons.qr_code_2_rounded,
+                        color: Colors.black,
+                      ),
+                      label: const Text(''),
+                      style: ButtonStyle(
+                        elevation:
+                            MaterialStateProperty.all<double>(0), // Xóa đổ bóng
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Hàm xóa dòng được gọi ở đây
+                        removeHoaChat2(hoaChat);
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.black,
+                      ),
+                      label: const Text(''),
+                      style: ButtonStyle(
+                        elevation:
+                            MaterialStateProperty.all<double>(0), // Xóa đổ bóng
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // scan qrcode hóa chất
+  onScanHoaChat1(qrHoaChat) {
+    _scanBloc.hoaChatGetData(qrHoaChat).then(
+      (_) {
+        setState(
+          () {
+            getDataScan(qrHoaChat, _scanBloc.hoaChatModel);
+            _loading = false;
+            hoaChat1 = _scanBloc.hoaChatModel;
+          },
+        );
+      },
+    );
+  }
+
+  onScanHoaChat2(qrHoaChat) {
+    _scanBloc.hoaChatGetData(qrHoaChat).then(
+      (_) {
+        setState(
+          () {
+            getDataScan(qrHoaChat, _scanBloc.hoaChatModel);
+            _loading = false;
+            hoaChat2 = _scanBloc.hoaChatModel;
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_appBloc.tenNhomChucNang == null) {
@@ -860,7 +1090,11 @@ class _MainPageState extends State<MainPage> {
       return SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 5),
+            const SizedBox(height: 8),
+            // quét hóa chất khi machucnang = nhapNemGhe
+            _appBloc.maChucNang == nhapNemGhe
+                ? scanHoaChat()
+                : const SizedBox.shrink(),
             Container(
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
@@ -929,12 +1163,10 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 5),
-            // render dropdown chọn hóa chất khi machucnang = nhapNemGhe
-            _appBloc.maChucNang == nhapNemGhe
-                ? hoaChatWidget()
-                : const SizedBox.shrink(),
             // render thông tin data sau khi quét
+            const SizedBox(
+              height: 8,
+            ),
             _loading
                 ? LoadingWidget(height: 200)
                 : checkNhapXuatKho(_appBloc.maChucNang) ??
