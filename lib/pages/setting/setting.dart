@@ -163,74 +163,74 @@ class _SettingPageState extends State<SettingPage> {
         ?.send([id, status, progress]);
   }
 
-  callUpdateAction(values) async {
-    if ((values["maPhienBan"] != _appBloc.appVersion) && values["isCapNhat"]) {
-      bool shouldUpdate = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Cập nhật"),
-            content: const Text(
-              "Ứng dụng đã có phiên bản mới. Bạn có muốn tải về không?",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text("Huỷ"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text("Tải về và cài đặt"),
-              ),
-            ],
-          );
-        },
-      );
-      if (shouldUpdate) {
-        await createDownloadDirectory();
-        Directory? downloadsDirectory = await getExternalStorageDirectory();
-        List<String> tmpArr = values["fileUrl"].split('/');
-        // Get the file path
-        final String filePath =
-            '${downloadsDirectory!.path}/Download/${tmpArr.last}';
+  // callUpdateAction(values) async {
+  //   if ((values["maPhienBan"] != _appBloc.appVersion) && values["isCapNhat"]) {
+  //     bool shouldUpdate = await showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text("Cập nhật"),
+  //           content: const Text(
+  //             "Ứng dụng đã có phiên bản mới. Bạn có muốn tải về không?",
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, false),
+  //               child: const Text("Huỷ"),
+  //             ),
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, true),
+  //               child: const Text("Tải về và cài đặt"),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //     if (shouldUpdate) {
+  //       await createDownloadDirectory();
+  //       Directory? downloadsDirectory = await getExternalStorageDirectory();
+  //       List<String> tmpArr = values["fileUrl"].split('/');
+  //       // Get the file path
+  //       final String filePath =
+  //           '${downloadsDirectory!.path}/Download/${tmpArr.last}';
 
-        // Check if the file exists
-        final bool fileExists = File(filePath).existsSync();
+  //       // Check if the file exists
+  //       final bool fileExists = File(filePath).existsSync();
 
-        // Delete the file if it exists
-        if (fileExists) {
-          File(filePath).deleteSync();
-        }
+  //       // Delete the file if it exists
+  //       if (fileExists) {
+  //         File(filePath).deleteSync();
+  //       }
 
-        String? downloadId = await FlutterDownloader.enqueue(
-          url: '${_appBloc.apiUrl}/${values["fileUrl"]}',
-          savedDir: '${downloadsDirectory.path}/Download',
-          showNotification: true,
-          openFileFromNotification: true,
-          fileName: values["fileName"],
-        );
+  //       String? downloadId = await FlutterDownloader.enqueue(
+  //         url: '${_appBloc.apiUrl}/${values["fileUrl"]}',
+  //         savedDir: '${downloadsDirectory.path}/Download',
+  //         showNotification: true,
+  //         openFileFromNotification: true,
+  //         fileName: values["fileName"],
+  //       );
 
-        bool isComplete = false;
-        while (!isComplete) {
-          List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
-          DownloadTask? task =
-              tasks?.firstWhere((task) => task.taskId == downloadId);
-          if (task?.status == DownloadTaskStatus.complete) {
-            isComplete = true;
-          }
-        }
+  //       bool isComplete = false;
+  //       while (!isComplete) {
+  //         List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
+  //         DownloadTask? task =
+  //             tasks?.firstWhere((task) => task.taskId == downloadId);
+  //         if (task?.status == DownloadTaskStatus.complete) {
+  //           isComplete = true;
+  //         }
+  //       }
 
-        await InstallPlugin.installApk(
-          '${downloadsDirectory.path}/Download/${tmpArr.last}',
-          appId: 'com.thaco.id.autocom.ghe',
-        ).then((value) {
-          if (value == 'Success') {
-            openSnackBar(context, "Tải xuống thành công");
-          }
-        });
-      }
-    }
-  }
+  //       await InstallPlugin.installApk(
+  //         '${downloadsDirectory.path}/Download/${tmpArr.last}',
+  //         appId: 'com.thaco.id.autocom.ghe',
+  //       ).then((value) {
+  //         if (value == 'Success') {
+  //           openSnackBar(context, "Tải xuống thành công");
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 
   createDownloadDirectory() async {
     Directory? downloadsDirectory = await getExternalStorageDirectory();
@@ -375,7 +375,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 child: UserUI(
                   onlineVersion: _version,
-                  callUpdateAction: callUpdateAction,
+                  callUpdateAction: () {},
                   values: values,
                 ),
               ),
