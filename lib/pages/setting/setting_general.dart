@@ -59,8 +59,8 @@ class _SettingGeneralState extends State<SettingGeneral> {
               },
             ),
           ),
-          const SizedBox(height: 15),
-          _buildLanguageDropdown(context),
+          //   const SizedBox(height: 15),
+          //    _buildLanguageDropdown(context),
         ],
       ),
     );

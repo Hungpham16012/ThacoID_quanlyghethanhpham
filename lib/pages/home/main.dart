@@ -1003,6 +1003,9 @@ class _MainPageState extends State<MainPage> {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                     ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     ElevatedButton.icon(
                       onPressed: () {
                         removeHoaChatISO(hoaChatISO);
@@ -1050,6 +1053,9 @@ class _MainPageState extends State<MainPage> {
                         backgroundColor:
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
+                    ),
+                    const SizedBox(
+                      width: 10,
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
@@ -1142,11 +1148,9 @@ class _MainPageState extends State<MainPage> {
                   listChuyens.isEmpty
                       ? const SizedBox.shrink()
                       : dropdownChuyen(listChuyens),
-                  // const SizedBox(height: 10),
-                  // const DividerWidget(),
+
                   const SizedBox(height: 10),
-                  const DividerWidget(),
-                  const SizedBox(height: 10),
+
                   EasyAutocomplete(
                     controller: _qrDataController,
                     onChanged: _onSearchChanged,
