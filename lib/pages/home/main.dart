@@ -517,15 +517,15 @@ class _MainPageState extends State<MainPage> {
       color: Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
-          showInfoXe(
+          showInfo(
             'Mã LOT',
             _exportData!.maLot,
           ),
-          showInfoXe(
+          showInfo(
             'Model',
             _exportData!.tenDongXe,
           ),
-          showInfoXe(
+          showInfo(
             'Loại xe',
             _exportData!.tenLoaiXe,
           ),
@@ -534,7 +534,7 @@ class _MainPageState extends State<MainPage> {
             SizedBox(
               child: Column(
                 children: [
-                  showInfoXe(
+                  showInfo(
                     'Ngày',
                     _exportData!.ngay.toString(),
                   ),
@@ -554,16 +554,16 @@ class _MainPageState extends State<MainPage> {
       color: Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
-          showInfoXe('Tên', _data!.tenChiTiet),
-          showInfoXe('Model', _data!.tenDongXe),
-          showInfoXe('Loại xe', _data!.tenLoaiXe),
+          showInfo('Tên', _data!.tenChiTiet),
+          showInfo('Model', _data!.tenDongXe),
+          showInfo('Loại xe', _data!.tenLoaiXe),
           // ignore: unnecessary_null_comparison
           if (_data!.ngay != null)
             // if (_data!.ngay != null)
             SizedBox(
               child: Column(
                 children: [
-                  showInfoXe('Ngày', _data!.ngay.toString()),
+                  showInfo('Ngày', _data!.ngay.toString()),
                   const SizedBox(height: 10),
                 ],
               ),
@@ -580,15 +580,15 @@ class _MainPageState extends State<MainPage> {
       color: Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
-          showInfoXe('Tên hàng hóa', _banLeData!.tenHangHoa),
-          showInfoXe('Model', _banLeData!.tenDongXe),
-          showInfoXe('Loại xe', _banLeData!.tenLoaiXe),
+          showInfo('Tên hàng hóa', _banLeData!.tenHangHoa),
+          showInfo('Model', _banLeData!.tenDongXe),
+          showInfo('Loại xe', _banLeData!.tenLoaiXe),
           // ignore: unnecessary_null_comparison
           if (_banLeData!.ngay != null)
             SizedBox(
               child: Column(
                 children: [
-                  showInfoXe('Ngày', _banLeData!.ngay.toString()),
+                  showInfo('Ngày', _banLeData!.ngay.toString()),
                   const SizedBox(height: 10),
                 ],
               ),
@@ -605,15 +605,15 @@ class _MainPageState extends State<MainPage> {
       color: Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
-          showInfoXe('Tên nệm áo', _aoNemGheData!.tenNemAo),
-          showInfoXe('Model', _aoNemGheData!.tenDongXe),
-          showInfoXe('Loại xe', _aoNemGheData!.tenLoaiXe),
+          showInfo('Tên nệm áo', _aoNemGheData!.tenNemAo),
+          showInfo('Model', _aoNemGheData!.tenDongXe),
+          showInfo('Loại xe', _aoNemGheData!.tenLoaiXe),
           // ignore: unnecessary_null_comparison
           if (_aoNemGheData!.ngay != null)
             SizedBox(
               child: Column(
                 children: [
-                  showInfoXe('Ngày', _aoNemGheData!.ngay.toString()),
+                  showInfo('Ngày', _aoNemGheData!.ngay.toString()),
                   const SizedBox(height: 10),
                 ],
               ),
@@ -923,7 +923,7 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       _showQRCodeScannerDialog(context);
                     },
-                    icon: const Icon(Icons.camera),
+                    icon: const Icon(Icons.qr_code_2_rounded),
                     label: const Text('Quét mã'),
                   )
                 ],
@@ -950,7 +950,7 @@ class _MainPageState extends State<MainPage> {
 }
 
 // ignore: unused_element
-Widget showInfoXe(String title, String value) {
+Widget showInfo(String title, String value) {
   return Column(
     children: [
       const SizedBox(height: 10),
