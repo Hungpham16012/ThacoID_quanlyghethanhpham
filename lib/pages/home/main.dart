@@ -329,8 +329,20 @@ class _MainPageState extends State<MainPage> {
             );
           },
         );
-      case nhapAoGhe || nhapNemGhe:
-        _scanBloc.aoNemGetData(qrCode).then(
+      case nhapAoGhe:
+        _scanBloc.aoGetData(qrCode).then(
+          (_) {
+            setState(
+              () {
+                getDataScan(qrCode, _scanBloc.aoNemData);
+                _loading = false;
+                _aoNemGheData = _scanBloc.aoNemData;
+              },
+            );
+          },
+        );
+      case nhapNemGhe:
+        _scanBloc.nemGetData(qrCode).then(
           (_) {
             setState(
               () {

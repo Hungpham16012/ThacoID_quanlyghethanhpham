@@ -178,15 +178,55 @@ class ScanBloc extends ChangeNotifier {
   }
 
   // Nhập áo nệm ghế
-  Future aoNemGetData(qrCode) async {
+  Future aoGetData(qrCode) async {
     _isLoading = true;
     _aoNemData = null;
+    bool isNem;
     try {
       final http.Response response =
           await requestHelper.getData('NhapKhoNemAo?Macode=$qrCode');
       var decodedData = jsonDecode(response.body);
       if (decodedData["data"] != null) {
         _aoNemData = AoNemGheModel.fromJson(decodedData["data"]);
+        if (_aoNemData != null) {
+          isNem = _aoNemData!.isNem;
+          if (isNem) {
+            _success = false;
+            _aoNemData = null;
+          }
+        }
+      } else {
+        _aoNemData = null;
+      }
+
+      _isLoading = false;
+      _success = decodedData["success"];
+      _message = decodedData["message"];
+      notifyListeners();
+    } catch (e) {
+      _message = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future nemGetData(qrCode) async {
+    _isLoading = true;
+    _aoNemData = null;
+    bool isNem;
+    try {
+      final http.Response response =
+          await requestHelper.getData('NhapKhoNemAo?Macode=$qrCode');
+      var decodedData = jsonDecode(response.body);
+      if (decodedData["data"] != null) {
+        _aoNemData = AoNemGheModel.fromJson(decodedData["data"]);
+        if (_aoNemData != null) {
+          isNem = _aoNemData!.isNem;
+          if (!isNem) {
+            _success = false;
+            _aoNemData = null;
+          }
+        }
       } else {
         _aoNemData = null;
       }
