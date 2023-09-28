@@ -14,6 +14,7 @@ class Config {
   final Color nemAoFalse = const Color.fromARGB(255, 6, 110, 4);
   final Color defaultSelected = Colors.black;
   final Color selected = const Color(0xFF00529C);
+  final Color buttonFalse = Color.fromARGB(255, 200, 85, 77);
 
   // Icons
   static const String appIcon = 'assets/images/icon.png';

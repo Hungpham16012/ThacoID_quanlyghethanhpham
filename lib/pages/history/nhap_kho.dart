@@ -92,7 +92,6 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: widget.list.map((item) {
                         id++;
-                        Color textColor = Config().defaultSelected;
 
                         return Column(
                           children: [
@@ -103,7 +102,6 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                                 children: [
                                   Text(
                                     "$id",
-                                    style: TextStyle(color: textColor),
                                   ),
                                   const SizedBox(width: 10),
                                   const SizedBox(width: 10),
@@ -112,19 +110,27 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       item.isNemAo
-                                          ? const Text('Nhập áo/nệm')
-                                          : const Text('Nhập ghế thành phẩm'),
+                                          ? const Text(
+                                              'Nhập áo/nệm',
+                                              style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 232, 87, 76)),
+                                            )
+                                          : const Text(
+                                              'Nhập ghế thành phẩm',
+                                              style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 232, 87, 76)),
+                                            ),
                                       Text(
                                         item.maChiTiet,
-                                        style: TextStyle(color: textColor),
                                       ),
+                                      const DividerWidget(),
                                       Text(
                                         item.tenChiTiet,
-                                        style: TextStyle(color: textColor),
                                       ),
                                       Text(
                                         item.maCode,
-                                        style: TextStyle(color: textColor),
                                       ),
                                     ],
                                   ),
@@ -134,7 +140,6 @@ class _HistoryXacNhanTienDoPageState extends State<HistoryNhapKhoPage> {
                                 children: [
                                   Text(
                                     item.thoiGianNhap,
-                                    style: TextStyle(color: textColor),
                                   ),
                                   Text(
                                     item.thoiGianHuy,

@@ -506,6 +506,14 @@ class _MainPageState extends State<MainPage> {
   // render button ở các trường hợp nhập xuất sản phẩm khác nhau
 
   renderButtonNhapXuat(isNhapkho, nhapxuatkhoId) {
+    Color buttonBackgroundColor = isNhapkho
+        ? (nhapxuatkhoId == null
+            ? Theme.of(context).primaryColor
+            : Config().buttonFalse)
+        : (nhapxuatkhoId == null
+            ? Theme.of(context).primaryColor
+            : Config().buttonFalse);
+
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 50,
@@ -513,7 +521,7 @@ class _MainPageState extends State<MainPage> {
       color: Theme.of(context).colorScheme.onPrimary,
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: buttonBackgroundColor,
         ),
         onPressed: _onSave,
         icon: Icon(
@@ -728,14 +736,19 @@ class _MainPageState extends State<MainPage> {
             fontSize: 16,
             color: selectedChuyen != null
                 ? Config().selected
-                : Config().defaultSelected, // Change text color when selected
+                : Config().defaultSelected,
           ),
           isDense: true,
           focusColor: Config().defaultSelected,
           dropdownColor: Colors.white,
           borderRadius: BorderRadius.circular(8),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          hint: const Text('Chọn Chuyền'),
+          hint: Text(
+            'Chọn Chuyền',
+            style: TextStyle(
+              color: Config().appThemeColor,
+            ),
+          ),
           value: selectedChuyen,
           onChanged: (String? newValue) {
             setState(() {
@@ -1124,12 +1137,15 @@ class _MainPageState extends State<MainPage> {
                   const SizedBox(height: 10),
                   const DividerWidget(),
                   const SizedBox(height: 10),
+
                   // hiển thị dropdown chuyền
                   listChuyens.isEmpty
                       ? const SizedBox.shrink()
                       : dropdownChuyen(listChuyens),
                   // const SizedBox(height: 10),
                   // const DividerWidget(),
+                  const SizedBox(height: 10),
+                  const DividerWidget(),
                   const SizedBox(height: 10),
                   EasyAutocomplete(
                     controller: _qrDataController,
