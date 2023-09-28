@@ -91,7 +91,6 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: widget.list.map((item) {
                         id++;
-                        Color textColor = Config().defaultSelected;
 
                         return Column(
                           children: [
@@ -102,7 +101,6 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                                 children: [
                                   Text(
                                     "$id",
-                                    style: TextStyle(color: textColor),
                                   ),
                                   const SizedBox(width: 10),
                                   const SizedBox(width: 10),
@@ -111,20 +109,25 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       item.isNemAo
-                                          ? const Text('Xuất kho áo/nệm')
+                                          ? const Text(
+                                              'Xuất kho áo/nệm',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            )
                                           : const Text(
-                                              'Xuất kho ghế thành phẩm'),
+                                              'Xuất kho ghế thành phẩm',
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            ),
                                       Text(
                                         item.maChiTiet,
-                                        style: TextStyle(color: textColor),
                                       ),
                                       Text(
                                         item.tenChiTiet,
-                                        style: TextStyle(color: textColor),
                                       ),
                                       Text(
                                         item.maCode,
-                                        style: TextStyle(color: textColor),
                                       ),
                                     ],
                                   ),
@@ -134,14 +137,12 @@ class _HistoryXuatKhoPageState extends State<HistoryXuatKhoPage> {
                                 children: [
                                   Text(
                                     item.thoiGianNhap,
-                                    style: TextStyle(color: textColor),
                                   ),
                                   Text(
                                     item.thoiGianHuy,
                                     style: const TextStyle(
                                         color: Colors.redAccent),
                                   ),
-                                  
                                 ],
                               ),
                             ),
